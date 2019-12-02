@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/topb"
+    tools:context=".event_details">
+
+    <Button
+        android:id="@+id/reg"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/curve"
+        android:backgroundTint="#191fcd"
+        android:fontFamily="@font/splight"
+        android:text="Register"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="272dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/eveimv"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:background="@null" />
+
+                <ImageView
+                    android:id="@+id/fh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:alpha="0"
+                    android:tint="#ff0111"
+                    app:srcCompat="@drawable/ic_baseline_favorite_24px" />
+
+
+                <FrameLayout
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginRight="20dp"
+                    android:background="@mipmap/ic_launcher_round"
+                    android:backgroundTint="@color/cardbg"
+                    android:elevation="5dp"
+                    android:paddingLeft="9dp"
+                    android:paddingTop="10.5dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10.5dp">
+
+                    <ToggleButton
+                        android:id="@+id/favButton"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:background="@null"
+                        android:button="@drawable/toggle_button"
+                        android:checked="false"
+                        android:foregroundGravity="center"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:text=""
+                        android:textOff=""
+                        android:textOn="" />
+
+                </FrameLayout>
+
+                <Button
+                    android:id="@+id/backbut2"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:background="?attr/homeAsUpIndicator"
+                    android:backgroundTint="@android:color/white"
+                    android:foreground="?attr/selectableItemBackground" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/evedttitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:layout_marginBottom="25dp"
+                        android:fontFamily="@font/spregu"
+                        android:gravity="center"
+                        android:text="Introduction to deep learning"
+                        android:textColor="@android:color/white"
+                        android:textSize="32sp" />
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/dtab"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                app:tabSelectedTextColor="@android:color/white"
+                app:tabTextColor="@color/unselected">
+
+                <android.support.design.widget.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="About" />
+
+                <android.support.design.widget.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Requisites" />
+
+                <android.support.design.widget.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contact" />
+            </android.support.design.widget.TabLayout>
+
+            <TextView
+                android:id="@+id/evedesc"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="80dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/pnreg"
+                android:text="Loading please wait"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>
