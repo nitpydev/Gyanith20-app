@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.barebrains.gyanith20">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:name=".gyanith19"
+        android:allowBackup="true"
+        android:icon="@drawable/l2"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/l2"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme.Noactionbar">
+        <activity android:name=".register" />
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" />
+        <activity android:name=".event_categories" />
+        <activity android:name=".event_details" />
+        <activity android:name=".profile" />
+        <activity android:name=".splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".notreceiver">
+            <intent-filter>
+                <action android:name="gyanith.notify" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".about" />
+    </application>
+
+</manifest>
