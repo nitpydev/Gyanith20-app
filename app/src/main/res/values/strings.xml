@@ -4,7 +4,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">Sign in</string>
     <!-- Strings related to login -->
@@ -12,4 +12,9 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <!--Schedule Tabs-->
+    <string name="schedule_tab0">LIVE</string>
+    <string name="schedule_tab1">DAY 1</string>
+    <string name="schedule_tab2">DAY 2</string>
+    <string name="schedule_tab3">DAY 3</string>
 </resources>

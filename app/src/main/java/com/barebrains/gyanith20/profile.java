@@ -1,10 +1,11 @@
 package com.barebrains.gyanith20;
 
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class profile extends AppCompatActivity {
 

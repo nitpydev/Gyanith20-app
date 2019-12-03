@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.design.widget.TabLayout
+            <com.google.android.material.tabs.TabLayout
                 android:id="@+id/schtabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -29,31 +29,31 @@
                 app:tabSelectedTextColor="@android:color/white"
                 app:tabTextColor="@color/unselected">
 
-                <android.support.design.widget.TabItem
+                <com.google.android.material.tabs.TabItem
                     android:id="@+id/tabItem2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Live" />
+                    android:text="@string/schedule_tab0" />
 
-                <android.support.design.widget.TabItem
+                <com.google.android.material.tabs.TabItem
                     android:id="@+id/tabItem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Day 0" />
+                    android:text="@string/schedule_tab1" />
 
-                <android.support.design.widget.TabItem
+                <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Day 1" />
+                    android:text="@string/schedule_tab2" />
 
-                <android.support.design.widget.TabItem
+                <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Day 2" />
+                    android:text="@string/schedule_tab3" />
 
-            </android.support.design.widget.TabLayout>
+            </com.google.android.material.tabs.TabLayout>
 
-            <android.support.v4.view.ViewPager
+            <androidx.viewpager.widget.ViewPager
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -66,11 +66,12 @@
                     android:id="@+id/fragment"
                     android:name="com.barebrains.gyanith20.schtab0"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    tools:layout="@layout/fragment_schtab0" />
             </FrameLayout>
-            </android.support.v4.view.ViewPager>
+            </androidx.viewpager.widget.ViewPager>
 
         </LinearLayout>
 
     </FrameLayout>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

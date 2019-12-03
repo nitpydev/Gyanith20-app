@@ -30,7 +30,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/w"
                         android:layout_width="match_parent"
                         android:layout_height="250dp"
@@ -57,9 +57,9 @@
                             android:text="Workshops"
                             android:textColor="@android:color/white"
                             android:textSize="20sp" />
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/nte"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
@@ -88,9 +88,9 @@
 
                             android:textColor="@android:color/white"
                             android:textSize="20sp" />
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/ud"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
@@ -119,7 +119,7 @@
 
                             android:textColor="@android:color/white"
                             android:textSize="20sp" />
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
 
@@ -130,7 +130,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/te"
                         android:layout_width="match_parent"
                         android:layout_height="180dp"
@@ -159,9 +159,9 @@
                             android:text="Technical events"
                             android:textColor="@android:color/white"
                             android:textSize="20sp" />
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/ps"
                         android:layout_width="match_parent"
                         android:layout_height="220dp"
@@ -190,9 +190,9 @@
                             android:textColor="@android:color/white"
 
                             android:textSize="20sp" />
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/gl"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
@@ -220,7 +220,7 @@
                             android:text="Guest Lectures"
                             android:textColor="@android:color/white"
                             android:textSize="20sp" />
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
 
                 </LinearLayout>

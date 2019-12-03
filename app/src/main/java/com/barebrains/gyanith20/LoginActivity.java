@@ -9,11 +9,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v7.app.AppCompatActivity;
 
 
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +27,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -55,7 +56,7 @@ import java.security.NoSuchAlgorithmException;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
-public class LoginActivity extends AppCompatActivity  {
+public class LoginActivity extends AppCompatActivity {
 
 
     EditText uid,pwd;
