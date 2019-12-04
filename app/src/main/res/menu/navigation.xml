@@ -22,4 +22,9 @@
         android:icon="@drawable/ic_baseline_notifications_24px"
         android:title="@string/title_notifications" />
 
+    <item
+        android:id="@+id/navigation_community"
+        android:icon="@drawable/ic_community_outline_black_24dp"
+        android:title="@string/title_notifications" />
+
 </menu>

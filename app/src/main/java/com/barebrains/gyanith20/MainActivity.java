@@ -55,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
                     item.setIcon(R.drawable.ic_baseline_notifications_24px);
                     notif.edit().putBoolean("newnot",false).apply();
                     return true;
+                case R.id.navigation_community:
+                    replace(new community());
+                    title.setText("Community");
+                    return true;
             }
             return false;
         }
@@ -111,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.mainframe,f).commit();
 
-        ((TextView)findViewById(R.id.title)).setText("Gyanith 19");
+        ((TextView)findViewById(R.id.title)).setText(R.string.topbar_home);
 
         ((Button)findViewById(R.id.account)).setOnClickListener(new View.OnClickListener() {
             @Override

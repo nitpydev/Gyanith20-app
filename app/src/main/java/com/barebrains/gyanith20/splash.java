@@ -32,7 +32,7 @@ public class splash extends AppCompatActivity {
         ImageView l=(ImageView)findViewById(R.id.imageView4);
 
 
-        registerReceiver(new notreceiver(),new IntentFilter("gyanith.notify"));
+        getApplicationContext().registerReceiver(new notreceiver(),new IntentFilter("gyanith.notify"));
         //registerReceiver(new notreceiver(),new IntentFilter("BOOT_COMPLETED"));
 
 

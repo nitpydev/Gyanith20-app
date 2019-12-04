@@ -163,7 +163,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/qrcard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -211,7 +211,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center" />
                     </FrameLayout>
-                </android.support.v7.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:id="@+id/usernametv"
@@ -305,7 +305,7 @@
         </ScrollView>
     </FrameLayout>
 
-    <android.support.v7.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/qrzoomed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -343,7 +343,7 @@
                 android:textSize="18sp" />
 
         </FrameLayout>
-    </android.support.v7.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <WebView
         android:id="@+id/wvreg"
