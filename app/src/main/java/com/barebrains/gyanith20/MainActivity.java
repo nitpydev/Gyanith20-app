@@ -1,6 +1,5 @@
 package com.barebrains.gyanith20;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -41,19 +39,19 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     replace(new home());
-                    title.setText("Gyanith 19");
+                    title.setText(R.string.topbar_home);
                     return true;
                 case R.id.navigation_schedule:
                     replace(new schedule());
-                    title.setText("Schedule");
+                    title.setText(R.string.topbar_schedule);
                     return true;
                 case R.id.navigation_favourites:
                     replace(new favourites());
-                    title.setText("Favourites");
+                    title.setText(R.string.topbar_favourites);
                     return true;
                 case R.id.navigation_notifications:
                    replace(new notifications());
-                    title.setText("Notifications");
+                    title.setText(R.string.topbar_notification);
                     item.setIcon(R.drawable.ic_baseline_notifications_24px);
                     notif.edit().putBoolean("newnot",false).apply();
                     return true;

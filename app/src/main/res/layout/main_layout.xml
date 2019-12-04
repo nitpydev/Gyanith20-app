@@ -27,25 +27,26 @@
                     android:id="@+id/topbaricon"
                     android:layout_width="55dp"
                     android:layout_height="39dp"
-                    android:layout_marginLeft="6dp"
+                    android:layout_marginStart="6dp"
                     android:layout_marginTop="9dp"
                     android:layout_marginBottom="6dp"
-                    android:background="@drawable/l2" />
+                    android:background="@drawable/l2"
+                    android:contentDescription="@string/app_name" />
 
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:fontFamily="@font/sofiaprolight"
                     android:gravity="center_vertical"
-                    android:text="Gyanith 19"
+                    android:text="@string/topbar_home"
                     android:textColor="@android:color/white"
                     android:textSize="24sp" />
 
                 <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1" />
 
                 <Button
@@ -53,7 +54,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:background="@drawable/ic_baseline_account_circle_24px"
                     android:backgroundTint="@android:color/white"
                     android:foreground="?attr/selectableItemBackground" />

@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 public class schAdapter extends ArrayAdapter {
@@ -26,8 +28,9 @@ public class schAdapter extends ArrayAdapter {
         this.res = res;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         LayoutInflater li = LayoutInflater.from(c);
         View root = li.inflate(res, null, false);
 
