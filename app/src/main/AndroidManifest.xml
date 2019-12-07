@@ -15,7 +15,12 @@
         android:roundIcon="@drawable/l2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Noactionbar">
-        <activity android:name=".UploadPostActivity"></activity>
+        <service
+            android:name=".PostUploadService"
+            android:enabled="true"
+            android:exported="false"></service>
+
+        <activity android:name=".UploadPostActivity" />
         <activity android:name=".register" />
         <activity
             android:name=".LoginActivity"
