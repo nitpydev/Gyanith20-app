@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/topb"
-    tools:context=".event_categories">
+    tools:context="Activities.EventCategoriesActivity">
 
     <ProgressBar
         android:id="@+id/catload"
