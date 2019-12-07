@@ -1,6 +1,14 @@
 package com.barebrains.gyanith20.Models;
 
 public class GyanithUser {
-    public String userName;
+    private static String userName;
 
+    public void User(String userName)
+    {
+        this.userName = userName;
+    }
+//getter
+    public static String getUserName() {
+        return userName;
+    }
 }
