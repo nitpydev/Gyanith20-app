@@ -3,6 +3,8 @@ package com.barebrains.gyanith20.Statics;
 import android.content.Context;
 import android.util.Pair;
 
+import com.barebrains.gyanith20.Models.Post;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -17,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class  PostManager{
     public static ArrayList<Pair<String,UploadTask>>  uploadImages(Context context, String[] imgPaths){
@@ -37,13 +40,16 @@ public class  PostManager{
         return pics;
     }
 
-    public  static void CommitPostToDB(String[] imgIds, String caption, long time){
+    public  static void CommitPostToDB(Post post, final Callback result){
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-
-        rootRef.child("posts").push().setValue(jsonPost("Test",
-                time,
-                caption
-        ,imgIds));
+        DatabaseReference postRef = rootRef.child("posts").push();
+        post.postId = postRef.getKey();
+        postRef.setValue(post).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                result.OnResult(null);
+            }
+        });
     }
 
     private static String generateUniqueId(){
@@ -62,5 +68,9 @@ public class  PostManager{
             e.printStackTrace();
         }
         return jsonObject.toString();
+    }
+
+    public interface Callback<T>{
+        void OnResult(T t);
     }
 }

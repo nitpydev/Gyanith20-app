@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         workshopll=findViewById(R.id.workshopll);
         webview = findViewById(R.id.wvreg);
         signup=findViewById(R.id.signupll);
-        sp = getSharedPreferences("com.barebrains.gyanith19", MODE_PRIVATE);
+        sp = getSharedPreferences("com.barebrains.gyanith20", MODE_PRIVATE);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override

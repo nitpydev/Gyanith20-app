@@ -1,6 +1,5 @@
 package com.barebrains.gyanith20.Services;
 
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -11,10 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.barebrains.gyanith20.Activities.SplashActivity;
-import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.Models.Post;
+import com.barebrains.gyanith20.Statics.GyanithUserManager;
+import com.barebrains.gyanith20.Statics.NotificationManager;
 import com.barebrains.gyanith20.Statics.PostManager;
-import com.barebrains.gyanith20.gyanith19;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.OnProgressListener;
@@ -22,17 +21,16 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PostUploadService extends Service {
 
+    private ArrayList<Pair<String, UploadTask>> imgUploads;
     private Map<String,Integer> ImgProgress;
-    private int PROGRESS_MAX;
-    private int NOTIFICATION_ID = 19;
     private String[] imgPaths;
     private String captions;
-    private ArrayList<Pair<String, UploadTask>> imgUploads;
     private int success = 0;
 
     public PostUploadService() {
@@ -40,54 +38,44 @@ public class PostUploadService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         imgPaths = intent.getExtras().getStringArray("EXTRA_IMG_PATHS");
         captions = intent.getStringExtra("EXTRA_CAPTIONS");
 
         imgUploads = PostManager.uploadImages(this,imgPaths);
         HandleProgress();
+
         return Service.START_REDELIVER_INTENT;
     }
 
     private void HandleProgress(){
-        PROGRESS_MAX = getTotalSize(imgPaths);
+        NotificationManager.Create(this,getTotalSize(imgPaths));//CREATE PROGRESS NOTIFICATION
+
         ImgProgress = new HashMap<>();
         for (Pair<String,UploadTask> imgUpload : imgUploads)
             ImgProgress.put(imgUpload.first,0);
 
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this, gyanith19.PROGRESS_CHANNEL)
-                .setSmallIcon(R.drawable.l2)
-                .setContentTitle("Posting")
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setAutoCancel(false)
-                .setContentIntent(PendingIntent.getActivity(this, 0,
-                        new Intent(this, SplashActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
-        final NotificationManagerCompat notManager = NotificationManagerCompat.from(this);
-
-        builder.setProgress(PROGRESS_MAX, 0, false);
-        notManager.notify(NOTIFICATION_ID, builder.build());
+        NotificationManager.setProgress(0);  //Show Notification
 
         for (int i = 0;i<imgUploads.size();i++)
         {
             final UploadTask uploadTask = imgUploads.get(i).second;
+
             uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                    int progress = (int) taskSnapshot.getBytesTransferred();
+                    String id = taskSnapshot.getStorage().getName();//Get ID
 
-                    String id = taskSnapshot.getStorage().getName();
-                    ImgProgress.remove(id);
-                    ImgProgress.put(id,progress);
+                    ImgProgress.remove(id);//Remove object with ID
+                    ImgProgress.put(id,(int)taskSnapshot.getBytesTransferred());//Put new object with ID
 
-                    builder.setProgress(PROGRESS_MAX, getProgress(), false);
-                    notManager.notify(NOTIFICATION_ID, builder.build());
+                    NotificationManager.setProgress(getProgress());
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d("asd", "error : " + e);
-                    builder.setProgress(0, 0, false);
-                    builder.setContentTitle("Posting Interrupted");
-                    notManager.notify(NOTIFICATION_ID, builder.build());
+                    NotificationManager.setProgressTitle("Posting Interrupted");
                 }
             })
             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -96,7 +84,18 @@ public class PostUploadService extends Service {
                     success++;
                     if (success == imgPaths.length)
                     {
-                        OnUploadComplete(builder,notManager);
+                        Post post = new Post(""
+                        , GyanithUserManager.getCurrentUser().userName
+                        ,System.currentTimeMillis()
+                        ,captions
+                        , Arrays.asList(getImgIds()));
+                        PostManager.CommitPostToDB(post, new PostManager.Callback() {
+                            @Override
+                            public void OnResult(Object o) {
+                                stopSelf();
+                            }
+                        });
+                        NotificationManager.CompleteProgress();
                     }
                 }
             });
@@ -104,16 +103,7 @@ public class PostUploadService extends Service {
 
     }
 
-    private void OnUploadComplete(NotificationCompat.Builder builder,NotificationManagerCompat notManager){
 
-
-        PostManager.CommitPostToDB(getImgIds(),captions,System.currentTimeMillis());
-        builder.setAutoCancel(true);
-
-        builder.setContentTitle("Posted")
-                .setProgress(0,0,false);
-        notManager.notify(NOTIFICATION_ID, builder.build());
-    }
     private int getProgress()
     {
         int totalProgress = 0;
@@ -142,7 +132,6 @@ public class PostUploadService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 }

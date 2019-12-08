@@ -60,7 +60,7 @@ public class eventCategoriesAdapter extends ArrayAdapter{
 
         ((TextView)root.findViewById(R.id.eveitname)).setText(ei.get(position).getName());
         ((TextView)root.findViewById(R.id.eveittime)).setText(ei.get(position).getTime());
-        int id = c.getResources().getIdentifier("com.barebrains.gyanith19:drawable/" + ei.get(position).getTag().toLowerCase(), null, null);
+        int id = c.getResources().getIdentifier("com.barebrains.gyanith20:drawable/" + ei.get(position).getTag().toLowerCase(), null, null);
         if(id!=0)
             ((ImageView)root.findViewById(R.id.logo)).setImageResource(id);
         return root;

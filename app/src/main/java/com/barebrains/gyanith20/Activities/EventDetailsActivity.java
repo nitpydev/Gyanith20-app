@@ -97,7 +97,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                             tab3=snapshot.getValue().toString();
                         }
                     }
-                    int id = getResources().getIdentifier("com.barebrains.gyanith19:drawable/" + tag.toLowerCase()+'b', null, null);
+                    int id = getResources().getIdentifier("com.barebrains.gyanith20:drawable/" + tag.toLowerCase()+'b', null, null);
                     if(id!=0)
                     ((ImageView)findViewById(R.id.eveimv)).setBackgroundResource(id);
             }
