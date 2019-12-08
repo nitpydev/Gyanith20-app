@@ -11,6 +11,7 @@ import com.barebrains.gyanith20.Activities.SplashActivity;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.gyanith20;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class NotificationManager {
@@ -37,6 +38,8 @@ public class NotificationManager {
                 .setAutoCancel(false)
                 .setContentIntent(PendingIntent.getActivity(service, 0,
                         new Intent(service, SplashActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
+        builders = new HashMap<>();
+        managers = new HashMap<>();
         builders.put(PROGRESS_NID,builder);
         managers.put(PROGRESS_NID,NotificationManagerCompat.from(service));
         service.startForeground(PROGRESS_NID,builders.get(PROGRESS_NID).build());

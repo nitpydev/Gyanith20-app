@@ -85,7 +85,7 @@ public class PostUploadService extends Service {
                     if (success == imgPaths.length)
                     {
                         Post post = new Post(""
-                        , GyanithUserManager.getCurrentUser().userName
+                        ,GyanithUserManager.getCurrentUser().userName
                         ,System.currentTimeMillis()
                         ,captions
                         , Arrays.asList(getImgIds()));

@@ -1,14 +1,17 @@
 package com.barebrains.gyanith20.Models;
 
+import java.util.List;
+
 public class GyanithUser {
     public String gyanithId;
     public String name;
     public String userName;
-    public String password;
     public String email;
     public String phoneNo;
     public String clg;
 
+    //Social feature specific
+    public List<String> likedPosts;
     public GyanithUser(String gyanithId,String name,String userName,String email,String phoneNo,String clg){
         this.gyanithId = gyanithId;
         this.name = name;

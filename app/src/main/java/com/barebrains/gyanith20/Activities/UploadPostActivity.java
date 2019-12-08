@@ -18,8 +18,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.barebrains.gyanith20.Adapters.postImagesAdaptor;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.Services.PostUploadService;
+import com.barebrains.gyanith20.Statics.Util;
 import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
 
 public class UploadPostActivity extends AppCompatActivity {
@@ -33,12 +35,12 @@ public class UploadPostActivity extends AppCompatActivity {
         final String[] imgPaths = bundle.getStringArray("EXTRA_IMG_PATHS");
 
         if (imgPaths != null)
-            imgBitmaps = getImgBitmaps(imgPaths);
+            imgBitmaps = Util.getImgBitmaps(imgPaths);
         else
             Log.d("asd","img path null");
 
         ViewPager viewPager = findViewById(R.id.uploadpost_viewpager);
-        viewPager.setAdapter(new ImageViewPagerAdaptor(this));
+        viewPager.setAdapter(new postImagesAdaptor(this,imgBitmaps));
         viewPager.setOffscreenPageLimit(imgBitmaps.length - 1);
 
         SpringDotsIndicator indicator = findViewById(R.id.uploadpost_dots);
@@ -62,53 +64,8 @@ public class UploadPostActivity extends AppCompatActivity {
         EditText captionsTxt = findViewById(R.id.post_captions);
         intent.putExtra("EXTRA_CAPTIONS",captionsTxt.getText().toString());
         startService(intent);
-
-    }
-    class ImageViewPagerAdaptor extends PagerAdapter {
-
-        LayoutInflater layoutInflater;
-
-        public ImageViewPagerAdaptor(Context context){
-            layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-        @Override
-        public int getCount() {
-            return imgBitmaps.length;
-        }
-
-        @Override
-        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view == ((LinearLayout) object);
-        }
-
-        @NonNull
-        @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            View itemView = layoutInflater.inflate(R.layout.item_upload_img, container, false);
-            ImageView imageView = (ImageView) itemView.findViewById(R.id.pager_item_img);
-
-            if (imgBitmaps[position] != null)
-                imageView.setImageBitmap(imgBitmaps[position]);
-
-            container.addView(itemView);
-            return itemView;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((LinearLayout) object);
-        }
     }
 
-    private Bitmap[] getImgBitmaps(String[] imgPaths){
-        Bitmap[] bitmaps = new Bitmap[imgPaths.length];
-        for (int i =0;i<imgPaths.length;i++) {
-            bitmaps[i] = BitmapFactory.decodeFile(imgPaths[i]);
-            Log.d("asd",imgPaths[i]);
-        }
-
-        return bitmaps;
-    }
 }
 
 
