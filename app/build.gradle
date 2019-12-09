@@ -1,3 +1,5 @@
+import org.w3c.dom.DOMImplementation
+
 apply plugin: 'com.android.application'
 
 android {
@@ -37,6 +39,8 @@ dependencies {
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'com.firebaseui:firebase-ui-database:6.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

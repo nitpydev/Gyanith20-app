@@ -2,8 +2,17 @@ package com.barebrains.gyanith20.Statics;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.util.Pair;
+
+import java.security.PublicKey;
+import java.util.List;
+
+import javax.crypto.interfaces.PBEKey;
 
 public class Util {
     public static String UriAbsPath(Context context,Uri imgUri){
@@ -18,6 +27,23 @@ public class Util {
         String path = cursor.getString(columnIndex);
         cursor.close();
         return path;
+    }
+
+    public static Bitmap[] getImgBitmaps(String[] imgPaths){
+        Bitmap[] bitmaps = new Bitmap[imgPaths.length];
+        for (int i =0;i<imgPaths.length;i++) {
+            bitmaps[i] = BitmapFactory.decodeFile(imgPaths[i]);
+        }
+
+        return bitmaps;
+    }
+
+    public static Pair<Integer,String>[] arrayToPair(List<String> array){
+        Pair<Integer,String>[] pairs = new Pair[array.size()];
+        for (int i=0;i<array.size();i++)
+            pairs[i] = new Pair<>(i,array.get(i));
+
+        return pairs;
     }
 
     public static String BuildTimeAgoString(long postTime){
