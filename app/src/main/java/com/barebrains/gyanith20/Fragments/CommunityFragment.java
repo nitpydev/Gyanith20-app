@@ -9,26 +9,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.barebrains.gyanith20.Activities.LoginActivity;
 import com.barebrains.gyanith20.Activities.UploadPostActivity;
+import com.barebrains.gyanith20.Adapters.feedAdapter;
 import com.barebrains.gyanith20.Models.Post;
 import com.barebrains.gyanith20.Others.PostViewHolder;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.Statics.Util;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.database.paging.DatabasePagingOptions;
+import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
+import com.firebase.ui.database.paging.LoadingState;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.polyak.iconswitch.IconSwitch;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -37,36 +41,50 @@ public class CommunityFragment extends Fragment {
     private static final int UPLOAD_POST_COMPLETED = 18;
     private static final int PERMISSIONS_REQUEST = 25;
 
-    private FirebaseRecyclerAdapter adapter;
-
+    private FirebaseRecyclerPagingAdapter<Post, PostViewHolder> adapter;
+    //private feedAdapter hotFeedAdapter;
+   // private feedAdapter trendingFeedAdapter;
+    private ProgressBar feedRefresh;
+    private RecyclerView hotPostFeed;
+    private RecyclerView trendingPostFeed;
     public CommunityFragment() {
         // Required empty public constructor
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Query query = FirebaseDatabase.getInstance().getReference().child("posts")
-                .limitToLast(15);
-        FirebaseRecyclerOptions<Post> options =
-                new FirebaseRecyclerOptions.Builder<Post>()
-                .setQuery(query,Post.class)
-                .setLifecycleOwner(this)
-                .build();
-
-        adapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>(options) {
+        SetUpHotFeed();
+       /* hotFeedAdapter = new feedAdapter("Hot",getContext(), 2, query, new feedAdapter.PageLoadListener() {
             @Override
-            protected void onBindViewHolder(@NonNull PostViewHolder viewHolder, int i, @NonNull Post post) {
-                viewHolder.FillPost(getContext(),post);
+            public void OnStartLoad() {
+                if (feedRefresh != null)
+                feedRefresh.setVisibility(View.VISIBLE);
             }
 
-            @NonNull
             @Override
-            public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View item = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_feedpost,parent,false);
-                return new PostViewHolder(item);
+            public void OnLoaded() {
+                if (feedRefresh != null)
+                feedRefresh.setVisibility(View.GONE);
+
             }
-        };
+        });
+
+        Query trendingQuery = FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("likes");
+        trendingFeedAdapter = new feedAdapter("Trend",getContext(), 2, trendingQuery, new feedAdapter.PageLoadListener() {
+            @Override
+            public void OnStartLoad() {
+                if (feedRefresh != null)
+                    feedRefresh.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void OnLoaded() {
+                if (feedRefresh != null)
+                    feedRefresh.setVisibility(View.GONE);
+
+            }
+        });
+        */
     }
 
     @Nullable
@@ -80,14 +98,69 @@ public class CommunityFragment extends Fragment {
                NewPost();
             }
         });
+        ((IconSwitch)root.findViewById(R.id.trendingSwitch)).setCheckedChangeListener(new IconSwitch.CheckedChangeListener() {
+            @Override
+            public void onCheckChanged(IconSwitch.Checked current) {
 
-        RecyclerView feedView = root.findViewById(R.id.postfeed);
-        feedView.setHasFixedSize(true);
-        feedView.setAdapter(adapter);
-        feedView.setLayoutManager(new LinearLayoutManager(getContext()));
+              /*  if (current == IconSwitch.Checked.RIGHT) {
+                    hotPostFeed.setVisibility(View.GONE);
+                    trendingPostFeed.setVisibility(View.VISIBLE);
+                } else {
+                    hotPostFeed.setVisibility(View.VISIBLE);
+                    trendingPostFeed.setVisibility(View.GONE);
+                }
+
+               */
+            }
+        });
+
+        hotPostFeed = root.findViewById(R.id.hot_post_feed);
+        hotPostFeed.setVisibility(View.VISIBLE);
+
+        hotPostFeed.setHasFixedSize(true);
+        hotPostFeed.setAdapter(adapter);
+        hotPostFeed.setLayoutManager(new LinearLayoutManager(getContext()));
+        feedRefresh = root.findViewById(R.id.progressBar);
+        feedRefresh.setVisibility(View.GONE);
+        /*
+
+        feedRefresh = root.findViewById(R.id.progressBar);
+
+        hotPostFeed = root.findViewById(R.id.hot_post_feed);
+        hotPostFeed.setVisibility(View.VISIBLE);
+
+        hotPostFeed.setHasFixedSize(true);
+        hotPostFeed.setAdapter(hotFeedAdapter);
+        hotPostFeed.setLayoutManager(new LinearLayoutManager(getContext()));
+        hotPostFeed.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (!recyclerView.canScrollVertically(1))
+                    hotFeedAdapter.getNextPageItems();
+            }
+        });
+
+
+        trendingPostFeed = root.findViewById(R.id.treading_post_feed);
+        trendingPostFeed.setVisibility(View.GONE);
+
+        trendingPostFeed.setHasFixedSize(true);
+        trendingPostFeed.setAdapter(trendingFeedAdapter);
+        trendingPostFeed.setLayoutManager(new LinearLayoutManager(getContext()));
+        trendingPostFeed.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (!recyclerView.canScrollVertically(1))
+                    trendingFeedAdapter.getNextPageItems();
+            }
+        });
 
        // Intent i = new Intent(getContext(), LoginActivity.class);
        // startActivity(i);
+
+         */
 
         return root;
     }
@@ -107,6 +180,40 @@ public class CommunityFragment extends Fragment {
         intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(intent, IMAGE_GALLERY_CODE);
+    }
+
+    private void SetUpHotFeed(){
+        Query query = FirebaseDatabase.getInstance().getReference().child("posts");
+        PagedList.Config config = new PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setPrefetchDistance(3)
+                .setPageSize(1)
+                .build();
+
+        DatabasePagingOptions<Post> options = new DatabasePagingOptions.Builder<Post>()
+                .setLifecycleOwner(this)
+                .setQuery(query, config, Post.class)
+                .build();
+
+        adapter = new FirebaseRecyclerPagingAdapter<Post, PostViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull PostViewHolder viewHolder, int position, @NonNull Post model) {
+                viewHolder.FillPost(getContext(),model);
+            }
+
+            @Override
+            protected void onLoadingStateChanged(@NonNull LoadingState state) {
+
+            }
+
+            @NonNull
+            @Override
+            public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View item = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_feedpost,parent,false);
+                return new PostViewHolder(item);
+            }
+        };
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -156,5 +263,16 @@ public class CommunityFragment extends Fragment {
             case UPLOAD_POST_COMPLETED:
                 Log.d("gyanith20", "Post_Uploaded");
         }
+    }
+
+    @Override
+    public void onDestroy() {
+      /*  if (hotFeedAdapter != null)
+        hotFeedAdapter.removeListeners();
+        if (trendingFeedAdapter != null)
+        trendingFeedAdapter.removeListeners();
+
+       */
+        super.onDestroy();
     }
 }

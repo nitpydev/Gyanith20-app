@@ -15,11 +15,41 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:clickable="true"
-        app:srcCompat="@drawable/ic_baseline_add_24px" />
+        app:srcCompat="@drawable/ic_baseline_add_24px"
+        android:focusable="true" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/postfeed"
+        android:id="@+id/hot_post_feed"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/treading_post_feed"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+    <com.polyak.iconswitch.IconSwitch
+        android:id="@+id/trendingSwitch"
+        android:layout_width="130dp"
+        android:layout_height="70dp"
+        android:layout_gravity="bottom|left"
+        android:layout_margin="8dp"
+        android:text="Hot"
+        app:isw_icon_left="@drawable/ic_hot_24dp"
+        app:isw_icon_right="@drawable/ic_baseline_favorite_24px"
+        app:isw_icon_size="30dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:indeterminate="true" />
 
 </FrameLayout>

@@ -46,7 +46,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     public void FillPost(Context context, Post post){
         userName.setText(post.username);
         captions.setText(post.caption);
-        likeCount.setText(Long.toString(post.likes));
+        likeCount.setText(Long.toString(post.likes).substring(1));
         bitmaps = new Bitmap[post.imgIds.size()];
         adaptor = new postImagesAdaptor(context,bitmaps);
         viewPager.setAdapter(adaptor);
