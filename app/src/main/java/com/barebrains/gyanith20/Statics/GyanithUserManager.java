@@ -41,7 +41,7 @@ public class GyanithUserManager extends AppCompatActivity {
 
     private static GyanithUser loggedUser;
 
-    private static String url = "http://gyanith.org/api.php?type=w&action=fetch&key=2ppagy0";
+    private static String url = "example.com"; //url is not yet ready, dummy url is implemented
 
     public static GyanithUserManager getInstance() {
 

@@ -11,18 +11,19 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.barebrains.gyanith20.Adapters.eventCategoriesAdapter;
 import com.barebrains.gyanith20.Models.eventitem;
 import com.barebrains.gyanith20.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,8 +32,9 @@ import java.util.Date;
 
 public class EventCategoriesActivity extends AppCompatActivity {
 
-    String s;
-    DatabaseReference ref;
+    String s,name,date,eventtag;
+    String url_event = "http://gyanith.org/api.php?type=w&action=fetch&key=2ppagy0";
+    String jsonobject;
     eventCategoriesAdapter ada;
     ArrayList<eventitem> items;
     eventitem it;
@@ -48,7 +50,7 @@ public class EventCategoriesActivity extends AppCompatActivity {
             getWindow().setExitTransition(new Explode());
         }
 
-        ref= FirebaseDatabase.getInstance().getReference();
+
         items=new ArrayList<eventitem>();
         setContentView(R.layout.activity_event_categories);
         lvi=findViewById(R.id.eveitlv);
@@ -72,32 +74,56 @@ public class EventCategoriesActivity extends AppCompatActivity {
         s=i.getStringExtra("category");
         ada=new eventCategoriesAdapter(R.layout.item_event_category,items,this);
         tag = new ArrayList();
-        ref.child(s).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                items.clear();
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    try{
-                        it=new eventitem(snapshot.child("name").getValue().toString(),timeFormatter(snapshot.child("timestamp").getValue().toString()),snapshot.getKey().toString());
-                        items.add(it);
-                        tag.add(snapshot.getKey());
-                    }catch (Exception e){
-                        e.printStackTrace();
+
+        //Json request
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url_event, new Response.Listener<JSONArray>()
+        {
+                    @Override
+                    public void onResponse(JSONArray jsonArray) {
+
+
+
+                            for(int i = 0; i < jsonArray.length(); i++) {
+                                try
+                                {
+                                JSONObject jsonobject = jsonArray.getJSONObject(i);
+                                name = jsonobject.getString("name");
+
+                                date = jsonobject.getString("date"); // json file didnt have date attribute,and will be added soon
+                                eventtag = jsonobject.getString("id");
+
+                                it=new eventitem(name,timeFormatter(date),eventtag);
+                                items.add(it);
+                                tag.add(eventtag);
+                                }
+                                catch (JSONException e) {
+                                    //catch exeption
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                            if(items.isEmpty())
+                                ((TextView)findViewById(R.id.textView14)).setVisibility(View.VISIBLE);
+                            else
+                                ((TextView)findViewById(R.id.textView14)).setVisibility(View.GONE);
+                                ((ProgressBar)findViewById(R.id.catload)).setVisibility(View.GONE);
+                            ada.notifyDataSetChanged();
+
                     }
-
-
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                       Toast.makeText(EventCategoriesActivity.this, volleyError.getMessage(),Toast.LENGTH_LONG).show();
+                    }
                 }
-                if(items.isEmpty()) ((TextView)findViewById(R.id.textView14)).setVisibility(View.VISIBLE);
-                else ((TextView)findViewById(R.id.textView14)).setVisibility(View.GONE);
-                ((ProgressBar)findViewById(R.id.catload)).setVisibility(View.GONE);
-                ada.notifyDataSetChanged();
-            }
+        );
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
 
-            }
-        });
 
         lvi.setAdapter(ada);
 
