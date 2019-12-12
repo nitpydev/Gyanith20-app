@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.barebrains.gyanith20.Fragments.CommunityFragment;
@@ -34,8 +35,15 @@ public class MainActivity extends AppCompatActivity {
     private TextView title;
     boolean doubleBackToExitPressedOnce;
     private ImageView imageView;
-    Context context;
     SharedPreferences notif;
+
+    private FragmentManager fragmentManager;
+    private Fragment activeFragment;
+    private HomeFragment homeFragment;
+    private ScheduleFragment scheduleFragment;
+    private FavouritesFragment favouritesFragment;
+    private NotificationFragment notificationFragment;
+    private CommunityFragment communityFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -44,25 +52,40 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    replace(new HomeFragment());
+                    if (homeFragment == null)
+                        initFragment((homeFragment = new HomeFragment()), "1");
+                    else
+                        setActiveFragment(homeFragment);
                     title.setText(R.string.topbar_home);
                     return true;
                 case R.id.navigation_schedule:
-                    replace(new ScheduleFragment());
+                    if (scheduleFragment == null)
+                        initFragment((scheduleFragment = new ScheduleFragment()), "2");
+                    else
+                        setActiveFragment(scheduleFragment);
                     title.setText(R.string.topbar_schedule);
                     return true;
                 case R.id.navigation_favourites:
-                    replace(new FavouritesFragment());
+                    if (favouritesFragment == null)
+                        initFragment((favouritesFragment = new FavouritesFragment()), "3");
+                    else
+                        setActiveFragment(favouritesFragment);
                     title.setText(R.string.topbar_favourites);
                     return true;
                 case R.id.navigation_notifications:
-                   replace(new NotificationFragment());
+                    if (notificationFragment == null)
+                        initFragment((notificationFragment = new NotificationFragment()), "4");
+                    else
+                        setActiveFragment(notificationFragment);
                     title.setText(R.string.topbar_notification);
                     item.setIcon(R.drawable.ic_baseline_notifications_24px);
                     notif.edit().putBoolean("newnot",false).apply();
                     return true;
                 case R.id.navigation_community:
-                    replace(new CommunityFragment());
+                    if (communityFragment == null)
+                        initFragment((communityFragment = new CommunityFragment()), "5");
+                    else
+                        setActiveFragment(communityFragment);
                     title.setText("Community");
                     return true;
             }
@@ -70,11 +93,23 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private void replace(Fragment m){
-        Fragment f=m;
-        FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
+    private void setActiveFragment(Fragment fragment)
+    {
+        FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.replace(R.id.mainframe,f).commit();
+        ft.hide(activeFragment);
+        ft.show(fragment).commit();
+        activeFragment = fragment;
+    }
+
+    private void initFragment(Fragment fragment,String tag){
+        FragmentTransaction ft = fragmentManager.beginTransaction()
+                .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .add(R.id.mainframe,fragment,tag);
+        if (activeFragment != null)
+            ft.hide(activeFragment);
+        ft.commit();
+        activeFragment = fragment;
     }
 
     @Override
@@ -104,22 +139,17 @@ public class MainActivity extends AppCompatActivity {
             getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
             getWindow().setEnterTransition(new Fade());
         }
-
         setContentView(R.layout.activity_main);
+
         doubleBackToExitPressedOnce = false;
+        fragmentManager = getSupportFragmentManager();
         imageView=findViewById(R.id.topbaricon);
-        context=this;
+        title = findViewById(R.id.title);
+        notif = getSharedPreferences(getString(R.string.package_name), Context.MODE_PRIVATE);
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
 
-        notif = context.getSharedPreferences("com.barebrains.Gyanith19", Context.MODE_PRIVATE);
-        botnav=findViewById(R.id.navigation);
-        title=findViewById(R.id.title);
-
-        BottomNavigationView navigation = (BottomNavigationView) botnav;
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        Fragment f=new HomeFragment();
-        FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
-        ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.replace(R.id.mainframe,f).commit();
+        navigation.setSelectedItemId(R.id.navigation_home);
 
         ((TextView)findViewById(R.id.title)).setText(R.string.topbar_home);
 
@@ -135,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,"Presented to you by HV,BP,KR,SR,AM",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this,"Presented to you by HV,BP,KR,SR,AM",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -143,5 +173,4 @@ public class MainActivity extends AppCompatActivity {
             navigation.getMenu().getItem(3).setIcon(R.drawable.ic_notification);
         }
 }
-
 }

@@ -16,9 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.paging.PagedList;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.barebrains.gyanith20.Activities.UploadPostActivity;
@@ -27,15 +24,8 @@ import com.barebrains.gyanith20.Models.Post;
 import com.barebrains.gyanith20.Others.PostViewHolder;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.Statics.Util;
-import com.firebase.ui.database.paging.DatabasePagingOptions;
 import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
-import com.firebase.ui.database.paging.LoadingState;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.polyak.iconswitch.IconSwitch;
 
 import static android.app.Activity.RESULT_OK;
@@ -45,8 +35,6 @@ public class CommunityFragment extends Fragment {
     private static final int UPLOAD_POST_COMPLETED = 18;
     private static final int PERMISSIONS_REQUEST = 25;
 
-    private FirebaseRecyclerPagingAdapter<Post, PostViewHolder> hotFeedAdapter;
-    private FirebaseRecyclerPagingAdapter<Post, PostViewHolder> trendingFeedAdapter;
     public CommunityFragment() {
         // Required empty public constructor
     }
@@ -54,7 +42,6 @@ public class CommunityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
     private void NewPostBtn(){
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)
@@ -71,8 +58,6 @@ public class CommunityFragment extends Fragment {
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(intent, IMAGE_GALLERY_CODE);
     }
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -124,7 +109,6 @@ public class CommunityFragment extends Fragment {
 
         return root;
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode != PERMISSIONS_REQUEST)
@@ -143,7 +127,6 @@ public class CommunityFragment extends Fragment {
         }
         NewPostBtn();
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK)
@@ -174,7 +157,6 @@ public class CommunityFragment extends Fragment {
                 Log.d("gyanith20", "Post_Uploaded");
         }
     }
-
     @Override
     public void onDestroy() {
       /*  if (hotFeedAdapter != null)

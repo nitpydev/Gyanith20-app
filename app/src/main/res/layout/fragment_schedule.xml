@@ -64,7 +64,7 @@
 
                 <fragment
                     android:id="@+id/fragment"
-                    android:name="com.barebrains.gyanith20.ScheduleTab0_Fragment"
+                    android:name="com.barebrains.gyanith20.Fragments.ScheduleTab0_Fragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:layout="@layout/fragment_schtab0" />

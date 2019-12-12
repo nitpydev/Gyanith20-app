@@ -22,6 +22,7 @@ public class gyanith20 extends Application {
     }
 
     private void HandleUserManagement(){
+        GyanithUserManager.SignInUser(this,",","",null);
         GyanithUser user = GyanithUserManager.RetriveGyanithUser(this);
        if (user != null) {
            GyanithUserManager.setLoggedUser(user);
