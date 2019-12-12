@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,13 +36,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 
-public class GyanithUserManager extends AppCompatActivity {
+public class GyanithUserManager {
 
     private static GyanithUserManager instance;
 
     private static GyanithUser loggedUser;
-
-    private static String url = "example.com"; //url is not yet ready, dummy url is implemented
 
     public static GyanithUserManager getInstance() {
 
@@ -63,9 +62,9 @@ public class GyanithUserManager extends AppCompatActivity {
             Log.d("asd", "impossible Error");
     }
 
-    public static void SignInUser(final Context context)//String username,String password,OnLoginResult result)
+    public static void SignInUser(final Context context,String username,String password,OnLoginResult result)
     {
-        GyanithSignIn("", "", new OnLoginResult() {
+        GyanithSignIn(context,"", "", new OnLoginResult() {
             @Override
             public void OnResult(GyanithUser user) {
                 loggedUser = user;
@@ -118,17 +117,44 @@ public class GyanithUserManager extends AppCompatActivity {
                 });
     }
 
-    private static void GyanithSignIn(final String username, final String password, OnLoginResult result) {
-        //login user with gyanith server()
-        // after receiving json response create a gyanith user
-        //and use result.OnResult(gyanithUser);
+    private static void GyanithSignIn(Context context,final String username, final String password, final OnLoginResult result) {
+
+        StringRequest userLoginRequest = new StringRequest(Request.Method.GET, buildUrl(username, password), new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    GyanithUserJsonResponse user = (new Gson()).fromJson(response, GyanithUserJsonResponse.class);
+                    GyanithUser gyanithUser = new GyanithUser(user.gyanithId
+                            , user.name
+                            , user.username
+                            , user.email
+                            , user.phoneNumber
+                            , user.clg);
+                    result.OnResult(gyanithUser);
+                }
+                catch (JsonParseException e) {
+                    Log.d("asd",e.toString());//Handle Error-------------------------
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Handle Error---------------------------------
+            }
+        });
+
+       // Volley.newRequestQueue(context).add(userLoginRequest); //This will be used after backend ready
 
 
         GyanithUser user = new GyanithUser("154asdad", "pushpavel", "pixel54", "jpushpavel@gmail.com", "8468494545", "NitPy");
         //user is dummy for now
         result.OnResult(user);
-        requestJSON(); //requesting JSON from url
     }
+
+    private static String buildUrl(String username,String password){
+        return "https://gyanith.org/?userApirequest?" + username + password;//DUMMY FOR NOW (will be updated after backend)
+    }
+
 
     private static void SaveGyanithUser(Context context, GyanithUser user) {
         SharedPreferences sp = context.getSharedPreferences(context.getString(R.string.package_name), Context.MODE_PRIVATE);
@@ -138,56 +164,6 @@ public class GyanithUserManager extends AppCompatActivity {
                 .apply();
     }
 
-    private static void requestJSON() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        try {
-
-                            JSONObject obj = new JSONObject(response);
-                            if (obj.optString("status").equals("true")) { // User status "true"
-
-                                ArrayList<Userinfo> UserinfoArrayList = new ArrayList<>();
-                                JSONArray dataArray = obj.getJSONArray("data");
-
-                                for (int i = 0; i < dataArray.length(); i++) {
-
-                                    Userinfo info = new Userinfo();
-                                    JSONObject dataobj = dataArray.getJSONObject(i);
-                                    // setters are to be implemented here, until jason responce is implemented
-
-                                    UserinfoArrayList.add(info);
-
-                                }
-
-                            } else {
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //displaying the error  if occurrs
-                    }
-                });
-
-        //creating a request queue
-        RequestQueue requestQueue = Volley.newRequestQueue(instance);
-
-        //adding the string request to request queue
-        requestQueue.add(stringRequest);
-
-    }
-
-
-
-
     public static GyanithUser RetriveGyanithUser(Context context){
         SharedPreferences sp = context.getSharedPreferences(context.getString(R.string.package_name), Context.MODE_PRIVATE);
         String json = sp.getString(context.getString(R.string.gyanithUserKey),"");
@@ -196,7 +172,20 @@ public class GyanithUserManager extends AppCompatActivity {
 
         Gson gson = new Gson();
         return gson.fromJson(json,GyanithUser.class);
-    }}
+    }
+
+    private class GyanithUserJsonResponse{
+        public String username;
+        public String name;
+        public String email;
+        public String gyanithId;
+        public String phoneNumber;
+        public String clg;
+
+        public GyanithUserJsonResponse(){}
+        //Other Fields will be updated following the backend
+    }
+}
 
 
 

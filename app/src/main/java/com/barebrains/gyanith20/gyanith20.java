@@ -28,11 +28,11 @@ public class gyanith20 extends Application {
     }
 
     private void HandleUserManagement(){
-
-        GyanithUserManager.SignInUser(this);
-        //GyanithUser user = GyanithUserManager.RetriveGyanithUser(this);
-       //if (user != null)
-           //GyanithUserManager.setLoggedUser(user);
+        GyanithUser user = GyanithUserManager.RetriveGyanithUser(this);
+       if (user != null) {
+           GyanithUserManager.setLoggedUser(user);
+           PostManager.getInstance().Initialize();
+       }
     }
 
     private void CreateProgressNotificationChannel(){
