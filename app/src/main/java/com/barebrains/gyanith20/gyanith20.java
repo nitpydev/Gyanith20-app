@@ -4,17 +4,11 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.NavUtils;
 
 import com.barebrains.gyanith20.Models.GyanithUser;
+import com.barebrains.gyanith20.Models.Post;
 import com.barebrains.gyanith20.Statics.GyanithUserManager;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
+import com.barebrains.gyanith20.Statics.PostManager;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class gyanith20 extends Application {

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.barebrains.gyanith20.Models.Post;
 import com.barebrains.gyanith20.R;
@@ -23,6 +24,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -38,9 +41,20 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Set;
 
 public class  PostManager{
+
+    private static PostManager instance;
+    public static PostManager getInstance(){
+        if (instance == null)
+            instance = new PostManager();
+        return instance;
+    }
+
     public static ArrayList<Pair<String,UploadTask>>  uploadImages(Context context, String[] imgPaths){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference().child("PostImages");
@@ -60,7 +74,7 @@ public class  PostManager{
     }
 
     public static void CommitPostToDB(Post post, final Callback result){
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference postRef = rootRef.child("posts").push();
         post.postId = postRef.getKey();
         postRef.setValue(post).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -69,7 +83,17 @@ public class  PostManager{
                 result.OnResult(null);
             }
         });
+        rootRef.child("postCount").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                rootRef.child("postCount").setValue(dataSnapshot.getValue(Long.class) + 1);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public static void getPostImage(Context context, final String imgId, final Callback<Bitmap> callback){
@@ -99,13 +123,6 @@ public class  PostManager{
        });
     }
 
-
-
-    public static void getFeed(int numberOfPosts,int from,Callback<Post[]> callback){
-        DatabaseReference posts = FirebaseDatabase.getInstance().getReference().child("posts");
-
-    }
-
     public static void getSpecificPost(String postId, final Callback<Post> callback){
         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
         DatabaseReference postRef = root.child("posts").child(postId);
@@ -128,8 +145,112 @@ public class  PostManager{
     private static String generateUniqueId(){
         return FirebaseDatabase.getInstance().getReference().push().getKey();
     }
-
     public interface Callback<T>{
         void OnResult(T t);
+    }
+
+
+
+
+
+    //LIKES MANAGEMENT
+    private Set<String> likedPosts;
+
+    public void Initialize()
+    {
+
+        getRemoteLikedPosts(new PostManager.Callback<String[]>() {
+            @Override
+            public void OnResult(String[] strings) {
+                likedPosts = new HashSet<>(Arrays.asList(strings));
+            }
+        });
+    }
+
+    public boolean isLiked(String postId)
+    {
+        if (likedPosts == null) {
+            Log.d("asd","isLiked : not initialized");
+            return false;
+        }
+
+        return likedPosts.contains(postId);
+    }
+
+    public void likePost(String postId)
+    {
+        likedPosts.add(postId);
+        FirebaseDatabase.getInstance().getReference().child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
+                .child("likedPosts").child(postId).setValue(postId);
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("posts").child(postId)
+                .child("likes");
+        reference.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                Long p = mutableData.getValue(Long.class);
+                if (p == null) {
+                    return Transaction.success(mutableData);
+                }
+                p--;
+                // Set value and report transaction success
+                mutableData.setValue(p);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+            }
+        });
+    }
+    public void dislikePost(String postId){
+        likedPosts.remove(postId);
+        FirebaseDatabase.getInstance().getReference().child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
+                .child("likedPosts").child(postId).removeValue();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("posts").child(postId)
+                .child("likes");
+        reference.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                Long p = mutableData.getValue(Long.class);
+                if (p == null) {
+                    return Transaction.success(mutableData);
+                }
+                p++;
+                // Set value and report transaction success
+                mutableData.setValue(p);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+            }
+        });
+    }
+
+    private void getRemoteLikedPosts(final PostManager.Callback<String[]> callback){
+        FirebaseDatabase.getInstance().getReference().child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
+                .child("likedPosts").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String[] posts = new String[(int) dataSnapshot.getChildrenCount()];
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                for (int i = 0;i<posts.length;i++)
+                    posts[i] = iterator.next().getValue(String.class);
+
+                callback.OnResult(posts);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

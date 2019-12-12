@@ -109,7 +109,6 @@ public class PostUploadService extends Service {
         int totalProgress = 0;
         for (Pair<String,UploadTask> imgUpload : imgUploads)
             totalProgress += ImgProgress.get(imgUpload.first);
-        Log.d("asd","progress : " + totalProgress);
         return totalProgress;
     }
 

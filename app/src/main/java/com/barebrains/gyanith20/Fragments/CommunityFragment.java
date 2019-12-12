@@ -19,9 +19,10 @@ import androidx.fragment.app.Fragment;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.barebrains.gyanith20.Activities.UploadPostActivity;
-import com.barebrains.gyanith20.Adapters.feedAdapter;
+import com.barebrains.gyanith20.Adapters.feedViewPagerAdapter;
 import com.barebrains.gyanith20.Models.Post;
 import com.barebrains.gyanith20.Others.PostViewHolder;
 import com.barebrains.gyanith20.R;
@@ -30,8 +31,11 @@ import com.firebase.ui.database.paging.DatabasePagingOptions;
 import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
 import com.firebase.ui.database.paging.LoadingState;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.polyak.iconswitch.IconSwitch;
 
 import static android.app.Activity.RESULT_OK;
@@ -41,131 +45,17 @@ public class CommunityFragment extends Fragment {
     private static final int UPLOAD_POST_COMPLETED = 18;
     private static final int PERMISSIONS_REQUEST = 25;
 
-    private FirebaseRecyclerPagingAdapter<Post, PostViewHolder> adapter;
-    //private feedAdapter hotFeedAdapter;
-   // private feedAdapter trendingFeedAdapter;
-    private ProgressBar feedRefresh;
-    private RecyclerView hotPostFeed;
-    private RecyclerView trendingPostFeed;
+    private FirebaseRecyclerPagingAdapter<Post, PostViewHolder> hotFeedAdapter;
+    private FirebaseRecyclerPagingAdapter<Post, PostViewHolder> trendingFeedAdapter;
     public CommunityFragment() {
         // Required empty public constructor
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SetUpHotFeed();
-       /* hotFeedAdapter = new feedAdapter("Hot",getContext(), 2, query, new feedAdapter.PageLoadListener() {
-            @Override
-            public void OnStartLoad() {
-                if (feedRefresh != null)
-                feedRefresh.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void OnLoaded() {
-                if (feedRefresh != null)
-                feedRefresh.setVisibility(View.GONE);
-
-            }
-        });
-
-        Query trendingQuery = FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("likes");
-        trendingFeedAdapter = new feedAdapter("Trend",getContext(), 2, trendingQuery, new feedAdapter.PageLoadListener() {
-            @Override
-            public void OnStartLoad() {
-                if (feedRefresh != null)
-                    feedRefresh.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void OnLoaded() {
-                if (feedRefresh != null)
-                    feedRefresh.setVisibility(View.GONE);
-
-            }
-        });
-        */
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View root = inflater.inflate(R.layout.fragment_community,container,false);
-        ((FloatingActionButton)root.findViewById(R.id.add_post_btn)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               NewPost();
-            }
-        });
-        ((IconSwitch)root.findViewById(R.id.trendingSwitch)).setCheckedChangeListener(new IconSwitch.CheckedChangeListener() {
-            @Override
-            public void onCheckChanged(IconSwitch.Checked current) {
-
-              /*  if (current == IconSwitch.Checked.RIGHT) {
-                    hotPostFeed.setVisibility(View.GONE);
-                    trendingPostFeed.setVisibility(View.VISIBLE);
-                } else {
-                    hotPostFeed.setVisibility(View.VISIBLE);
-                    trendingPostFeed.setVisibility(View.GONE);
-                }
-
-               */
-            }
-        });
-
-        hotPostFeed = root.findViewById(R.id.hot_post_feed);
-        hotPostFeed.setVisibility(View.VISIBLE);
-
-        hotPostFeed.setHasFixedSize(true);
-        hotPostFeed.setAdapter(adapter);
-        hotPostFeed.setLayoutManager(new LinearLayoutManager(getContext()));
-        feedRefresh = root.findViewById(R.id.progressBar);
-        feedRefresh.setVisibility(View.GONE);
-        /*
-
-        feedRefresh = root.findViewById(R.id.progressBar);
-
-        hotPostFeed = root.findViewById(R.id.hot_post_feed);
-        hotPostFeed.setVisibility(View.VISIBLE);
-
-        hotPostFeed.setHasFixedSize(true);
-        hotPostFeed.setAdapter(hotFeedAdapter);
-        hotPostFeed.setLayoutManager(new LinearLayoutManager(getContext()));
-        hotPostFeed.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (!recyclerView.canScrollVertically(1))
-                    hotFeedAdapter.getNextPageItems();
-            }
-        });
-
-
-        trendingPostFeed = root.findViewById(R.id.treading_post_feed);
-        trendingPostFeed.setVisibility(View.GONE);
-
-        trendingPostFeed.setHasFixedSize(true);
-        trendingPostFeed.setAdapter(trendingFeedAdapter);
-        trendingPostFeed.setLayoutManager(new LinearLayoutManager(getContext()));
-        trendingPostFeed.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (!recyclerView.canScrollVertically(1))
-                    trendingFeedAdapter.getNextPageItems();
-            }
-        });
-
-       // Intent i = new Intent(getContext(), LoginActivity.class);
-       // startActivity(i);
-
-         */
-
-        return root;
-    }
-
-    private void NewPost(){
+    private void NewPostBtn(){
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)
         {
@@ -182,39 +72,59 @@ public class CommunityFragment extends Fragment {
         startActivityForResult(intent, IMAGE_GALLERY_CODE);
     }
 
-    private void SetUpHotFeed(){
-        Query query = FirebaseDatabase.getInstance().getReference().child("posts");
-        PagedList.Config config = new PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setPrefetchDistance(3)
-                .setPageSize(1)
-                .build();
 
-        DatabasePagingOptions<Post> options = new DatabasePagingOptions.Builder<Post>()
-                .setLifecycleOwner(this)
-                .setQuery(query, config, Post.class)
-                .build();
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        adapter = new FirebaseRecyclerPagingAdapter<Post, PostViewHolder>(options) {
+        View root = inflater.inflate(R.layout.fragment_community,container,false);
+        ((FloatingActionButton)root.findViewById(R.id.add_post_btn)).setOnClickListener(new View.OnClickListener() {
             @Override
-            protected void onBindViewHolder(@NonNull PostViewHolder viewHolder, int position, @NonNull Post model) {
-                viewHolder.FillPost(getContext(),model);
+            public void onClick(View v) {
+                NewPostBtn();
+            }
+        });
+
+        final ViewPager viewPager = root.findViewById(R.id.feedViewPager);
+
+        final IconSwitch iconSwitch = (IconSwitch)root.findViewById(R.id.trendingSwitch);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
             @Override
-            protected void onLoadingStateChanged(@NonNull LoadingState state) {
-
+            public void onPageSelected(int position) {
+                if (position == 0)
+                    iconSwitch.setChecked(IconSwitch.Checked.LEFT);
+                else
+                    iconSwitch.setChecked(IconSwitch.Checked.RIGHT);
             }
 
-            @NonNull
             @Override
-            public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View item = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_feedpost,parent,false);
-                return new PostViewHolder(item);
+            public void onPageScrollStateChanged(int state) {
+
             }
-        };
+        });
+        iconSwitch.setCheckedChangeListener(new IconSwitch.CheckedChangeListener() {
+            @Override
+            public void onCheckChanged(IconSwitch.Checked current) {
+
+                if (current == IconSwitch.Checked.RIGHT)
+                    viewPager.setCurrentItem(1);
+                else
+                    viewPager.setCurrentItem(0);
+            }
+        });
+
+
+        viewPager.setAdapter(new feedViewPagerAdapter(getContext(),this,(ProgressBar)root.findViewById(R.id.progressBar)));
+        viewPager.setOffscreenPageLimit(1);
+
+        return root;
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode != PERMISSIONS_REQUEST)
@@ -231,7 +141,7 @@ public class CommunityFragment extends Fragment {
             Toast.makeText(getContext(),"Cannot Post Without Permission",Toast.LENGTH_LONG).show();
             return;
         }
-        NewPost();
+        NewPostBtn();
     }
 
     @Override

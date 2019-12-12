@@ -12,7 +12,6 @@ public class Post {
     public List<String> imgIds;
     public long likes;
     public long shares;
-    public List<String> likedUsers;
 
     public Post(String postId,String username, long time, String caption, List<String> imgIds)
     {
@@ -23,7 +22,6 @@ public class Post {
         this.imgIds = imgIds;
         likes = 0;
         shares = 0;
-        likedUsers = new LinkedList<>();
     }
 
     public Post(){}
