@@ -18,20 +18,11 @@
         app:srcCompat="@drawable/ic_baseline_add_24px"
         android:focusable="true" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/hot_post_feed"
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/feedViewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/treading_post_feed"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
+        android:layout_height="match_parent" />
 
     <com.polyak.iconswitch.IconSwitch
         android:id="@+id/trendingSwitch"
@@ -50,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:layout_marginBottom="-6.5dp"
         android:indeterminate="true" />
 
 </FrameLayout>

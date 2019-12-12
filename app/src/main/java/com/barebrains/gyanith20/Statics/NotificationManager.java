@@ -53,7 +53,7 @@ public class NotificationManager {
        setProgress(0);
     }
     public static void setProgressTitle(String title){
-        builders.get(PROGRESS_NID).setContentTitle("Posting Interrupted");
+        builders.get(PROGRESS_NID).setContentTitle(title);
         managers.get(PROGRESS_NID).notify(PROGRESS_NID, builders.get(PROGRESS_NID).build());
     }
 
