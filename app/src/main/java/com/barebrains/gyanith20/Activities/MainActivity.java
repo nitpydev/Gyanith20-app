@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
         activeFragment = fragment;
     }
-    private Fragment backStacked;
+    /*private Fragment backStacked;
     public void BackStackedFragment(Fragment fragment){
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -121,8 +121,11 @@ public class MainActivity extends AppCompatActivity {
         activeFragment = communityFragment = fragment;
     }
 
+     */
+
     @Override
     public void onBackPressed() {
+        /*
         if (backStacked != null)
         {
             activeFragment = backStacked;
@@ -131,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
             backStacked = null;
             return;
         }
+
+         */
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;

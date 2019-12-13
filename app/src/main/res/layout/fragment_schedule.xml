@@ -58,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <FrameLayout
+               <!-- <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -68,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:layout="@layout/fragment_schtab0" />
-            </FrameLayout>
+            </FrameLayout>-->
             </androidx.viewpager.widget.ViewPager>
 
         </LinearLayout>

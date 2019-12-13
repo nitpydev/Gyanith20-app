@@ -2,11 +2,8 @@ package com.barebrains.gyanith20.Others;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.util.Pair;
-import android.util.Printer;
-import android.util.StateSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,14 +15,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.barebrains.gyanith20.Activities.MainActivity;
 import com.barebrains.gyanith20.Adapters.postImagesAdaptor;
-import com.barebrains.gyanith20.Fragments.RemoteUserProfileFragment;
 import com.barebrains.gyanith20.Models.Post;
 import com.barebrains.gyanith20.R;
-import com.barebrains.gyanith20.Statics.GyanithUserManager;
 import com.barebrains.gyanith20.Statics.PostManager;
 import com.barebrains.gyanith20.Statics.Util;
 import com.google.android.material.card.MaterialCardView;
-import com.google.firebase.database.FirebaseDatabase;
 import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
 
 public class PostViewHolder extends RecyclerView.ViewHolder {
@@ -117,7 +111,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         userProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.BackStackedFragment(new RemoteUserProfileFragment());
+                //Show User Profile
             }
         });
 
@@ -135,26 +129,4 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void FillSimplePost(Context context,Post post){
-        postTopBar.setVisibility(View.GONE);
-        postBottomBar.setVisibility(View.GONE);
-        bitmaps = new Bitmap[post.imgIds.size()];
-        adaptor = new postImagesAdaptor(context,bitmaps);
-        viewPager.setAdapter(adaptor);
-       // dotsIndicator.setViewPager(viewPager);
-        viewPager.setOffscreenPageLimit(bitmaps.length -1);
-        Pair<Integer,String>[] imgIdsMap = Util.arrayToPair(post.imgIds);
-        for (final Pair<Integer,String> imgId : imgIdsMap)
-        {
-            PostManager.getPostImage(context, imgId.second, new PostManager.Callback<Bitmap>() {
-                @Override
-                public void OnResult(Bitmap bitmap) {
-                    if (bitmap == null)
-                        Log.d("asd","bitmap is null");
-                    bitmaps[imgId.first] = bitmap;
-                    adaptor.UpdatePosition(viewPager,imgId.first);
-                }
-            });
-        }
-    }
 }
