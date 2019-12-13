@@ -46,6 +46,7 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     implementation 'com.github.omadahealth:swipy:1.2.3'
     implementation 'android.arch.paging:runtime:1.0.1'
+    implementation 'com.synnapps:carouselview:0.1.5'
 }
 
 apply plugin: 'com.google.gms.google-services'

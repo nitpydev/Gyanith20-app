@@ -168,5 +168,6 @@
     <orderEntry type="library" name="Gradle: com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.polyak:icon-switch:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: de.hdodenhof:circleimageview:3.0.1@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.synnapps:carouselview:0.1.5@aar" level="project" />
   </component>
 </module>

@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView botnav;
     private TextView title;
     boolean doubleBackToExitPressedOnce;
-    private ImageView imageView;
+   // private ImageView imageView;
     SharedPreferences notif;
 
     private FragmentManager fragmentManager;
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
         doubleBackToExitPressedOnce = false;
         fragmentManager = getSupportFragmentManager();
-        imageView=findViewById(R.id.topbaricon);
+        //imageView=findViewById(R.id.topbaricon);
         title = findViewById(R.id.title);
         notif = getSharedPreferences(getString(R.string.package_name), Context.MODE_PRIVATE);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -179,13 +179,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        imageView.setOnClickListener(new View.OnClickListener() {
+      /*  imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this,"Presented to you by HV,BP,KR,SR,AM",Toast.LENGTH_SHORT).show();
             }
         });
 
+
+       */
         if(notif.getBoolean("newnot",false)){
             navigation.getMenu().getItem(3).setIcon(R.drawable.ic_notification);
         }
