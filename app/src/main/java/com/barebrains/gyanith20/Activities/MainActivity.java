@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private ScheduleFragment scheduleFragment;
     private FavouritesFragment favouritesFragment;
     private NotificationFragment notificationFragment;
-    private CommunityFragment communityFragment;
+    private Fragment communityFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -111,9 +111,26 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
         activeFragment = fragment;
     }
+    private Fragment backStacked;
+    public void BackStackedFragment(Fragment fragment){
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.hide(activeFragment)
+                .add(R.id.mainframe,fragment,"back").addToBackStack("back").commit();
+        backStacked = activeFragment;
+        activeFragment = communityFragment = fragment;
+    }
 
     @Override
     public void onBackPressed() {
+        if (backStacked != null)
+        {
+            activeFragment = backStacked;
+            super.onBackPressed();
+            communityFragment = backStacked;
+            backStacked = null;
+            return;
+        }
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;

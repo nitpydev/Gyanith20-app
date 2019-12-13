@@ -1,7 +1,5 @@
 package com.barebrains.gyanith20.Adapters;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.barebrains.gyanith20.Activities.MainActivity;
 import com.barebrains.gyanith20.Models.Post;
 import com.barebrains.gyanith20.Others.PostViewHolder;
 import com.barebrains.gyanith20.R;
@@ -29,14 +28,14 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class feedViewPagerAdapter extends PagerAdapter {
-    Context context;
+    MainActivity mainActivity;
     LifecycleOwner lifecycleOwner;
     private PagedList.Config config;
     private Long postCount;
 
     private ProgressBar loadFeed;
 
-    public feedViewPagerAdapter(Context context, LifecycleOwner lifecycleOwner,ProgressBar loadFeed){
+    public feedViewPagerAdapter(MainActivity mainActivity, LifecycleOwner lifecycleOwner, ProgressBar loadFeed){
         this.postCount = 0L;
         this.loadFeed = loadFeed;
         this.config = new PagedList.Config.Builder()
@@ -44,7 +43,7 @@ public class feedViewPagerAdapter extends PagerAdapter {
                 .setPrefetchDistance(1)
                 .setPageSize(3)
                 .build();
-        this.context = context;
+        this.mainActivity = mainActivity;
         this.lifecycleOwner = lifecycleOwner;
         ListenForPostCount();
     }
@@ -56,7 +55,7 @@ public class feedViewPagerAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        View Rootview = LayoutInflater.from(context).inflate(R.layout.item_feed,container,false);
+        View Rootview = LayoutInflater.from(mainActivity).inflate(R.layout.item_feed,container,false);
         RecyclerView view = Rootview.findViewById(R.id.feed);
         SwipeRefreshLayout refreshLayout = Rootview.findViewById(R.id.refreshFeed);
         if (position == 0)
@@ -97,7 +96,7 @@ public class feedViewPagerAdapter extends PagerAdapter {
         final FirebaseRecyclerPagingAdapter<Post, PostViewHolder> hotAdapter = new FirebaseRecyclerPagingAdapter<Post, PostViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull PostViewHolder viewHolder, int position, @NonNull Post model) {
-                viewHolder.FillPost(context, model);
+                viewHolder.FillPost(mainActivity, model);
             }
 
             @NonNull
@@ -122,7 +121,7 @@ public class feedViewPagerAdapter extends PagerAdapter {
         };
         feed.setAdapter(hotAdapter);
         feed.setHasFixedSize(true);
-        feed.setLayoutManager(new LinearLayoutManager(context));
+        feed.setLayoutManager(new LinearLayoutManager(mainActivity));
         refreshFeed.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -156,7 +155,7 @@ public class feedViewPagerAdapter extends PagerAdapter {
 
             @Override
             protected void onBindViewHolder(@NonNull PostViewHolder viewHolder, int position, @NonNull Post model) {
-                viewHolder.FillPost(context, model);
+                viewHolder.FillPost(mainActivity, model);
             }
 
             @Override
@@ -174,7 +173,7 @@ public class feedViewPagerAdapter extends PagerAdapter {
         };
         feed.setAdapter(trendAdapter);
         feed.setHasFixedSize(true);
-        feed.setLayoutManager(new LinearLayoutManager(context));
+        feed.setLayoutManager(new LinearLayoutManager(mainActivity));
 
         refreshFeed.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

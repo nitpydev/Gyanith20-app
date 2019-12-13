@@ -83,17 +83,28 @@ public class  PostManager{
                 result.OnResult(null);
             }
         });
-        rootRef.child("postCount").addListenerForSingleValueEvent(new ValueEventListener() {
+        rootRef.child("postCount").runTransaction(new Transaction.Handler() {
+            @NonNull
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                rootRef.child("postCount").setValue(dataSnapshot.getValue(Long.class) + 1);
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                Long p = mutableData.getValue(Long.class);
+                if (p == null) {
+                    return Transaction.success(mutableData);
+                }
+                p++;
+                // Set value and report transaction success
+                mutableData.setValue(p);
+                return Transaction.success(mutableData);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
 
             }
         });
+
+        rootRef.child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
+                .child("posts").child(post.postId).setValue(post.postId);
     }
 
     public static void getPostImage(Context context, final String imgId, final Callback<Bitmap> callback){

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="600dp"
+    android:layout_height="500dp"
     android:layout_margin="15dp"
     android:orientation="vertical"
     app:cardElevation="4dp">
@@ -16,9 +16,7 @@
             android:id="@+id/post_top_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="0dp"
+            app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -27,32 +25,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp">
 
-                <ImageView
-                    android:id="@+id/post_profile_img"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentBottom="true"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/user_profile_btn"
+                    android:layout_width="180dp"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    app:srcCompat="@drawable/about" />
+                    android:foreground="?android:attr/selectableItemBackground">
 
-                <TextView
-                    android:id="@+id/post_username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_toEndOf="@+id/post_profile_img"
-                    android:gravity="center_vertical"
-                    android:text="user_name"
-                    android:textSize="18sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/post_profile_img"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            app:srcCompat="@drawable/about" />
+
+                        <TextView
+                            android:id="@+id/post_username"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:gravity="center_vertical"
+                            android:text="user_name"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/like_btn"
@@ -99,7 +103,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="0dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:gravity="center">
@@ -159,6 +163,7 @@
                     android:id="@+id/dots"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
                     app:dampingRatio="0.5"
                     app:dotsColor="@color/colorPrimaryDark"
                     app:dotsCornerRadius="2dp"

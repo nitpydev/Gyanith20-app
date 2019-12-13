@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.barebrains.gyanith20.Activities.MainActivity;
 import com.barebrains.gyanith20.Activities.UploadPostActivity;
 import com.barebrains.gyanith20.Adapters.feedViewPagerAdapter;
 import com.barebrains.gyanith20.Models.Post;
@@ -104,7 +105,7 @@ public class CommunityFragment extends Fragment {
         });
 
 
-        viewPager.setAdapter(new feedViewPagerAdapter(getContext(),this,(ProgressBar)root.findViewById(R.id.progressBar)));
+        viewPager.setAdapter(new feedViewPagerAdapter((MainActivity) getActivity(),this,(ProgressBar)root.findViewById(R.id.progressBar)));
         viewPager.setOffscreenPageLimit(1);
 
         return root;
