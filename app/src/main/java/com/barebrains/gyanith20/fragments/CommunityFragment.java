@@ -209,11 +209,13 @@ class FeedsPagerAdapter extends PagerAdapter{
         switch (position) {
             case 0:
                 resId = R.id.hot_feed_page;
-                SetUpFeed(R.id.hot_feed,R.id.hot_refreshFeed);
+                Query query = FirebaseDatabase.getInstance().getReference().child("posts");
+                SetUpFeed(R.id.hot_feed,R.id.hot_refreshFeed,query);
                 break;
             case 1:
                 resId = R.id.trend_feed_page;
-                SetUpFeed(R.id.trend_feed,R.id.trend_refreshFeed);
+                Query trendquery = FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("likes");
+                SetUpFeed(R.id.trend_feed,R.id.trend_refreshFeed,trendquery);
                 break;
         }
         return activity.findViewById(resId);
@@ -221,12 +223,11 @@ class FeedsPagerAdapter extends PagerAdapter{
 
 
 
-    private void SetUpFeed(int feedId, int refreshFeedId){
+    private void SetUpFeed(int feedId, int refreshFeedId,Query query){
         final ProgressBar loadFeed = activity.findViewById(R.id.progressBar);
         RecyclerView feed = activity.findViewById(feedId);
         final SwipeRefreshLayout refreshFeed = activity.findViewById(refreshFeedId);
 
-        Query query = FirebaseDatabase.getInstance().getReference().child("posts");
 
         DatabasePagingOptions<Post> options = new DatabasePagingOptions.Builder<Post>()
                 .setLifecycleOwner(lifecycleOwner)

@@ -110,6 +110,9 @@ public class PostView extends RelativeLayout {
             setLikeIcon(true);
             likeState = true;
         }
+        else
+            setLikeIcon(false);
+            likeState = false;
 
 
         likeBtn.setOnClickListener(new OnClickListener() {
