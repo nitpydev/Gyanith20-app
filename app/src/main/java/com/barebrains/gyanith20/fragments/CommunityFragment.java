@@ -29,6 +29,7 @@ import com.barebrains.gyanith20.activities.UploadPostActivity;
 import com.barebrains.gyanith20.components.PostView;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.Util;
 import com.firebase.ui.database.paging.DatabasePagingOptions;
 import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
@@ -78,7 +79,7 @@ public class CommunityFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_community,container,false);
 
-        ((FloatingActionButton)root.findViewById(R.id.add_post_btn)).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.add_post_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 NewPostBtn();
@@ -209,7 +210,7 @@ class FeedsPagerAdapter extends PagerAdapter{
         switch (position) {
             case 0:
                 resId = R.id.hot_feed_page;
-                Query query = FirebaseDatabase.getInstance().getReference().child("posts");
+                Query query = FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("time");
                 SetUpFeed(R.id.hot_feed,R.id.hot_refreshFeed,query);
                 break;
             case 1:
@@ -238,6 +239,8 @@ class FeedsPagerAdapter extends PagerAdapter{
             @Override
             protected void onBindViewHolder(@NonNull final PostViewHolder viewHolder, int position, @NonNull Post model) {
                 viewHolder.postView.SetPost(activity,model);
+                PostManager.getInstance().AddLikeStateChangedLister(model.postId
+                        ,viewHolder.postView.getLikeChangedListener());
             }
 
             @NonNull
@@ -246,6 +249,7 @@ class FeedsPagerAdapter extends PagerAdapter{
                 View item = new PostView(activity);
                 return new PostViewHolder(item);
             }
+
 
             @Override
             protected void onLoadingStateChanged(@NonNull LoadingState state) {

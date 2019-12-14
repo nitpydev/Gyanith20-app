@@ -3,9 +3,11 @@ package com.barebrains.gyanith20.components;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,6 +31,7 @@ public class PostView extends RelativeLayout {
     private TextView usernameTxt;
     private TextView likeCountText;
     private TextView captionsText;
+    private TextView bottomCaptionsText;
     private TextView timestampText;
 
     //ImageViews for Assignment
@@ -49,6 +52,7 @@ public class PostView extends RelativeLayout {
 
 
     private boolean likeState;
+    private Post post;
 
     public PostView(Context context) {
         super(context);
@@ -78,6 +82,7 @@ public class PostView extends RelativeLayout {
         usernameTxt = findViewById(R.id.post_username);
         likeCountText = findViewById(R.id.post_likecount);
         captionsText = findViewById(R.id.post_captions_text);
+        bottomCaptionsText = findViewById(R.id.post_bottom_caption_txt);
         timestampText = findViewById(R.id.post_timestamp_txt);
         profileImg = findViewById(R.id.post_profile_img);
         viewPager = findViewById(R.id.post_img_viewpager);
@@ -92,12 +97,14 @@ public class PostView extends RelativeLayout {
         unlikedDrawable = ContextCompat.getDrawable(context,R.drawable.ic_favorite_border_black_24dp);
     }
 
-    public void SetPost(final Context context, final Post post){
+    public void SetPost(final Context context, Post initalPost) {
+        post = initalPost;
         usernameTxt.setText(post.username);
-        likeCountText.setText((post.likes != 0)?Long.toString(post.likes).substring(1):"0");
+        likeCountText.setText((post.likes != 0) ? Long.toString(post.likes).substring(1) : "0");
         captionsText.setText(post.caption);
+        bottomCaptionsText.setText(post.caption);
         timestampText.setText(Util.BuildTimeAgoString(post.time));
-        setUpViewPager(context,post.imgIds.toArray());
+        setUpViewPager(context, post.imgIds.toArray());
         captionsText.setVisibility(GONE);
         viewPager.setOnViewPagerClickListener(new ClickableViewPager.OnClickListener() {
             @Override
@@ -106,31 +113,22 @@ public class PostView extends RelativeLayout {
             }
         });
 
-        if (PostManager.getInstance().isLiked(post.postId)){
+        if (PostManager.getInstance().isLiked(post.postId)) {
             setLikeIcon(true);
             likeState = true;
-        }
-        else
+        } else{
             setLikeIcon(false);
             likeState = false;
+        }
 
 
         likeBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                likeState = !likeState;
-                if (likeState){
-                    setLikeIcon(true);
-                    post.likes--;
-                    likeCountText.setText(String.valueOf(-post.likes));
+                if (!likeState)
                     PostManager.getInstance().likePost(post.postId);
-                }
-                else {
-                    setLikeIcon(false);
-                    post.likes++;
-                    likeCountText.setText(String.valueOf(-post.likes));
+                else
                     PostManager.getInstance().dislikePost(post.postId);
-                }
             }
         });
 
@@ -145,6 +143,28 @@ public class PostView extends RelativeLayout {
             }
         });
     }
+
+    public PostManager.OnLikeStateChangedListener getLikeChangedListener(){
+        return new PostManager.OnLikeStateChangedListener() {
+            @Override
+            public void OnChange(boolean state) {
+                if (state){
+                    setLikeIcon(true);
+                    likeState = true;
+                    post.likes--;
+                    likeCountText.setText(String.valueOf(-post.likes));
+                }
+                else {
+                    setLikeIcon(false);
+                    likeState = false;
+                    post.likes++;
+                    likeCountText.setText(String.valueOf(-post.likes));
+                }
+            }
+        };
+    }
+
+
 
     private String buildDeepLink(String postId){
         return "http://gyanith.com/post/" + postId;
@@ -169,7 +189,7 @@ public class PostView extends RelativeLayout {
         if (captionsText.getVisibility() == View.VISIBLE)
             viewPager.setAlpha(1f);
         else
-            viewPager.setAlpha(0.5f);
+            viewPager.setAlpha(0.3f);
 
         captionsText.setVisibility((captionsText.getVisibility() == View.VISIBLE)?GONE:VISIBLE);
     }

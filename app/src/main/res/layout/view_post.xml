@@ -130,7 +130,7 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/materialCardView"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             app:cardElevation="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -149,6 +149,19 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/post_bottom_caption_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="TextView"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/post_timestamp_txt" />
 
                 <com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
                     android:id="@+id/dots"
@@ -178,6 +191,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="THIS IS THE CAPTONS"
+            android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold"

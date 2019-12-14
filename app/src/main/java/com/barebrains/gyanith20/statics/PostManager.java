@@ -10,6 +10,7 @@ import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.barebrains.gyanith20.components.PostView;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,14 +28,20 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.w3c.dom.ls.LSInput;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class  PostManager{
@@ -43,6 +50,8 @@ public class  PostManager{
     public static PostManager getInstance(){
         if (instance == null)
             instance = new PostManager();
+        if(instance.listeners == null)
+            instance.listeners = new HashMap<>();
         return instance;
     }
 
@@ -67,6 +76,7 @@ public class  PostManager{
     public static void CommitPostToDB(Post post, final Callback result){
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference postRef = rootRef.child("posts").push();
+        post.time = -post.time;
         post.postId = postRef.getKey();
         postRef.setValue(post).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -183,6 +193,8 @@ public class  PostManager{
 
     public void likePost(String postId)
     {
+        for (OnLikeStateChangedListener listener : listeners.get(postId))
+            listener.OnChange(true);
         likedPosts.add(postId);
         FirebaseDatabase.getInstance().getReference().child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
                 .child("likedPosts").child(postId).setValue(postId);
@@ -211,6 +223,8 @@ public class  PostManager{
         });
     }
     public void dislikePost(String postId){
+        for (OnLikeStateChangedListener listener : listeners.get(postId))
+            listener.OnChange(false);
         likedPosts.remove(postId);
         FirebaseDatabase.getInstance().getReference().child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
                 .child("likedPosts").child(postId).removeValue();
@@ -257,4 +271,25 @@ public class  PostManager{
             }
         });
     }
+
+
+    //Like Listeners
+    private Map<String,List<OnLikeStateChangedListener>> listeners;
+
+    public void AddLikeStateChangedLister(String id,OnLikeStateChangedListener listener){
+        if (listeners.containsKey(id))
+            listeners.get(id).add(listener);
+        else {
+            List<OnLikeStateChangedListener> t = new ArrayList<>();
+            t.add(listener);
+            listeners.put(id,t);
+        }
+    }
+
+
+    public interface OnLikeStateChangedListener{
+        void OnChange(boolean state);
+    }
 }
+
+

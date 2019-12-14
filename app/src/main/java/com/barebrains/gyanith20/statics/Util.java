@@ -47,7 +47,7 @@ public class Util {
         final int hrs = 60*minute;
         final int days = 24*hrs;
         long currentTime = System.currentTimeMillis();
-        long diff = currentTime - postTime;
+        long diff = currentTime + postTime;
 
         if (diff < minute)
             return "just now";
