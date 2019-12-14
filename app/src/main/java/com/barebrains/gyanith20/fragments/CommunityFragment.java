@@ -35,6 +35,7 @@ import com.firebase.ui.database.paging.DatabasePagingOptions;
 import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
 import com.firebase.ui.database.paging.LoadingState;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.polyak.iconswitch.IconSwitch;
@@ -78,7 +79,7 @@ public class CommunityFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_community,container,false);
-
+        PostManager.getInstance().setSnackbarParent(root);
         root.findViewById(R.id.add_post_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,7 +230,6 @@ class FeedsPagerAdapter extends PagerAdapter{
         RecyclerView feed = activity.findViewById(feedId);
         final SwipeRefreshLayout refreshFeed = activity.findViewById(refreshFeedId);
 
-
         DatabasePagingOptions<Post> options = new DatabasePagingOptions.Builder<Post>()
                 .setLifecycleOwner(lifecycleOwner)
                 .setQuery(query, config, Post.class)
@@ -263,6 +263,7 @@ class FeedsPagerAdapter extends PagerAdapter{
                 }
             }
         };
+        PostManager.getInstance().setRefreshs(adapter);
 
         feed.setAdapter(adapter);
         feed.setHasFixedSize(true);

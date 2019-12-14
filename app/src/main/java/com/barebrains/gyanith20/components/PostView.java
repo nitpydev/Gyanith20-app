@@ -1,5 +1,7 @@
 package com.barebrains.gyanith20.components;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,11 +12,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
+import androidx.coordinatorlayout.widget.ViewGroupUtils;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
@@ -22,6 +26,7 @@ import com.barebrains.gyanith20.adapters.postImagesAdaptor;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.statics.Anim;
+import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.Util;
 import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
@@ -45,7 +50,9 @@ public class PostView extends RelativeLayout {
     private View likeBtn;
     private View shareBtn;
     private View profileBtn;
-
+    private View deleteBtn;
+    private View tapPanel;
+    private View progressBar;
 
     //Other Resources
     private Drawable likedDrawable;
@@ -90,6 +97,9 @@ public class PostView extends RelativeLayout {
         likeBtn = findViewById(R.id.like_btn);
         shareBtn = findViewById(R.id.share_btn);
         profileBtn = findViewById(R.id.profile_btn);
+        tapPanel = findViewById(R.id.tap_panel);
+        deleteBtn = findViewById(R.id.post_delete_btn);
+        progressBar = findViewById(R.id.post_progress);
 
         dotsIndicator = findViewById(R.id.dots);
         likeIcon = findViewById(R.id.like_img);
@@ -106,13 +116,19 @@ public class PostView extends RelativeLayout {
         bottomCaptionsText.setText(post.caption);
         timestampText.setText(Util.BuildTimeAgoString(post.time));
         setUpViewPager(context, post.imgIds.toArray());
-        captionsText.setVisibility(GONE);
+        tapPanel.setVisibility(GONE);
+        progressBar.setVisibility(GONE);
         viewPager.setOnViewPagerClickListener(new ClickableViewPager.OnClickListener() {
             @Override
             public void onViewPagerClick(ViewPager viewPager) {
                 captionStateToggle();
             }
         });
+
+        if (post.gyanithId.equals(GyanithUserManager.getCurrentUser().gyanithId))
+            deleteBtn.setVisibility(VISIBLE);
+        else
+            deleteBtn.setVisibility(GONE);
 
         if (PostManager.getInstance().isLiked(post.postId)) {
             setLikeIcon(true);
@@ -141,6 +157,33 @@ public class PostView extends RelativeLayout {
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Gyanith Community Post");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, buildDeepLink(post.postId));
                 context.startActivity(Intent.createChooser(sharingIntent, "Share via"));
+            }
+        });
+
+        deleteBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                progressBar.setVisibility(VISIBLE);
+                PostManager.deletePost(post, new PostManager.VoidCallback() {
+                    @Override
+                    public void OnResult() {
+                        progressBar.setVisibility(GONE);
+                        final ViewGroup parent = findViewById(R.id.post_root);
+                        final View deletedPost = LayoutInflater.from(context).inflate(R.layout.item_deleted_post,parent,false);
+                        final View post = parent.findViewById(R.id.post);
+                        Anim.zoomY(parent,1f,0.2f,0f,300);
+                        Anim.alpha(post, 1f, 0f, 300, new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                parent.removeView(post);
+                                parent.addView(deletedPost);
+                                Anim.alpha(deletedPost,0f,1f,300,null);
+
+                            }
+                        });
+
+                    }
+                });
             }
         });
     }
@@ -188,12 +231,12 @@ public class PostView extends RelativeLayout {
     }
 
     private void captionStateToggle(){
-        if (captionsText.getVisibility() == View.VISIBLE) {
-            Anim.crossfade(captionsText,viewPager,0f,350);
-            Anim.zoom(captionsText,1f, 0.7f,450);
+        if (tapPanel.getVisibility() == View.VISIBLE) {
+            Anim.crossfade(tapPanel,viewPager,0f,350);
+            Anim.zoom(tapPanel,1f, 0.7f,450);
         } else {
-            Anim.crossfade(viewPager,captionsText,0.3f,350);
-            Anim.zoom(captionsText,0.7f,1f,400);
+            Anim.crossfade(viewPager,tapPanel,0.3f,350);
+            Anim.zoom(tapPanel,0.7f,1f,400);
         }
     }
 

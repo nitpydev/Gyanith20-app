@@ -31,4 +31,18 @@ public class Anim {
         scaleAnimation.setDuration(duration);
         view.startAnimation(scaleAnimation);
     }
+
+    public static void zoomY(View view,float from,float to,float Ypivot,long duration){
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1f, 1f, from, to, ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
+                ScaleAnimation.RELATIVE_TO_SELF, Ypivot);
+        scaleAnimation.setDuration(duration);
+        view.startAnimation(scaleAnimation);
+    }
+
+    public static void alpha(View view,float from,float to,long duration,AnimatorListenerAdapter listenerAdapter){
+        view.setAlpha(from);
+        view.animate().alpha(to)
+                .setDuration(duration)
+                .setListener(listenerAdapter);
+    }
 }

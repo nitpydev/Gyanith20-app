@@ -6,16 +6,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.util.Pair;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.barebrains.gyanith20.components.PostView;
-import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.models.Post;
+import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,15 +30,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.w3c.dom.ls.LSInput;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -63,14 +65,44 @@ public class  PostManager{
         {
             String id = generateUniqueId();
             try {
+                SharedPreferences sp = context.getSharedPreferences(context.getString(R.string.package_name),Context.MODE_PRIVATE);
+                File existingFile = new File(imgPaths[i]);
+                File imgFile = new File(context.getCacheDir(),id);
+                copyFile(existingFile,imgFile);
+                sp.edit().putString(id,imgFile.getAbsolutePath()).apply();
                 InputStream stream = new FileInputStream(new File(imgPaths[i]));
                 UploadTask uploadTask = storageRef.child(id).putStream(stream);
                 pics.add(new Pair<>(id, uploadTask));
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         return pics;
+    }
+
+    public static void copyFile(File sourceFile, File destFile) throws IOException {
+        if (!destFile.getParentFile().exists())
+            destFile.getParentFile().mkdirs();
+
+        if (!destFile.exists()) {
+            destFile.createNewFile();
+        }
+
+        FileChannel source = null;
+        FileChannel destination = null;
+
+        try {
+            source = new FileInputStream(sourceFile).getChannel();
+            destination = new FileOutputStream(destFile).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        } finally {
+            if (source != null) {
+                source.close();
+            }
+            if (destination != null) {
+                destination.close();
+            }
+        }
     }
 
     public static void CommitPostToDB(Post post, final Callback result){
@@ -81,6 +113,7 @@ public class  PostManager{
         postRef.setValue(post).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                getInstance().showPostUploadedSnackbar();
                 result.OnResult(null);
             }
         });
@@ -154,9 +187,51 @@ public class  PostManager{
         });
     }
 
+
+    public static void deletePost(Post post, final VoidCallback callback){
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference postRef = rootRef.child("posts").child(post.postId);
+        postRef.removeValue();
+        DatabaseReference userPostRef = rootRef.child("users").child(post.gyanithId).child("posts").child(post.postId);
+        userPostRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                callback.OnResult();
+            }
+        });
+
+        rootRef.child("postCount").runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                Long p = mutableData.getValue(Long.class);
+                if (p == null) {
+                    return Transaction.success(mutableData);
+                }
+                p--;
+                // Set value and report transaction success
+                mutableData.setValue(p);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+            }
+        });
+        for (String imgId : post.imgIds)
+            FirebaseStorage.getInstance().getReference().child("PostImages").child(imgId).delete();
+    }
+
+
     private static String generateUniqueId(){
         return FirebaseDatabase.getInstance().getReference().push().getKey();
     }
+
+    public interface VoidCallback{
+        void OnResult();
+    }
+
     public interface Callback<T>{
         void OnResult(T t);
     }
@@ -173,12 +248,23 @@ public class  PostManager{
     public void Initialize()
     {
 
-        getRemoteLikedPosts(new PostManager.Callback<String[]>() {
+        getRemoteLikedPosts(new Callback<String[]>()  {
             @Override
             public void OnResult(String[] strings) {
                 likedPosts = new HashSet<>(Arrays.asList(strings));
             }
         });
+
+       /* getRemoteUserPosts(new Callback<Post[]>() {
+            @Override
+            public void OnResult(Post[] posts) {
+                userPostIds = new HashSet<>();
+                //for (int i = 0;i< posts.length;i++)
+                 //   userPostIds.add(posts[i].postId);
+            }
+        });
+
+        */
     }
 
     public boolean isLiked(String postId)
@@ -289,6 +375,55 @@ public class  PostManager{
 
     public interface OnLikeStateChangedListener{
         void OnChange(boolean state);
+    }
+
+    //USER POSTS MANAGEMENT
+    //private Set<String> userPostIds;
+    private View snackbarParent;
+    private FirebaseRecyclerPagingAdapter[] refresh = new FirebaseRecyclerPagingAdapter[2];
+    public void getRemoteUserPosts(final Callback<Post[]> callback){
+        FirebaseDatabase.getInstance().getReference().child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
+                .child("posts").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Post[] posts = new Post[(int) dataSnapshot.getChildrenCount()];
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                for (int i = 0;i<posts.length;i++)
+                    posts[i] = iterator.next().getValue(Post.class);
+
+                callback.OnResult(posts);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void setSnackbarParent(View view){
+        snackbarParent = view;
+    }
+
+    public void setRefreshs(FirebaseRecyclerPagingAdapter adapter){
+        if (refresh[0] == null)
+            refresh[0] = adapter;
+        else if (refresh[1] == null)
+            refresh[1] = adapter;
+    }
+
+
+    public void showPostUploadedSnackbar(){
+        final Snackbar snackbar = Snackbar.make(snackbarParent,"Posted Successfully",10000);
+        snackbar.setAction("Refresh Feed", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (FirebaseRecyclerPagingAdapter refreshAdapter : refresh)
+                    refreshAdapter.refresh();
+                snackbar.dismiss();
+            }
+        });
+        snackbar.show();
     }
 }
 
