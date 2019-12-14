@@ -51,8 +51,12 @@ public class Util {
 
         if (diff < minute)
             return "just now";
+        else if (diff < 2*minute)
+            return "a min ago";
         else if (diff < hrs)
             return diff/minute + " mins ago";
+        else if (diff < 2*hrs)
+            return "an hour ago";
         else if (diff < days)
             return diff/hrs + " hrs ago";
         else if (diff < 2*days)

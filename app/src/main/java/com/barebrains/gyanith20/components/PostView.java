@@ -21,6 +21,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.barebrains.gyanith20.adapters.postImagesAdaptor;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.statics.Anim;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.Util;
 import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
@@ -174,6 +175,7 @@ public class PostView extends RelativeLayout {
         final Bitmap[] bitmaps = new Bitmap[imgIds.length];
         viewPager.setAdapter(new postImagesAdaptor(context,bitmaps));
         viewPager.setOffscreenPageLimit(bitmaps.length -1);
+        dotsIndicator.setVisibility((bitmaps.length > 1)?VISIBLE:GONE);
         dotsIndicator.setViewPager(viewPager);
         for (int i = 0; i < bitmaps.length;i++)
             PostManager.getPostImage(context, i, (String) imgIds[i], new PostManager.Callback2<Bitmap, Integer>() {
@@ -186,12 +188,13 @@ public class PostView extends RelativeLayout {
     }
 
     private void captionStateToggle(){
-        if (captionsText.getVisibility() == View.VISIBLE)
-            viewPager.setAlpha(1f);
-        else
-            viewPager.setAlpha(0.3f);
-
-        captionsText.setVisibility((captionsText.getVisibility() == View.VISIBLE)?GONE:VISIBLE);
+        if (captionsText.getVisibility() == View.VISIBLE) {
+            Anim.crossfade(captionsText,viewPager,0f,350);
+            Anim.zoom(captionsText,1f, 0.7f,450);
+        } else {
+            Anim.crossfade(viewPager,captionsText,0.3f,350);
+            Anim.zoom(captionsText,0.7f,1f,400);
+        }
     }
 
     private void setLikeIcon(boolean state)
