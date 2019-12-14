@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="15dp"
     android:orientation="vertical"
+    app:cardBackgroundColor="@color/topbar"
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,6 +17,7 @@
             android:id="@+id/materialCardView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/topb"
             app:cardElevation="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,6 +42,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:tint="@color/txtColor"
                         app:srcCompat="?attr/actionModeShareDrawable" />
 
                     <TextView
@@ -48,7 +51,8 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
                         android:gravity="center_vertical"
-                        android:text="Share" />
+                        android:text="Share"
+                        android:textColor="#FFFFFF" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -76,6 +80,7 @@
                         android:layout_marginStart="5dp"
                         android:gravity="center_vertical"
                         android:text="user_name"
+                        android:textColor="@color/txtColor"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -105,7 +110,8 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
                         android:gravity="center_vertical"
-                        android:text="451" />
+                        android:text="451"
+                        android:textColor="@color/txtColor" />
                 </LinearLayout>
 
 
@@ -131,6 +137,7 @@
             android:id="@+id/materialCardView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/topb"
             app:cardElevation="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -145,9 +152,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     android:text="TextView"
+                    android:textColor="@color/txtColor"
                     android:textStyle="italic"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -156,26 +164,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
+                    android:layout_marginTop="8dp"
                     android:text="TextView"
                     android:textAlignment="center"
-                    android:textColor="#000000"
+                    android:textColor="@color/txtColor"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/post_timestamp_txt" />
+                    app:layout_constraintTop_toBottomOf="@+id/dots" />
 
                 <com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
                     android:id="@+id/dots"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:visibility="gone"
                     app:dampingRatio="0.5"
-                    app:dotsColor="@color/colorPrimaryDark"
+                    app:dotsColor="@color/txtColor"
                     app:dotsCornerRadius="2dp"
                     app:dotsSize="16dp"
                     app:dotsSpacing="6dp"
-                    app:dotsStrokeColor="@color/colorPrimaryDark"
+                    app:dotsStrokeColor="@color/colorAccent"
                     app:dotsStrokeWidth="2dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -193,7 +203,7 @@
             android:layout_height="wrap_content"
             android:text="THIS IS THE CAPTONS"
             android:textAlignment="center"
-            android:textColor="#000000"
+            android:textColor="@color/txtColor"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/materialCardView"

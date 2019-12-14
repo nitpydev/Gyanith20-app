@@ -12,4 +12,5 @@
     <color name="redd">#ff0111</color>
     <color name="cardbg">#373748</color>
     <color name="unselected">#64FFFFFF</color>
+    <color name="txtColor">#ffffff</color>
 </resources>
