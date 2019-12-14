@@ -1,7 +1,9 @@
 package com.barebrains.gyanith20.Fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -16,17 +18,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.paging.PagedList;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.barebrains.gyanith20.Activities.MainActivity;
 import com.barebrains.gyanith20.Activities.UploadPostActivity;
-import com.barebrains.gyanith20.Adapters.feedViewPagerAdapter;
+import com.barebrains.gyanith20.CustomComponents.PostView;
 import com.barebrains.gyanith20.Models.Post;
-import com.barebrains.gyanith20.Others.PostViewHolder;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.Statics.Util;
+import com.firebase.ui.database.paging.DatabasePagingOptions;
 import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
+import com.firebase.ui.database.paging.LoadingState;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.polyak.iconswitch.IconSwitch;
 
 import static android.app.Activity.RESULT_OK;
@@ -39,10 +49,13 @@ public class CommunityFragment extends Fragment {
     public CommunityFragment() {
         // Required empty public constructor
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //HANDLE SIGN IN CHECK
     }
+
     private void NewPostBtn(){
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)
@@ -59,11 +72,13 @@ public class CommunityFragment extends Fragment {
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(intent, IMAGE_GALLERY_CODE);
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_community,container,false);
+
         ((FloatingActionButton)root.findViewById(R.id.add_post_btn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,6 +108,7 @@ public class CommunityFragment extends Fragment {
 
             }
         });
+
         iconSwitch.setCheckedChangeListener(new IconSwitch.CheckedChangeListener() {
             @Override
             public void onCheckChanged(IconSwitch.Checked current) {
@@ -105,8 +121,11 @@ public class CommunityFragment extends Fragment {
         });
 
 
-        viewPager.setAdapter(new feedViewPagerAdapter((MainActivity) getActivity(),this,(ProgressBar)root.findViewById(R.id.progressBar)));
+        //viewPager.setAdapter(new feedViewPagerAdapter((MainActivity) getActivity(),this,(ProgressBar)root.findViewById(R.id.progressBar)));
         viewPager.setOffscreenPageLimit(1);
+
+
+        viewPager.setAdapter(new FeedsPagerAdapter(this));
 
         return root;
     }
@@ -167,5 +186,107 @@ public class CommunityFragment extends Fragment {
 
        */
         super.onDestroy();
+    }
+}
+
+class FeedsPagerAdapter extends PagerAdapter{
+    private Activity activity;
+    private LifecycleOwner lifecycleOwner;
+    private final PagedList.Config config = new PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPrefetchDistance(1)
+            .setPageSize(3)
+            .build();
+
+    public FeedsPagerAdapter(CommunityFragment parent){
+        this.activity = parent.getActivity();
+        lifecycleOwner = parent.getViewLifecycleOwner();
+    }
+
+    @NonNull
+    @Override
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
+        int resId = 0;
+        switch (position) {
+            case 0:
+                resId = R.id.hot_feed_page;
+                SetUpFeed(R.id.hot_feed,R.id.hot_refreshFeed);
+                break;
+            case 1:
+                resId = R.id.trend_feed_page;
+                SetUpFeed(R.id.trend_feed,R.id.trend_refreshFeed);
+                break;
+        }
+        return activity.findViewById(resId);
+    }
+
+
+
+    private void SetUpFeed(int feedId, int refreshFeedId){
+        final ProgressBar loadFeed = activity.findViewById(R.id.progressBar);
+        RecyclerView feed = activity.findViewById(feedId);
+        final SwipeRefreshLayout refreshFeed = activity.findViewById(refreshFeedId);
+
+        Query query = FirebaseDatabase.getInstance().getReference().child("posts");
+
+        DatabasePagingOptions<Post> options = new DatabasePagingOptions.Builder<Post>()
+                .setLifecycleOwner(lifecycleOwner)
+                .setQuery(query, config, Post.class)
+                .build();
+
+        final FirebaseRecyclerPagingAdapter<Post, PostViewHolder> adapter = new FirebaseRecyclerPagingAdapter<Post, PostViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull final PostViewHolder viewHolder, int position, @NonNull Post model) {
+                viewHolder.postView.SetPost(activity,model);
+            }
+
+            @NonNull
+            @Override
+            public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View item = new PostView(activity);
+                return new PostViewHolder(item);
+            }
+
+            @Override
+            protected void onLoadingStateChanged(@NonNull LoadingState state) {
+                switch (state){
+                    case LOADING_INITIAL:
+                        refreshFeed.setRefreshing(false);
+                    case LOADING_MORE:
+                        loadFeed.setVisibility(View.VISIBLE);
+                    case LOADED:
+                        loadFeed.setVisibility(View.GONE);
+                }
+            }
+        };
+
+        feed.setAdapter(adapter);
+        feed.setHasFixedSize(true);
+        feed.setLayoutManager(new LinearLayoutManager(activity));
+        refreshFeed.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                adapter.refresh();
+            }
+        });
+    }
+    @Override
+    public int getCount() {
+        return 2;
+    }
+
+    @Override
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+        return view == object;
+    }
+
+}
+
+class PostViewHolder extends RecyclerView.ViewHolder{
+
+    PostView postView;
+    public PostViewHolder(@NonNull View itemView) {
+        super(itemView);
+        postView = (PostView) itemView;
     }
 }

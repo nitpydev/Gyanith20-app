@@ -107,13 +107,13 @@ public class  PostManager{
                 .child("posts").child(post.postId).setValue(post.postId);
     }
 
-    public static void getPostImage(Context context, final String imgId, final Callback<Bitmap> callback){
+    public static void getPostImage(Context context,final int requestId, final String imgId, final Callback2<Bitmap,Integer> callback){
         final SharedPreferences sp = context.getSharedPreferences(context.getString(R.string.package_name),Context.MODE_PRIVATE);
         String imgPath = sp.getString(imgId,"");
        if (!imgPath.equals("")){
            Bitmap bitmap = BitmapFactory.decodeFile(imgPath);
            if (bitmap != null) {
-               callback.OnResult(bitmap);
+               callback.OnResult(bitmap,requestId);
                return;
            }
        }
@@ -125,11 +125,11 @@ public class  PostManager{
            public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
                if (!task.isSuccessful()) {
                    Log.d("asd","e : " + task.getException().getLocalizedMessage());
-                   callback.OnResult(null);
+                   callback.OnResult(null,requestId);
                    return;
                }
                sp.edit().putString(imgId,imgFile.getAbsolutePath()).apply();
-               callback.OnResult(BitmapFactory.decodeFile(imgFile.getAbsolutePath()));
+               callback.OnResult(BitmapFactory.decodeFile(imgFile.getAbsolutePath()),requestId);
            }
        });
     }
@@ -159,7 +159,9 @@ public class  PostManager{
     public interface Callback<T>{
         void OnResult(T t);
     }
-
+    public interface Callback2<T,J>{
+        void OnResult(T t,J j);
+    }
 
 
 

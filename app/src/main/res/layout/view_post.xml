@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    android:layout_margin="15dp"
+    android:orientation="vertical"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/materialCardView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <LinearLayout
+                    android:id="@+id/share_btn"
+                    android:layout_width="100dp"
+                    android:layout_height="0dp"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:srcCompat="?attr/actionModeShareDrawable" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:gravity="center_vertical"
+                        android:text="Share" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/profile_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/post_profile_img"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        app:srcCompat="@drawable/about" />
+
+                    <TextView
+                        android:id="@+id/post_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:gravity="center_vertical"
+                        android:text="user_name"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/like_btn"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="16dp"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/share_btn"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0">
+
+
+                    <ImageView
+                        android:id="@+id/like_img"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        app:srcCompat="@drawable/ic_favorite_border_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/post_likecount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:gravity="center_vertical"
+                        android:text="451" />
+                </LinearLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <com.barebrains.gyanith20.CustomComponents.ClickableViewPager
+            android:id="@+id/post_img_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/materialCardView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/materialCardView2">
+
+        </com.barebrains.gyanith20.CustomComponents.ClickableViewPager>
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/materialCardView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardElevation="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/post_timestamp_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
+                    android:id="@+id/dots"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:dampingRatio="0.5"
+                    app:dotsColor="@color/colorPrimaryDark"
+                    app:dotsCornerRadius="2dp"
+                    app:dotsSize="16dp"
+                    app:dotsSpacing="6dp"
+                    app:dotsStrokeColor="@color/colorPrimaryDark"
+                    app:dotsStrokeWidth="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:stiffness="300">
+
+                </com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/post_captions_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="THIS IS THE CAPTONS"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/materialCardView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/materialCardView2" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

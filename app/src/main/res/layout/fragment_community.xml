@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="50dp">
 
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_post_btn"
         android:layout_width="wrap_content"
@@ -22,7 +21,38 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/feedViewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/hot_feed_page">
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/hot_refreshFeed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/hot_feed"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/trend_feed_page">
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/trend_refreshFeed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/trend_feed"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </LinearLayout>
+    </androidx.viewpager.widget.ViewPager>
 
     <com.polyak.iconswitch.IconSwitch
         android:id="@+id/trendingSwitch"
@@ -30,7 +60,6 @@
         android:layout_height="70dp"
         android:layout_gravity="bottom|left"
         android:layout_margin="8dp"
-        android:text="Hot"
         app:isw_icon_left="@drawable/ic_hot_24dp"
         app:isw_icon_right="@drawable/ic_baseline_favorite_24px"
         app:isw_icon_size="30dp" />
