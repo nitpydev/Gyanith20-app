@@ -5,10 +5,9 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
-import com.barebrains.gyanith20.Models.GyanithUser;
-import com.barebrains.gyanith20.Models.Post;
-import com.barebrains.gyanith20.Statics.GyanithUserManager;
-import com.barebrains.gyanith20.Statics.PostManager;
+import com.barebrains.gyanith20.models.GyanithUser;
+import com.barebrains.gyanith20.statics.GyanithUserManager;
+import com.barebrains.gyanith20.statics.PostManager;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class gyanith20 extends Application {

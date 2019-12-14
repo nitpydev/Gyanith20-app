@@ -115,7 +115,7 @@
         </com.google.android.material.card.MaterialCardView>
 
 
-        <com.barebrains.gyanith20.CustomComponents.ClickableViewPager
+        <com.barebrains.gyanith20.components.ClickableViewPager
             android:id="@+id/post_img_viewpager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -124,13 +124,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/materialCardView2">
 
-        </com.barebrains.gyanith20.CustomComponents.ClickableViewPager>
+        </com.barebrains.gyanith20.components.ClickableViewPager>
 
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/materialCardView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             app:cardElevation="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -144,6 +144,7 @@
                     android:id="@+id/post_timestamp_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:text="TextView"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
