@@ -68,7 +68,7 @@ public class  PostManager{
                 SharedPreferences sp = context.getSharedPreferences(context.getString(R.string.package_name),Context.MODE_PRIVATE);
                 File existingFile = new File(imgPaths[i]);
                 File imgFile = new File(context.getCacheDir(),id);
-                copyFile(existingFile,imgFile);
+                Util.putBitmaptoFile(Util.decodeFile(existingFile),imgFile);
                 sp.edit().putString(id,imgFile.getAbsolutePath()).apply();
                 InputStream stream = new FileInputStream(new File(imgPaths[i]));
                 UploadTask uploadTask = storageRef.child(id).putStream(stream);
@@ -80,30 +80,7 @@ public class  PostManager{
         return pics;
     }
 
-    public static void copyFile(File sourceFile, File destFile) throws IOException {
-        if (!destFile.getParentFile().exists())
-            destFile.getParentFile().mkdirs();
 
-        if (!destFile.exists()) {
-            destFile.createNewFile();
-        }
-
-        FileChannel source = null;
-        FileChannel destination = null;
-
-        try {
-            source = new FileInputStream(sourceFile).getChannel();
-            destination = new FileOutputStream(destFile).getChannel();
-            destination.transferFrom(source, 0, source.size());
-        } finally {
-            if (source != null) {
-                source.close();
-            }
-            if (destination != null) {
-                destination.close();
-            }
-        }
-    }
 
     public static void CommitPostToDB(Post post, final Callback result){
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
