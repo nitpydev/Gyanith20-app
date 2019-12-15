@@ -1,12 +1,15 @@
 package com.barebrains.gyanith20.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Explode;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -21,25 +24,36 @@ import com.android.volley.toolbox.Volley;
 import com.barebrains.gyanith20.Adapters.eventCategoriesAdapter;
 import com.barebrains.gyanith20.Models.eventitem;
 import com.barebrains.gyanith20.R;
+
+import com.google.gson.Gson;
+
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
 import java.util.Calendar;
 import java.util.Date;
 
+
 public class EventCategoriesActivity extends AppCompatActivity {
 
-    String s,name,date,eventtag;
+    String s,name,date,eventtag, type, cat;
     String url_event = "http://gyanith.org/api.php?type=w&action=fetch&key=2ppagy0";
-    String jsonobject;
     eventCategoriesAdapter ada;
     ArrayList<eventitem> items;
+    String bug;
+
     eventitem it;
     ListView lvi;
     ArrayList tag;
+
+    SharedPreferences prefs;
+    String PREF_KEY = "json_string", PREFS = "shared_prefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +86,28 @@ public class EventCategoriesActivity extends AppCompatActivity {
         Intent i=getIntent();
         ((TextView)findViewById(R.id.cattitle)).setText(i.getStringExtra("category"));
         s=i.getStringExtra("category");
+
+        switch(s)
+        {
+            case "Workshop":
+                cat = "w";
+                break;
+            case "Technical Events":
+                cat = "te";
+                break;
+            case "Non Technical Events":
+                cat = "nte";
+                break;
+            case "Pro Shows":
+                cat = "ps";
+            case "Guest Lectures":
+                cat = "gl";
+                break;
+             default:
+                 cat = "not found";
+                 break;
+        }
+
         ada=new eventCategoriesAdapter(R.layout.item_event_category,items,this);
         tag = new ArrayList();
 
@@ -88,14 +124,24 @@ public class EventCategoriesActivity extends AppCompatActivity {
                                 try
                                 {
                                 JSONObject jsonobject = jsonArray.getJSONObject(i);
-                                name = jsonobject.getString("name");
+                                type = jsonobject.getString("type");
+                                    name = jsonobject.getString("name");
 
-                                date = jsonobject.getString("date"); // json file didnt have date attribute,and will be added soon
-                                eventtag = jsonobject.getString("id");
+                                    date = jsonobject.getString("timestamp");
+                                    eventtag = jsonobject.getString("id");
 
-                                it=new eventitem(name,timeFormatter(date),eventtag);
-                                items.add(it);
-                                tag.add(eventtag);
+
+
+                                    it = new eventitem(name, timeFormatter(date), eventtag);
+                                    it.setType(type);
+
+                                if(type.equals(cat)) {
+
+
+                                    items.add(it);
+
+                                    tag.add(eventtag);
+                                }
                                 }
                                 catch (JSONException e) {
                                     //catch exeption
@@ -104,6 +150,15 @@ public class EventCategoriesActivity extends AppCompatActivity {
 
                             }
 
+                        // caches the
+
+                        Gson gson = new Gson();
+                        String cache_json = gson.toJson(items);
+                        prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString(PREF_KEY,cache_json);
+                        editor.apply();
+
                             if(items.isEmpty())
                                 ((TextView)findViewById(R.id.textView14)).setVisibility(View.VISIBLE);
                             else
@@ -111,12 +166,51 @@ public class EventCategoriesActivity extends AppCompatActivity {
                                 ((ProgressBar)findViewById(R.id.catload)).setVisibility(View.GONE);
                             ada.notifyDataSetChanged();
 
+
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                       Toast.makeText(EventCategoriesActivity.this, volleyError.getMessage(),Toast.LENGTH_LONG).show();
+
+                        SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+                        String string = prefs.getString(PREF_KEY, null);
+                        try {
+                            JSONArray jsonArray = new JSONArray(string);
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                name = jsonObject.getString("name");
+
+                                date = jsonObject.getString("time");
+                                eventtag = jsonObject.getString("tag");
+                                type = jsonObject.getString("type");
+
+                                it = new eventitem(name, date, eventtag);
+                                if(type.equals(cat)){
+                                items.add(it);
+                                tag.add(eventtag);
+                                }
+
+                            }
+
+                            if(items.isEmpty())
+                                ((TextView)findViewById(R.id.textView14)).setVisibility(View.VISIBLE);
+                            else
+                                ((TextView)findViewById(R.id.textView14)).setVisibility(View.GONE);
+                            ((ProgressBar)findViewById(R.id.catload)).setVisibility(View.GONE);
+                            ada.notifyDataSetChanged();
+                        }
+                        catch(JSONException e)
+                        {
+                            Toast.makeText(EventCategoriesActivity.this,"network unavailable",Toast.LENGTH_LONG).show();
+                        }
+
+
+
+
+
+
                     }
                 }
         );
@@ -155,4 +249,6 @@ public class EventCategoriesActivity extends AppCompatActivity {
         Date d=new Date(timeInt);
         return s.format(d);
     }
+
+
 }
