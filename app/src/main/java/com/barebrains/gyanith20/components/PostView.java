@@ -53,6 +53,7 @@ public class PostView extends RelativeLayout {
     private View deleteBtn;
     private View tapPanel;
     private View progressBar;
+    private View postContent;
 
     //Other Resources
     private Drawable likedDrawable;
@@ -61,6 +62,8 @@ public class PostView extends RelativeLayout {
 
     private boolean likeState;
     private Post post;
+    private View deletedPost;
+    private ViewGroup parentView;
 
     public PostView(Context context) {
         super(context);
@@ -100,6 +103,8 @@ public class PostView extends RelativeLayout {
         tapPanel = findViewById(R.id.tap_panel);
         deleteBtn = findViewById(R.id.post_delete_btn);
         progressBar = findViewById(R.id.post_progress);
+        postContent = findViewById(R.id.post);
+        parentView = findViewById(R.id.post_root);
 
         dotsIndicator = findViewById(R.id.dots);
         likeIcon = findViewById(R.id.like_img);
@@ -109,6 +114,11 @@ public class PostView extends RelativeLayout {
     }
 
     public void SetPost(final Context context, Post initalPost) {
+
+        postContent.setVisibility(VISIBLE);
+        if (deletedPost != null)
+            parentView.removeView(deletedPost);
+
         post = initalPost;
         usernameTxt.setText(post.username);
         likeCountText.setText((post.likes != 0) ? Long.toString(post.likes).substring(1) : "0");
@@ -168,17 +178,14 @@ public class PostView extends RelativeLayout {
                     @Override
                     public void OnResult() {
                         progressBar.setVisibility(GONE);
-                        final ViewGroup parent = findViewById(R.id.post_root);
-                        final View deletedPost = LayoutInflater.from(context).inflate(R.layout.item_deleted_post,parent,false);
-                        final View post = parent.findViewById(R.id.post);
-                        Anim.zoomY(parent,1f,0.2f,0f,300);
-                        Anim.alpha(post, 1f, 0f, 300, new AnimatorListenerAdapter() {
+                        deletedPost = LayoutInflater.from(context).inflate(R.layout.item_deleted_post,parentView,false);
+                        Anim.zoomY(parentView,1f,0.2f,0f,300);
+                        Anim.alpha(postContent, 1f, 0f, 300, new AnimatorListenerAdapter() {
                             @Override
                             public void onAnimationEnd(Animator animation) {
-                                parent.removeView(post);
-                                parent.addView(deletedPost);
+                                postContent.setVisibility(GONE);
+                                parentView.addView(deletedPost);
                                 Anim.alpha(deletedPost,0f,1f,300,null);
-
                             }
                         });
 
