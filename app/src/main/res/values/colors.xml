@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#171723</color>
-    <color name="colorAccent">#ff0111</color>
+    <color name="colorAccent">#0352fc</color>
     <color name="grey">#e9e6e6</color>
     <color name="blackbg">#020203</color>
     <color name="topb">#1E1E2E</color>
@@ -12,4 +12,5 @@
     <color name="redd">#ff0111</color>
     <color name="cardbg">#373748</color>
     <color name="unselected">#64FFFFFF</color>
+    <color name="txtColor">#ffffff</color>
 </resources>

@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- For Uploading photos in CommunityFragment tab -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".gyanith20"
@@ -16,20 +16,34 @@
         android:roundIcon="@drawable/l2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Noactionbar">
-        <service android:name=".Services.PostUploadService" />
+        <activity android:name=".activities.SpecificPostActivity"
+            android:label="@string/app_name">
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://recipe-app.com/recipe" -->
+                <data android:scheme="http"
+                    android:host="gyanith.com"
+                    android:pathPrefix="/post" />
 
-        <activity android:name=".Activities.UploadPostActivity" />
-        <activity android:name=".Activities.RegisterActivity" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".services.PostUploadService" />
+
+        <activity android:name=".activities.UploadPostActivity" />
+        <activity android:name=".activities.RegisterActivity" />
         <activity
-            android:name=".Activities.LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name" />
-        <activity android:name=".Activities.EventCategoriesActivity" />
-        <activity android:name=".Activities.EventDetailsActivity" />
-        <activity android:name=".Activities.ProfileActivity" />
-        <activity android:name=".Activities.SplashActivity">
+        <activity android:name=".activities.EventCategoriesActivity" />
+        <activity android:name=".activities.EventDetailsActivity" />
+        <activity android:name=".activities.ProfileActivity" />
+        <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,13 +51,13 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".Others.notreceiver">
+        <receiver android:name=".others.notreceiver">
             <intent-filter>
                 <action android:name="gyanith.notify" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".Activities.AboutActivity" />
+        <activity android:name=".activities.AboutActivity" />
     </application>
 
 </manifest>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="Fragments.ScheduleFragment">
+    tools:context="fragments.ScheduleFragment">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -58,17 +58,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <FrameLayout
+               <!-- <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <fragment
                     android:id="@+id/fragment"
-                    android:name="com.barebrains.gyanith20.ScheduleTab0_Fragment"
+                    android:name="com.barebrains.gyanith20.Fragments.ScheduleTab0_Fragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:layout="@layout/fragment_schtab0" />
-            </FrameLayout>
+            </FrameLayout>-->
             </androidx.viewpager.widget.ViewPager>
 
         </LinearLayout>
