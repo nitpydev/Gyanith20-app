@@ -60,6 +60,8 @@
         android:layout_height="70dp"
         android:layout_gravity="bottom|left"
         android:layout_margin="8dp"
+        app:isw_active_tint_icon_left="@color/colorBackdropAccent"
+        app:isw_active_tint_icon_right="@color/colorBackdropAccent"
         app:isw_icon_left="@drawable/ic_hot_24dp"
         app:isw_icon_right="@drawable/ic_baseline_favorite_24px"
         app:isw_icon_size="30dp" />

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#ffffff</color>
-    <color name="colorPrimaryDark">#171723</color>
-    <color name="colorAccent">#0352fc</color>
+    <color name="colorPrimaryDark">#232C3D</color>
+    <color name="colorAccent">#4EE956</color>
+    <color name="colorSecondaryAccent">#F71976</color>
+    <color name="colorBackDrop">#232C3D</color>
+    <color name="colorSecondaryBackDrop">#49546B</color>
+    <color name="colorBackdropAccent">#293346</color>
+
     <color name="grey">#e9e6e6</color>
     <color name="blackbg">#020203</color>
     <color name="topb">#1E1E2E</color>
