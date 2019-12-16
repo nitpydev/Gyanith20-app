@@ -15,18 +15,30 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.models.eventitem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
@@ -44,6 +56,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     String id="";
     AlertDialog.Builder a;
     AlertDialog vi;
+    String url = "http://gyanith.org/api.php?type=w&action=fetch&key=2ppagy0";
 
 
     @Override
@@ -78,35 +91,53 @@ public class EventDetailsActivity extends AppCompatActivity {
             }
         });
 
-        reference = FirebaseDatabase.getInstance().getReference().child(child).child(tag);
-
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>()
+        {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    title.setText(dataSnapshot.child("name").getValue().toString());
-                    for(DataSnapshot snapshot:dataSnapshot.child("details").getChildren()){
-                        if(snapshot.getKey().toString().charAt(0)=='1'){
-                            tab1=snapshot.getValue().toString();
-                            desc.setText(tab1);
-                        }
-                        if(snapshot.getKey().toString().charAt(0)=='2'){
-                            dtab.getTabAt(1).setText(snapshot.getKey().substring(1));
-                            tab2=snapshot.getValue().toString();
-                        }
-                        if(snapshot.getKey().toString().charAt(0)=='3'){
-                            tab3=snapshot.getValue().toString();
-                        }
+            public void onResponse(JSONArray jsonArray) {
+
+
+
+               {
+                    try
+                    {
+                        int int_tag = Integer.parseInt(tag);
+                        JSONObject jsonobject = jsonArray.getJSONObject(int_tag);
+
+                        title.setText(jsonobject.getString("name"));
+
+                        tab1 = jsonobject.getString("des");
+                        desc.setText(tab1);
+
+                        tab2 = jsonobject.getString("rules");
+
+                        tab3 = jsonobject.getString("contact");
+
                     }
-                    int id = getResources().getIdentifier("com.barebrains.gyanith20:drawable/" + tag.toLowerCase()+'b', null, null);
-                    if(id!=0)
-                    ((ImageView)findViewById(R.id.eveimv)).setBackgroundResource(id);
-            }
+                    catch (JSONException e) {
+                        //catch exception
+                        e.printStackTrace();
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+
 
             }
-        });
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                        Toast.makeText(EventDetailsActivity.this,"network unavailable",Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
+
+
+
         final ImageView f=(ImageView)findViewById(R.id.fh) ;
 
         favtb.setChecked(sp.getBoolean(tag,false));
