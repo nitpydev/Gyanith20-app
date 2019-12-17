@@ -27,15 +27,15 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.barebrains.gyanith20.activities.UploadPostActivity;
 import com.barebrains.gyanith20.components.PostView;
+import com.barebrains.gyanith20.interfaces.AuthStateListener;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.Util;
 import com.firebase.ui.database.paging.DatabasePagingOptions;
 import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
 import com.firebase.ui.database.paging.LoadingState;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.polyak.iconswitch.IconSwitch;
@@ -51,13 +51,45 @@ public class CommunityFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //HANDLE SIGN IN CHECK
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        final View root = inflater.inflate(R.layout.fragment_community,container,false);
+        PostManager.getInstance().setSnackbarParent(root); //Need to check here*/*/
+
+        final View addPostBtn = root.findViewById(R.id.add_post_btn);
+
+        GyanithUserManager.addAuthStateListner(1, new AuthStateListener() {
+            @Override
+            public void onChange() {
+                addPostBtn.setOnClickListener(null);
+                addPostBtn.setVisibility(View.GONE);
+            }
+            @Override
+            public void VerifiedUser() {
+                addPostBtn.setVisibility(View.VISIBLE);
+                addPostBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startPosting();
+                    }
+                });
+            }
+        });
+
+        //Need Loading Pages Effect Like FaceBook */*/
+        SetupViewPager(root);
+        return root;
     }
 
-    private void NewPostBtn(){
+    @Override
+    public void onDestroyView() {
+        GyanithUserManager.removeAuthStateListener(1);
+        super.onDestroyView();
+    }
+
+    private void startPosting(){
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)
         {
@@ -74,28 +106,16 @@ public class CommunityFragment extends Fragment {
         startActivityForResult(intent, IMAGE_GALLERY_CODE);
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View root = inflater.inflate(R.layout.fragment_community,container,false);
-        PostManager.getInstance().setSnackbarParent(root);
-        root.findViewById(R.id.add_post_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NewPostBtn();
-            }
-        });
-
+    private void SetupViewPager(View root){
         final ViewPager viewPager = root.findViewById(R.id.feedViewPager);
 
         final IconSwitch iconSwitch = (IconSwitch)root.findViewById(R.id.trendingSwitch);
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
-
             @Override
             public void onPageSelected(int position) {
                 if (position == 0)
@@ -103,7 +123,6 @@ public class CommunityFragment extends Fragment {
                 else
                     iconSwitch.setChecked(IconSwitch.Checked.RIGHT);
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
 
@@ -121,19 +140,16 @@ public class CommunityFragment extends Fragment {
             }
         });
 
-
-        //viewPager.setAdapter(new feedViewPagerAdapter((MainActivity) getActivity(),this,(ProgressBar)root.findViewById(R.id.progressBar)));
         viewPager.setOffscreenPageLimit(1);
-
-
         viewPager.setAdapter(new FeedsPagerAdapter(this));
-
-        return root;
     }
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode != PERMISSIONS_REQUEST)
             return;
+
         if (grantResults.length != 0) {
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
@@ -146,7 +162,7 @@ public class CommunityFragment extends Fragment {
             Toast.makeText(getContext(),"Cannot Post Without Permission",Toast.LENGTH_LONG).show();
             return;
         }
-        NewPostBtn();
+        startPosting();
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -178,16 +194,7 @@ public class CommunityFragment extends Fragment {
                 Log.d("gyanith20", "Post_Uploaded");
         }
     }
-    @Override
-    public void onDestroy() {
-      /*  if (hotFeedAdapter != null)
-        hotFeedAdapter.removeListeners();
-        if (trendingFeedAdapter != null)
-        trendingFeedAdapter.removeListeners();
 
-       */
-        super.onDestroy();
-    }
 }
 
 class FeedsPagerAdapter extends PagerAdapter{

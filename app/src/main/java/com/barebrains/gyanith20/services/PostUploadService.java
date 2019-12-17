@@ -8,6 +8,7 @@ import android.util.Pair;
 
 import androidx.annotation.NonNull;
 
+import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.NotificationManager;
@@ -90,9 +91,9 @@ public class PostUploadService extends Service {
                                 ,Arrays.asList(getImgIds()));
 
 
-                        PostManager.CommitPostToDB(post, new PostManager.Callback() {
+                        PostManager.CommitPostToDB(post, new CompletionListener() {
                             @Override
-                            public void OnResult(Object o) {
+                            public void OnComplete() {
                                 stopSelf();
                             }
                         });

@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.hide(activeFragment)
-                .add(R.id.mainframe,fragment,"back").addToBackStack("back").commit();
+                .add(R.id.mainframe,fragment,"backBtn").addToBackStack("backBtn").commit();
         backStacked = activeFragment;
         activeFragment = communityFragment = fragment;
     }

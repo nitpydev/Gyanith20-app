@@ -4,7 +4,9 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
+import android.util.Log;
 
+import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.PostManager;
@@ -17,16 +19,24 @@ public class gyanith20 extends Application {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         CreateProgressNotificationChannel();
         HandleUserManagement();
+
         super.onCreate();
     }
 
     private void HandleUserManagement(){
-        GyanithUserManager.SignInUser(this,",","",null);
-        GyanithUser user = GyanithUserManager.RetriveGyanithUser(this);
-       if (user != null) {
-           GyanithUserManager.setLoggedUser(user);
-           PostManager.getInstance().Initialize();
-       }
+        try {
+            GyanithUserManager.SignInReturningUser(this, new ResultListener<GyanithUser>() {
+                @Override
+                public void OnResult(GyanithUser gyanithUser) {
+                    if (gyanithUser == null)
+                        Log.d("asd","User Token Expired");
+                    else
+                        Log.d("asd","user return successful");
+                }
+            });
+        } catch (IllegalStateException e) {
+            e.printStackTrace();//No Saved User Found
+        }
     }
 
     private void CreateProgressNotificationChannel(){

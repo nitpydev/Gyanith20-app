@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.interfaces.CompletionListener;
+import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.Post;
 import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -82,7 +84,7 @@ public class  PostManager{
 
 
 
-    public static void CommitPostToDB(Post post, final Callback result){
+    public static void CommitPostToDB(Post post, final CompletionListener result){
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference postRef = rootRef.child("posts").push();
         post.time = -post.time;
@@ -91,7 +93,7 @@ public class  PostManager{
             @Override
             public void onSuccess(Void aVoid) {
                 getInstance().showPostUploadedSnackbar();
-                result.OnResult(null);
+                result.OnComplete();
             }
         });
         rootRef.child("postCount").runTransaction(new Transaction.Handler() {
@@ -118,13 +120,13 @@ public class  PostManager{
                 .child("posts").child(post.postId).setValue(post.postId);
     }
 
-    public static void getPostImage(Context context,final int requestId, final String imgId, final Callback2<Bitmap,Integer> callback){
+    public static void getPostImage(Context context,final int requestId, final String imgId, final ResultListener<Pair<Bitmap,Integer>> callback){
         final SharedPreferences sp = context.getSharedPreferences(context.getString(R.string.package_name),Context.MODE_PRIVATE);
         String imgPath = sp.getString(imgId,"");
        if (!imgPath.equals("")){
            Bitmap bitmap = BitmapFactory.decodeFile(imgPath);
            if (bitmap != null) {
-               callback.OnResult(bitmap,requestId);
+               callback.OnResult(new Pair<>(bitmap,requestId));
                return;
            }
        }
@@ -136,16 +138,16 @@ public class  PostManager{
            public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
                if (!task.isSuccessful()) {
                    Log.d("asd","e : " + task.getException().getLocalizedMessage());
-                   callback.OnResult(null,requestId);
+                   callback.OnResult(new Pair<Bitmap, Integer>(null,requestId));
                    return;
                }
                sp.edit().putString(imgId,imgFile.getAbsolutePath()).apply();
-               callback.OnResult(BitmapFactory.decodeFile(imgFile.getAbsolutePath()),requestId);
+               callback.OnResult(new Pair<>(BitmapFactory.decodeFile(imgFile.getAbsolutePath()),requestId));
            }
        });
     }
 
-    public static void getSpecificPost(String postId, final Callback<Post> callback){
+    public static void getSpecificPost(String postId, final ResultListener<Post> callback){
         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
         DatabaseReference postRef = root.child("posts").child(postId);
         postRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -165,7 +167,7 @@ public class  PostManager{
     }
 
 
-    public static void deletePost(Post post, final VoidCallback callback){
+    public static void deletePost(Post post, final CompletionListener callback){
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference postRef = rootRef.child("posts").child(post.postId);
         postRef.removeValue();
@@ -173,7 +175,7 @@ public class  PostManager{
         userPostRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                callback.OnResult();
+                callback.OnComplete();
             }
         });
 
@@ -205,43 +207,17 @@ public class  PostManager{
         return FirebaseDatabase.getInstance().getReference().push().getKey();
     }
 
-    public interface VoidCallback{
-        void OnResult();
-    }
-
-    public interface Callback<T>{
-        void OnResult(T t);
-    }
-    public interface Callback2<T,J>{
-        void OnResult(T t,J j);
-    }
-
-
-
-
     //LIKES MANAGEMENT
     private Set<String> likedPosts;
 
     public void Initialize()
     {
-
-        getRemoteLikedPosts(new Callback<String[]>()  {
+        getRemoteLikedPosts(new ResultListener<String[]>()  {
             @Override
             public void OnResult(String[] strings) {
                 likedPosts = new HashSet<>(Arrays.asList(strings));
             }
         });
-
-       /* getRemoteUserPosts(new Callback<Post[]>() {
-            @Override
-            public void OnResult(Post[] posts) {
-                userPostIds = new HashSet<>();
-                //for (int i = 0;i< posts.length;i++)
-                 //   userPostIds.add(posts[i].postId);
-            }
-        });
-
-        */
     }
 
     public boolean isLiked(String postId)
@@ -315,7 +291,7 @@ public class  PostManager{
         });
     }
 
-    private void getRemoteLikedPosts(final PostManager.Callback<String[]> callback){
+    private void getRemoteLikedPosts(final ResultListener<String[]> callback){
         FirebaseDatabase.getInstance().getReference().child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
                 .child("likedPosts").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -358,7 +334,7 @@ public class  PostManager{
     //private Set<String> userPostIds;
     private View snackbarParent;
     private FirebaseRecyclerPagingAdapter[] refresh = new FirebaseRecyclerPagingAdapter[2];
-    public void getRemoteUserPosts(final Callback<Post[]> callback){
+    public void getRemoteUserPosts(final ResultListener<Post[]> callback){
         FirebaseDatabase.getInstance().getReference().child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
                 .child("posts").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

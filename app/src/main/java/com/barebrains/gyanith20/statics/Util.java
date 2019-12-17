@@ -9,6 +9,9 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Pair;
 
+import com.barebrains.gyanith20.models.GyanithUser;
+import com.google.gson.Gson;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -17,7 +20,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.nio.channels.FileChannel;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public class Util {
@@ -121,6 +127,56 @@ public class Util {
         }
 
         return b;
+    }
+
+    public static String sha1(String input)
+    { try {
+        // getInstance() method is called with algorithm SHA-1
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+
+        // digest() method is called
+        // to calculate message digest of the input string
+        // returned as array of byte
+        byte[] messageDigest = md.digest(input.getBytes());
+
+        // Convert byte array into signum representation
+        BigInteger no = new BigInteger(1, messageDigest);
+
+        // Convert message digest into hex value
+        String hashtext = no.toString(16);
+
+        // Add preceding 0s to make it 32 bit
+        while (hashtext.length() < 32) {
+            hashtext = "0" + hashtext;
+        }
+
+        // return the HashText
+        return hashtext;
+    }
+
+    // For specifying wrong message digest algorithms
+    catch (NoSuchAlgorithmException e) {
+        throw new RuntimeException(e);
+    }
+    }
+
+    public static GyanithUser jsonToGyanithUser(String s,String token){
+        Gson gson = new Gson();
+        GyanithUserJsonResponse json = gson.fromJson(s,GyanithUserJsonResponse.class);
+       /* return new GyanithUser(json.gyanithId
+        ,json.name
+        ,json.username
+        ,json.email
+        ,json.phoneNumber
+        ,json.clg
+        ,json.token);*/
+       //FOR NOW AS USER INFO FIELDS IN THE BACKEND ARE NOT YET IMPLEMENTED,WE CREATE A DUMMY USER
+       return new GyanithUser("GYsd59",
+               "Pushpavel",
+               "Pixel54","jpushpavel@gmail.com",
+               "4897854541",
+               "NITPY",
+               token);
     }
 }
 

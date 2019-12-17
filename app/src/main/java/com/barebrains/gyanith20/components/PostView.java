@@ -5,24 +5,26 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.coordinatorlayout.widget.ViewGroupUtils;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.barebrains.gyanith20.adapters.postImagesAdaptor;
+import com.barebrains.gyanith20.interfaces.AuthStateListener;
+import com.barebrains.gyanith20.interfaces.CompletionListener;
+import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.statics.Anim;
@@ -52,18 +54,19 @@ public class PostView extends RelativeLayout {
     private View profileBtn;
     private View deleteBtn;
     private View tapPanel;
-    private View progressBar;
     private View postContent;
 
     //Other Resources
     private Drawable likedDrawable;
     private Drawable unlikedDrawable;
 
-
+    private int isUserLiked = 0;
     private boolean likeState;
     private Post post;
     private View deletedPost;
     private ViewGroup parentView;
+
+    private AuthStateListener authStateListener;
 
     public PostView(Context context) {
         super(context);
@@ -102,7 +105,6 @@ public class PostView extends RelativeLayout {
         profileBtn = findViewById(R.id.profile_btn);
         tapPanel = findViewById(R.id.tap_panel);
         deleteBtn = findViewById(R.id.post_delete_btn);
-        progressBar = findViewById(R.id.post_progress);
         postContent = findViewById(R.id.post);
         parentView = findViewById(R.id.post_root);
 
@@ -114,48 +116,14 @@ public class PostView extends RelativeLayout {
     }
 
     public void SetPost(final Context context, Post initalPost) {
-
-        postContent.setVisibility(VISIBLE);
-        if (deletedPost != null)
-            parentView.removeView(deletedPost);
-
+        resetPostView();
         post = initalPost;
-        usernameTxt.setText(post.username);
-        likeCountText.setText((post.likes != 0) ? Long.toString(post.likes).substring(1) : "0");
-        captionsText.setText(post.caption);
-        bottomCaptionsText.setText(post.caption);
-        timestampText.setText(Util.BuildTimeAgoString(post.time));
+        SetUIData();
         setUpViewPager(context, post.imgIds.toArray());
-        tapPanel.setVisibility(GONE);
-        progressBar.setVisibility(GONE);
         viewPager.setOnViewPagerClickListener(new ClickableViewPager.OnClickListener() {
             @Override
             public void onViewPagerClick(ViewPager viewPager) {
                 captionStateToggle();
-            }
-        });
-
-        if (post.gyanithId.equals(GyanithUserManager.getCurrentUser().gyanithId))
-            deleteBtn.setVisibility(VISIBLE);
-        else
-            deleteBtn.setVisibility(GONE);
-
-        if (PostManager.getInstance().isLiked(post.postId)) {
-            setLikeIcon(true);
-            likeState = true;
-        } else{
-            setLikeIcon(false);
-            likeState = false;
-        }
-
-
-        likeBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!likeState)
-                    PostManager.getInstance().likePost(post.postId);
-                else
-                    PostManager.getInstance().dislikePost(post.postId);
             }
         });
 
@@ -170,52 +138,120 @@ public class PostView extends RelativeLayout {
             }
         });
 
-        deleteBtn.setOnClickListener(new OnClickListener() {
+        //Below are the Auth state aware Statements
+        authStateListener = new AuthStateListener(){
             @Override
-            public void onClick(View view) {
-                progressBar.setVisibility(VISIBLE);
-                PostManager.deletePost(post, new PostManager.VoidCallback() {
+            public void onChange() {
+                deleteBtn.setVisibility(GONE);
+                setLikeState(false);
+                likeBtn.setOnClickListener(null);
+                deleteBtn.setOnClickListener(null);
+            }
+
+            @Override
+            public void VerifiedUser() {
+                if (post.gyanithId.equals(GyanithUserManager.getCurrentUser().gyanithId))
+                    deleteBtn.setVisibility(VISIBLE);
+
+                if (PostManager.getInstance().isLiked(post.postId)) {
+                    isUserLiked = 1;
+                    setLikeState(true);
+                }
+                else {
+                    isUserLiked = 0;
+                    setLikeState(false);
+                }
+
+
+                likeBtn.setOnClickListener(new OnClickListener() {
                     @Override
-                    public void OnResult() {
-                        progressBar.setVisibility(GONE);
-                        deletedPost = LayoutInflater.from(context).inflate(R.layout.item_deleted_post,parentView,false);
-                        Anim.zoomY(parentView,1f,0.2f,0f,300);
-                        Anim.alpha(postContent, 1f, 0f, 300, new AnimatorListenerAdapter() {
+                    public void onClick(View view) {
+                        if (!likeState)
+                            PostManager.getInstance().likePost(post.postId);
+                        else
+                            PostManager.getInstance().dislikePost(post.postId);
+                    }
+                });
+
+                deleteBtn.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        PostManager.deletePost(post, new CompletionListener() {
                             @Override
-                            public void onAnimationEnd(Animator animation) {
-                                postContent.setVisibility(GONE);
-                                parentView.addView(deletedPost);
-                                Anim.alpha(deletedPost,0f,1f,300,null);
+                            public void OnComplete() {
+                                deletedPost = LayoutInflater.from(context).inflate(R.layout.item_deleted_post,parentView,false);
+                                deletePostAnimation();
                             }
                         });
+                    }
+                });
 
+            }
+
+            @Override
+            public void UnVerifiedUser() {
+                likeBtn.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getContext(),"Verify Email to Like Posts",Toast.LENGTH_SHORT).show();
                     }
                 });
             }
+
+            @Override
+            public void NullUser() {
+                likeBtn.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getContext(),"Sign in to Like Posts", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        };
+
+        GyanithUserManager.addAuthStateListener(authStateListener);
+    }
+
+    private void resetPostView(){
+        postContent.setVisibility(VISIBLE);
+        if (deletedPost != null)
+            parentView.removeView(deletedPost);
+        if (post != null)
+            GyanithUserManager.removeAuthStateListener(authStateListener);
+        tapPanel.setVisibility(GONE);
+    }
+
+
+    private void SetUIData(){
+        usernameTxt.setText(post.username);
+        likeCountText.setText((post.likes != 0) ? Long.toString(post.likes).substring(1) : "0");
+        captionsText.setText(post.caption);
+        bottomCaptionsText.setText(post.caption);
+        timestampText.setText(Util.BuildTimeAgoString(post.time));
+    }
+
+    private void deletePostAnimation(){
+        Anim.zoomY(parentView,1f,0.2f,0f,300);
+        Anim.alpha(postContent, 1f, 0f, 300, new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                postContent.setVisibility(GONE);
+                parentView.addView(deletedPost);
+                Anim.alpha(deletedPost,0f,1f,300,null);
+            }
         });
     }
+
+
 
     public PostManager.OnLikeStateChangedListener getLikeChangedListener(){
         return new PostManager.OnLikeStateChangedListener() {
             @Override
             public void OnChange(boolean state) {
-                if (state){
-                    setLikeIcon(true);
-                    likeState = true;
-                    post.likes--;
-                    likeCountText.setText(String.valueOf(-post.likes));
-                }
-                else {
-                    setLikeIcon(false);
-                    likeState = false;
-                    post.likes++;
-                    likeCountText.setText(String.valueOf(-post.likes));
-                }
+               setLikeState(state);
             }
         };
     }
-
-
 
     private String buildDeepLink(String postId){
         return "http://gyanith.com/post/" + postId;
@@ -228,11 +264,11 @@ public class PostView extends RelativeLayout {
         dotsIndicator.setVisibility((bitmaps.length > 1)?VISIBLE:GONE);
         dotsIndicator.setViewPager(viewPager);
         for (int i = 0; i < bitmaps.length;i++)
-            PostManager.getPostImage(context, i, (String) imgIds[i], new PostManager.Callback2<Bitmap, Integer>() {
+            PostManager.getPostImage(context, i, (String) imgIds[i], new ResultListener<Pair<Bitmap, Integer>>() {
                 @Override
-                public void OnResult(Bitmap bitmap, Integer integer) {
-                    bitmaps[integer] = bitmap;
-                    ((postImagesAdaptor)viewPager.getAdapter()).UpdatePosition(viewPager,integer);
+                public void OnResult(Pair<Bitmap,Integer> result) {
+                    bitmaps[result.second] = result.first;
+                    ((postImagesAdaptor)viewPager.getAdapter()).UpdatePosition(viewPager,result.second);
                 }
             });
     }
@@ -247,15 +283,17 @@ public class PostView extends RelativeLayout {
         }
     }
 
-    private void setLikeIcon(boolean state)
-    {
+    private void setLikeState(boolean state){
         if (state)
         {
+            likeCountText.setText(String.valueOf(-post.likes + isUserLiked - 1));
             likeIcon.setImageDrawable(likedDrawable);
         }
         else
         {
             likeIcon.setImageDrawable(unlikedDrawable);
+            likeCountText.setText(String.valueOf(-post.likes + isUserLiked));
         }
+        likeState = state;
     }
 }

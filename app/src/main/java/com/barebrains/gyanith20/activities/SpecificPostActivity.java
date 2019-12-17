@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.barebrains.gyanith20.components.PostView;
+import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.statics.PostManager;
@@ -36,7 +37,7 @@ public class SpecificPostActivity extends AppCompatActivity {
     }
 
     private void GetPost(String postId){
-        PostManager.getSpecificPost(postId, new PostManager.Callback<Post>() {
+        PostManager.getSpecificPost(postId, new ResultListener<Post>() {
             @Override
             public void OnResult(Post post) {
                 PostView postView = findViewById(R.id.specific_post);

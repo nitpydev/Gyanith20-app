@@ -9,16 +9,17 @@ public class GyanithUser {
     public String email;
     public String phoneNo;
     public String clg;
+    public String token;
+    public boolean verified;
 
-    //Social feature specific
-    public List<String> likedPosts;
-    public GyanithUser(String gyanithId,String name,String userName,String email,String phoneNo,String clg){
+    public GyanithUser(String gyanithId,String name,String userName,String email,String phoneNo,String clg,String token){
         this.gyanithId = gyanithId;
         this.name = name;
         this.userName = userName;
         this.email = email;
         this.phoneNo = phoneNo;
         this.clg = clg;
+        this.token = token;
     }
 
 }
