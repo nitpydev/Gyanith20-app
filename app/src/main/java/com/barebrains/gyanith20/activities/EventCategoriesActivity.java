@@ -46,7 +46,7 @@ public class EventCategoriesActivity extends AppCompatActivity {
     String url_event = "http://gyanith.org/api.php?type=w&action=fetch&key=2ppagy0";
     eventCategoriesAdapter ada;
     ArrayList<eventitem> items;
-    String bug;
+
 
     eventitem it;
     ListView lvi;
@@ -144,20 +144,20 @@ public class EventCategoriesActivity extends AppCompatActivity {
                                 }
                                 }
                                 catch (JSONException e) {
-                                    //catch exeption
+                                    //catch exception
                                     e.printStackTrace();
                                 }
 
                             }
 
                         // caches the
-
+                        if(!items.isEmpty()){
                         Gson gson = new Gson();
                         String cache_json = gson.toJson(items);
                         prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString(PREF_KEY,cache_json);
-                        editor.apply();
+                        editor.apply();}
 
                             if(items.isEmpty())
                                 ((TextView)findViewById(R.id.textView14)).setVisibility(View.VISIBLE);
@@ -174,7 +174,7 @@ public class EventCategoriesActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError volleyError) {
 
                         SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-                        String string = prefs.getString(PREF_KEY, null);
+                        String string = prefs.getString(PREF_KEY, "no input");
                         try {
                             JSONArray jsonArray = new JSONArray(string);
 
