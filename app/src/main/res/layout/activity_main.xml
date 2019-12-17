@@ -30,18 +30,19 @@
                     android:layout_height="50dp"
                     android:layout_gravity="center_vertical"
                     android:layout_margin="8dp"
+                    android:visibility="gone"
                     app:srcCompat="@drawable/l2" />
 
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="@font/sofiaprolight"
+                    android:layout_marginLeft="15dp"
+                    android:fontFamily="@font/poppinsr"
                     android:gravity="center_vertical"
                     android:text="@string/topbar_home"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="24sp" />
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
 
                 <Space
                     android:layout_width="0dp"

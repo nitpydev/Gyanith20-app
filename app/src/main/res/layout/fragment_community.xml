@@ -60,11 +60,13 @@
         android:layout_height="70dp"
         android:layout_gravity="bottom|left"
         android:layout_margin="8dp"
-        app:isw_active_tint_icon_left="@color/colorBackdropAccent"
-        app:isw_active_tint_icon_right="@color/colorBackdropAccent"
+        app:isw_active_tint_icon_left="#fefefe"
+        app:isw_active_tint_icon_right="#fefefe"
         app:isw_icon_left="@drawable/ic_hot_24dp"
         app:isw_icon_right="@drawable/ic_baseline_favorite_24px"
-        app:isw_icon_size="30dp" />
+        app:isw_icon_size="30dp"
+        app:isw_inactive_tint_icon_left="#727172"
+        app:isw_inactive_tint_icon_right="#727172" />
 
     <ProgressBar
         android:id="@+id/progressBar"

@@ -2,11 +2,11 @@
 <resources>
     <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#232C3D</color>
-    <color name="colorAccent">#4EE956</color>
+    <color name="colorAccent">#112BAD</color>
     <color name="colorSecondaryAccent">#F71976</color>
-    <color name="colorBackDrop">#232C3D</color>
+    <color name="colorBackDrop">#141414</color>
     <color name="colorSecondaryBackDrop">#49546B</color>
-    <color name="colorBackdropAccent">#293346</color>
+    <color name="colorBackdropAccent">#1f1f1f</color>
 
     <color name="grey">#e9e6e6</color>
     <color name="blackbg">#020203</color>

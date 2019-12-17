@@ -96,7 +96,7 @@
         <com.barebrains.gyanith20.components.ClickableViewPager
             android:id="@+id/post_img_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="380dp"
+            android:layout_height="300dp"
             app:layout_constraintBottom_toTopOf="@+id/materialCardView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
