@@ -27,7 +27,6 @@ public class gyanith20 extends Application {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         CreateProgressNotificationChannel();
         HandleUserManagement();
-
         super.onCreate();
     }
     private void setScreenOrientation(){

@@ -333,6 +333,17 @@ public class GyanithUserManager {
             else
                 listener.UnVerifiedUser();
         }
+        for (AuthStateListener listener : getInstance().userStateListenersUnMapped) {
+            listener.onChange();
+            if (loggedUser == null)
+                listener.NullUser();
+            else if (loggedUser.verified)
+                listener.VerifiedUser();
+            else
+                listener.UnVerifiedUser();
+        }
+
+
     }
 }
 

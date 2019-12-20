@@ -55,10 +55,9 @@ public class CommunityFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         final View root = inflater.inflate(R.layout.fragment_community,container,false);
         PostManager.getInstance().setSnackbarParent(root); //Need to check here*/*/
-
+        PostManager.getInstance().showPostUploadedSnackbar();
         final View addPostBtn = root.findViewById(R.id.add_post_btn);
 
         GyanithUserManager.addAuthStateListner(1, new AuthStateListener() {
@@ -258,6 +257,10 @@ class FeedsPagerAdapter extends PagerAdapter{
                 return new PostViewHolder(item);
             }
 
+            @Override
+            public int getItemCount() {
+                return (PostManager.postCount < super.getItemCount())?PostManager.postCount:super.getItemCount();
+            }
 
             @Override
             protected void onLoadingStateChanged(@NonNull LoadingState state) {
