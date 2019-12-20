@@ -44,7 +44,7 @@ import java.util.Date;
 public class EventCategoriesActivity extends AppCompatActivity {
 
     String s,name,date,eventtag, type, cat;
-    String url_event = "http://gyanith.org/api.php?type=w&action=fetch&key=2ppagy0";
+    String url_event = "http://gyanith.org/api.php?action=fetchAll&key=2ppagy0";
     eventCategoriesAdapter ada;
     ArrayList<eventitem> items;
 

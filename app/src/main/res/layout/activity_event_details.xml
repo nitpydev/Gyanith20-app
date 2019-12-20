@@ -111,7 +111,7 @@
                         android:layout_marginBottom="25dp"
                         android:fontFamily="@font/spregu"
                         android:gravity="center"
-                        android:text="Introduction to deep learning"
+                        android:text="Loading..."
                         android:textColor="@android:color/white"
                         android:textSize="32sp" />
 
@@ -135,7 +135,7 @@
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Requisites" />
+                    android:text="Rules" />
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
@@ -153,7 +153,7 @@
                 android:layout_marginBottom="80dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/pnreg"
-                android:text="Loading please wait"
+
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
         </LinearLayout>

@@ -56,7 +56,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     String id="";
     AlertDialog.Builder a;
     AlertDialog vi;
-    String url = "http://gyanith.org/api.php?type=w&action=fetch&key=2ppagy0";
+    String url = "http://gyanith.org/api.php?action=fetchAll&key=2ppagy0";
 
 
     @Override
@@ -83,6 +83,13 @@ public class EventDetailsActivity extends AppCompatActivity {
         eveimage=findViewById(R.id.eveimv);
         favtb=findViewById(R.id.favButton);
 
+        if(child.equals("Workshop"))
+        {
+            dtab.getTabAt(1).setText("Requisites");
+        }
+
+
+
 
         bb2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,11 +109,14 @@ public class EventDetailsActivity extends AppCompatActivity {
                     try
                     {
                         int int_tag = Integer.parseInt(tag);
-                        JSONObject jsonobject = jsonArray.getJSONObject(int_tag);
+                        JSONObject jsonobject = jsonArray.getJSONObject(int_tag - 1);
 
-                        title.setText(jsonobject.getString("name"));
+                        String name = jsonobject.getString("name");
+
+                        title.setText(name);
 
                         tab1 = jsonobject.getString("des");
+
                         desc.setText(tab1);
 
                         tab2 = jsonobject.getString("rules");
@@ -162,7 +172,6 @@ public class EventDetailsActivity extends AppCompatActivity {
 
 
 
-
         dtab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -193,6 +202,8 @@ public class EventDetailsActivity extends AppCompatActivity {
             ((Button)findViewById(R.id.reg)).setVisibility(View.GONE);
         if(tag.equals("P1"))
             ((Button)findViewById(R.id.reg)).setVisibility(View.GONE);
+
+
 
 
         reg = FirebaseDatabase.getInstance().getReference().child(child).child(tag);
