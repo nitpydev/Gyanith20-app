@@ -56,7 +56,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     String id="";
     AlertDialog.Builder a;
     AlertDialog vi;
-    String url = "http://gyanith.org/api.php?type=w&action=fetch&key=2ppagy0";
+    String url = "http://gyanith.org/api.php?action=fetchAll&key=2ppagy0";
 
 
     @Override
@@ -107,6 +107,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                         title.setText(jsonobject.getString("name"));
 
                         tab1 = jsonobject.getString("des");
+
                         desc.setText(tab1);
 
                         tab2 = jsonobject.getString("rules");
@@ -193,6 +194,8 @@ public class EventDetailsActivity extends AppCompatActivity {
             ((Button)findViewById(R.id.reg)).setVisibility(View.GONE);
         if(tag.equals("P1"))
             ((Button)findViewById(R.id.reg)).setVisibility(View.GONE);
+
+
 
 
         reg = FirebaseDatabase.getInstance().getReference().child(child).child(tag);
