@@ -103,14 +103,6 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="email"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold" />
-
-                    <TextView
                         android:id="@+id/userinfo_phoneno"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -119,6 +111,14 @@
                         android:text="9481667495"
                         android:textColor="@android:color/white"
                         android:textStyle="italic" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="email"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/userinfo_email"

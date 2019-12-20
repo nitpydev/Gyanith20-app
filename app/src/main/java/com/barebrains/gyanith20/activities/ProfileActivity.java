@@ -103,6 +103,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 GyanithUserManager.SignOutUser(ProfileActivity.this);
+                finish();
             }
         });
     }
