@@ -8,6 +8,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -77,11 +78,15 @@ public class gyanith20 extends Application {
                         Log.d("asd","User Token Expired");
                     else
                         Log.d("asd","user return successful");
+                }
 
+                @Override
+                public void OnError(String error) {
+                    Log.d("asd","Error in returning user");
                 }
             });
         } catch (IllegalStateException e) {
-            e.printStackTrace();//No Saved User Found
+            Log.d("asd","No Saved User Found");//No Saved User Found
         }
     }
 

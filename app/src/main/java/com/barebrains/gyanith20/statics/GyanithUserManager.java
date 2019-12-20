@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -20,6 +21,7 @@ import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -99,10 +101,9 @@ public class GyanithUserManager {
     }
 
     public static void SignInReturningUser(final Context context, final ResultListener<GyanithUser> result) throws IllegalStateException {
-        GyanithUser user = RetriveGyanithUser(context);
+        final GyanithUser user = RetriveGyanithUser(context);
         if (user == null)
             throw new IllegalStateException();
-        Log.d("asd","token : " + user.token);
         GyanithSignInWithToken(context, user.token, new ResultListener<GyanithUser>() {
             @Override
             public void OnResult(GyanithUser gyanithUser) {
@@ -119,6 +120,7 @@ public class GyanithUserManager {
 
             @Override
             public void OnError(String error) {
+                loggedUser = user;
                 result.OnError(error);
             }
         });
@@ -137,11 +139,11 @@ public class GyanithUserManager {
                             return;
                         }
 
-                        Class e = task.getException().getClass();
+                        Exception e = task.getException();
 
-                        if (e == FirebaseAuthInvalidCredentialsException.class)
+                        if (e instanceof FirebaseAuthInvalidCredentialsException)
                             Log.d("asd", "FirebaseAuth : Invalid Password");
-                        else if (e == FirebaseAuthInvalidUserException.class) {
+                        else if (e instanceof FirebaseAuthInvalidUserException) {
                             FirebaseUserSignUp(gyanithUser, gyanithUser.gyanithId, new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -224,8 +226,7 @@ public class GyanithUserManager {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                callback.OnError("Internal Error");
-                error.printStackTrace();
+                callback.OnError("Network Error");
             }
         });
 

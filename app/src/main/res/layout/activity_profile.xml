@@ -19,7 +19,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/profile_card"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:cardBackgroundColor="@color/colorPrimaryDark">
@@ -154,10 +154,17 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/qr_card"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:cardBackgroundColor="#FFFFFF">
+
+            <ProgressBar
+                android:id="@+id/qr_prog"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
 
             <ImageView
                 android:id="@+id/qrBtn"
@@ -165,8 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="32dp"
-                android:foreground="?android:attr/selectableItemBackground"
-                app:srcCompat="@drawable/qr_sample" />
+                android:foreground="?android:attr/selectableItemBackground" />
 
             <ImageView
                 android:id="@+id/qr_back_btn"
