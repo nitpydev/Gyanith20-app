@@ -2,19 +2,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/topb">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_gravity="center_vertical"
-            app:cardBackgroundColor="@color/colorBackdropAccent"
+            app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="0dp"
             app:cardElevation="2dp">
 
@@ -42,7 +41,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/topbar_home"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp" />
+                    android:textSize="22sp" />
 
                 <Space
                     android:layout_width="0dp"
@@ -58,7 +57,7 @@
                     android:background="@drawable/ic_baseline_account_circle_24px"
                     android:foreground="?attr/selectableItemBackground" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <FrameLayout
             android:id="@+id/mainframe"

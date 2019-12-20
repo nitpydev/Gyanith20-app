@@ -3,10 +3,12 @@ package com.barebrains.gyanith20.statics;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -19,6 +21,7 @@ import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -63,10 +66,10 @@ public class GyanithUserManager {
     {
         if (loggedUser != null)
             throw new IllegalStateException();
-
         GetGyanithUserToken(context,username, password, new ResultListener<String>() {
             @Override
             public void OnResult(String token) {
+
                 if (token == null){
                     result.OnResult(null);//Invalid Credentials
                     return;
@@ -82,16 +85,25 @@ public class GyanithUserManager {
                         SaveGyanithUser(context,loggedUser);
                         result.OnResult(gyanithUser);
                     }
+
+                    @Override
+                    public void OnError(String error) {
+                        result.OnError(error);
+                    }
                 });
+            }
+
+            @Override
+            public void OnError(String error) {
+                result.OnError(error);
             }
         });
     }
 
     public static void SignInReturningUser(final Context context, final ResultListener<GyanithUser> result) throws IllegalStateException {
-        GyanithUser user = RetriveGyanithUser(context);
+        final GyanithUser user = RetriveGyanithUser(context);
         if (user == null)
             throw new IllegalStateException();
-
         GyanithSignInWithToken(context, user.token, new ResultListener<GyanithUser>() {
             @Override
             public void OnResult(GyanithUser gyanithUser) {
@@ -105,10 +117,18 @@ public class GyanithUserManager {
                 SaveGyanithUser(context,gyanithUser);
                 result.OnResult(loggedUser);
             }
+
+            @Override
+            public void OnError(String error) {
+                loggedUser = user;
+                result.OnError(error);
+            }
         });
     }
 
     private static void FirebaseUserSignIn(final GyanithUser gyanithUser) {
+        if(FirebaseAuth.getInstance().getCurrentUser() != null)
+            return;
 
         FirebaseAuth.getInstance().signInWithEmailAndPassword(gyanithUser.email, gyanithUser.gyanithId)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -119,14 +139,16 @@ public class GyanithUserManager {
                             return;
                         }
 
-                        Class e = task.getException().getClass();
+                        Exception e = task.getException();
 
-                        if (e == FirebaseAuthInvalidCredentialsException.class)
+                        if (e instanceof FirebaseAuthInvalidCredentialsException)
                             Log.d("asd", "FirebaseAuth : Invalid Password");
-                        else if (e == FirebaseAuthInvalidUserException.class) {
+                        else if (e instanceof FirebaseAuthInvalidUserException) {
                             FirebaseUserSignUp(gyanithUser, gyanithUser.gyanithId, new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
+                                    if (FirebaseAuth.getInstance().getCurrentUser() != null)
+                                        return;
                                     Log.d("asd", "FirebaseAuth : New User " + task.isSuccessful());
                                 }
                             });
@@ -174,6 +196,7 @@ public class GyanithUserManager {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        result.OnError("Internal Error");
                         error.printStackTrace();
                     }
                 });
@@ -181,7 +204,7 @@ public class GyanithUserManager {
         Volley.newRequestQueue(context).add(userTokenRequest);
     }
 
-    private static void GyanithSignInWithToken(Context context, final String token, final ResultListener<GyanithUser> callback) {
+    private static void GyanithSignInWithToken(final Context context, final String token, final ResultListener<GyanithUser> callback) {
 
         RequestQueue requestQueue = Volley.newRequestQueue(context.getApplicationContext());
         JsonObjectRequest userInfoRequest = new JsonObjectRequest(Request.Method.GET,buildUserInfoRequestUrl(token), null
@@ -198,16 +221,15 @@ public class GyanithUserManager {
                 {
                     callback.OnResult(null);
                 }
-                Log.d("asd","no error");
             }
         },new Response.ErrorListener(){
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("asd","error");
-                error.printStackTrace();
+                callback.OnError("Network Error");
             }
         });
+
         userInfoRequest.setRetryPolicy(new DefaultRetryPolicy(
                 10000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
@@ -229,12 +251,7 @@ public class GyanithUserManager {
         sp.edit().putString(context.getString(R.string.gyanithUserKey), json)
                 .apply();
         loggedUser = user;
-        if (FirebaseAuth.getInstance().getCurrentUser() == null)
-            FirebaseUserSignIn(user);
-        else if (!FirebaseAuth.getInstance().getCurrentUser().getEmail().equals(loggedUser.email)) {
-            FirebaseAuth.getInstance().signOut();
-            FirebaseUserSignIn(loggedUser);
-        }
+        resolveUserState(context);
         AuthStateChanged();
     }
 
@@ -247,7 +264,7 @@ public class GyanithUserManager {
         return gson.fromJson(json,GyanithUser.class);
     }
 
-    private static void SignOutUser(Context context){
+    public static void SignOutUser(Context context){
         if (loggedUser == null)
             return;
         AuthStateChanged();
@@ -257,7 +274,7 @@ public class GyanithUserManager {
         loggedUser = null;
     }
 
-    public static boolean resolveUserState(Context context){
+    public static boolean resolveUserState(final Context context){
         if (loggedUser == null) {
             SignOutUser(context);
             return false;
@@ -265,6 +282,10 @@ public class GyanithUserManager {
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null)
             FirebaseUserSignIn(loggedUser);
+        else if (!FirebaseAuth.getInstance().getCurrentUser().getEmail().equals(loggedUser.email)) {
+            FirebaseAuth.getInstance().signOut();
+            FirebaseUserSignIn(loggedUser);
+        }
 
         return true;
     }
@@ -315,16 +336,5 @@ public class GyanithUserManager {
     }
 }
 
-class GyanithUserJsonResponse{
-    public String username;
-    public String name;
-    public String email;
-    public String gyanithId;
-    public String phoneNumber;
-    public String clg;
-    public String token;
 
-    public GyanithUserJsonResponse(){}
-    //Other Fields will be updated following the backend
-}
 

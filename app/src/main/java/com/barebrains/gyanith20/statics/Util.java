@@ -10,20 +10,19 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.barebrains.gyanith20.models.GyanithUser;
+import com.barebrains.gyanith20.models.eventitem;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Util {
@@ -171,12 +170,87 @@ public class Util {
         ,json.clg
         ,json.token);*/
        //FOR NOW AS USER INFO FIELDS IN THE BACKEND ARE NOT YET IMPLEMENTED,WE CREATE A DUMMY USER
-       return new GyanithUser("GYsd59",
+        json.registeredEvents = new ArrayList<>();
+        eventItemJson a = new eventItemJson();
+        a.name = "nameed";
+        a.id = "tageg";
+        a.timestamp = "6a4446464";
+        a.type = "te";
+        json.registeredEvents.add(a);
+        eventItemJson b = new eventItemJson();
+        b.name = "nameed_te";
+        b.id = "tageg_te";
+        b.timestamp = "6a4446464_te";
+        b.type = "w";
+        json.registeredEvents.add(b);
+        Pair<ArrayList<eventitem>,ArrayList<eventitem>> events = segregateEvents(jsonToEventItem(json.registeredEvents));
+        return new GyanithUser("GYsd59",
                "Pushpavel",
                "Pixel54","jpushpavel@gmail.com",
                "4897854541",
                "NITPY",
+               events.first,
+               events.second,
+               true,
                token);
+    }
+
+    public static ArrayList<eventitem> jsonToEventItem(ArrayList<eventItemJson> jsons){
+        ArrayList<eventitem> eventitems = new ArrayList<>(jsons.size());
+        for (int i = 0; i < jsons.size();i++){
+            eventItemJson itemJson = jsons.get(i);
+
+            eventitem item = new eventitem(itemJson.name,itemJson.timestamp,itemJson.id);
+            item.setType(itemJson.type);
+            eventitems.add(item);
+        }
+
+        return eventitems;
+    }
+
+    public static Pair<ArrayList<eventitem>,ArrayList<eventitem>> segregateEvents(ArrayList<eventitem> unsorted){
+        ArrayList<eventitem> te,w;
+        te = new ArrayList<>();
+        w = new ArrayList<>();
+
+        for (eventitem eventitem : unsorted){
+            if (eventitem.type == "w")
+                w.add(eventitem);
+            else
+                te.add(eventitem);
+        }
+
+        return new Pair<>(te,w);
     }
 }
 
+class GyanithUserJsonResponse{
+    public String username;
+    public String name;
+    public String email;
+    public String gyanithId;
+    public String phoneNumber;
+    public String clg;
+    public String token;
+    public ArrayList<eventItemJson> registeredEvents;
+
+    public GyanithUserJsonResponse(){}
+    //Other Fields will be updated following the backend
+}
+
+
+class eventItemJson{
+    public String id;
+    public String name;
+    public String des;
+    public String rules;
+    public String contact;
+    public String img1;
+    public String img2;
+    public String cost;
+    public String max_ptps;
+    public String type;
+    public String timestamp;
+
+    public eventItemJson(){}
+}

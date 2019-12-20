@@ -26,6 +26,7 @@ import com.barebrains.gyanith20.fragments.HomeFragment;
 import com.barebrains.gyanith20.fragments.NotificationFragment;
 import com.barebrains.gyanith20.fragments.ScheduleFragment;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -110,31 +111,10 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
         activeFragment = fragment;
     }
-    /*private Fragment backStacked;
-    public void BackStackedFragment(Fragment fragment){
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.hide(activeFragment)
-                .add(R.id.mainframe,fragment,"backBtn").addToBackStack("backBtn").commit();
-        backStacked = activeFragment;
-        activeFragment = communityFragment = fragment;
-    }
 
-     */
 
     @Override
     public void onBackPressed() {
-        /*
-        if (backStacked != null)
-        {
-            activeFragment = backStacked;
-            super.onBackPressed();
-            communityFragment = backStacked;
-            backStacked = null;
-            return;
-        }
-
-         */
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;
@@ -151,8 +131,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 2000);
     }
-  //  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  //  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,8 +156,11 @@ public class MainActivity extends AppCompatActivity {
         ((Button)findViewById(R.id.account)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            	//Toast.makeText(getApplicationContext(), "Will be updated soon!", Toast.LENGTH_SHORT).show();
-                Intent i=new Intent(getApplicationContext(),LoginActivity.class);
+            	Class<?> c = LoginActivity.class;
+                boolean resolved = GyanithUserManager.resolveUserState(MainActivity.this);
+                if (resolved) c = ProfileActivity.class;
+
+                Intent i=new Intent(getApplicationContext(),c);
                 startActivity(i);
             }
         });

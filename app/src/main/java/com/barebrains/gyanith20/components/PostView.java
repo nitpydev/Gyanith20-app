@@ -102,7 +102,7 @@ public class PostView extends RelativeLayout {
         viewPager = findViewById(R.id.post_img_viewpager);
         likeBtn = findViewById(R.id.like_btn);
         shareBtn = findViewById(R.id.share_btn);
-        profileBtn = findViewById(R.id.profile_btn);
+        profileBtn = findViewById(R.id.post_profile_btn);
         tapPanel = findViewById(R.id.tap_panel);
         deleteBtn = findViewById(R.id.post_delete_btn);
         postContent = findViewById(R.id.post);

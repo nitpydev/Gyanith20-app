@@ -1,5 +1,6 @@
 package com.barebrains.gyanith20.interfaces;
 
-public interface ResultListener<T> {
-    void OnResult(T t);
+public class ResultListener<T> {
+    public void OnResult(T t){}
+    public void OnError(String error){}
 }
