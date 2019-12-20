@@ -7,7 +7,7 @@
     android:background="@drawable/abbg1"
     tools:context="activities.AboutActivity">
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/sharebut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="?attr/actionModeShareDrawable" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/direcbut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_baseline_near_me_24px" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/feebut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_baseline_create_24px" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/mainbut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

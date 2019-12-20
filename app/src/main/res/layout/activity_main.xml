@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_gravity="center_vertical"
@@ -57,7 +57,7 @@
                     android:background="@drawable/ic_baseline_account_circle_24px"
                     android:foreground="?attr/selectableItemBackground" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <FrameLayout
             android:id="@+id/mainframe"

@@ -64,7 +64,7 @@
             android:layout_height="match_parent"
             android:divider="@null"
             tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp"></ListView>
+            tools:layout_editor_absoluteY="8dp" />
 
     </LinearLayout>
 </FrameLayout>
