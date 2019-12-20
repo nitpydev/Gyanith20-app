@@ -83,6 +83,13 @@ public class EventDetailsActivity extends AppCompatActivity {
         eveimage=findViewById(R.id.eveimv);
         favtb=findViewById(R.id.favButton);
 
+        if(child.equals("Workshop"))
+        {
+            dtab.getTabAt(1).setText("Requisites");
+        }
+
+
+
 
         bb2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,9 +109,11 @@ public class EventDetailsActivity extends AppCompatActivity {
                     try
                     {
                         int int_tag = Integer.parseInt(tag);
-                        JSONObject jsonobject = jsonArray.getJSONObject(int_tag);
+                        JSONObject jsonobject = jsonArray.getJSONObject(int_tag - 1);
 
-                        title.setText(jsonobject.getString("name"));
+                        String name = jsonobject.getString("name");
+
+                        title.setText(name);
 
                         tab1 = jsonobject.getString("des");
 
@@ -160,7 +169,6 @@ public class EventDetailsActivity extends AppCompatActivity {
                 }
             }
         });
-
 
 
 
