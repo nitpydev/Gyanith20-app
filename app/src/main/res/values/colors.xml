@@ -18,4 +18,5 @@
     <color name="cardbg">#373748</color>
     <color name="unselected">#64FFFFFF</color>
     <color name="txtColor">#ffffff</color>
+    <color name="profile_tabs">#3F51B5</color>
 </resources>

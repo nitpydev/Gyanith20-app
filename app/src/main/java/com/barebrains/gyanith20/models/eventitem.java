@@ -2,7 +2,7 @@ package com.barebrains.gyanith20.models;
 
 public class eventitem {
 
-    String name,time,tag,type;
+    public String name,time,tag,type;
 
     public void setType(String type) {
         this.type = type;
@@ -29,3 +29,4 @@ public class eventitem {
 
 
 }
+

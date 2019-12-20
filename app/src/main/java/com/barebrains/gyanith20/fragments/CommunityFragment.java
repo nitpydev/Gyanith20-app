@@ -30,6 +30,7 @@ import com.barebrains.gyanith20.components.PostView;
 import com.barebrains.gyanith20.interfaces.AuthStateListener;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.others.PostViewHolder;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.Util;
@@ -294,11 +295,3 @@ class FeedsPagerAdapter extends PagerAdapter{
 
 }
 
-class PostViewHolder extends RecyclerView.ViewHolder{
-
-    PostView postView;
-    public PostViewHolder(@NonNull View itemView) {
-        super(itemView);
-        postView = (PostView) itemView;
-    }
-}

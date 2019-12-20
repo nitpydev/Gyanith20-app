@@ -117,7 +117,7 @@ public class  PostManager{
         });
 
         rootRef.child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
-                .child("posts").child(post.postId).setValue(post.postId);
+                .child("posts").child(post.postId).setValue(post);
     }
 
     public static void getPostImage(Context context,final int requestId, final String imgId, final ResultListener<Pair<Bitmap,Integer>> callback){

@@ -90,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Enter credentials!", Toast.LENGTH_LONG).show();
                 }
                 else {
+                    Log.d("asd","asdasd");
                     GyanithUserManager.SignInUser(LoginActivity.this
                             , username, pas, new ResultListener<GyanithUser>() {
                                     @Override
@@ -101,7 +102,13 @@ public class LoginActivity extends AppCompatActivity {
                                         }
                                         OnSignInSuccess();
                                     }
-                    });
+
+                                @Override
+                                public void OnError(String error) {
+                                    Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
+                                    isLoading(false);
+                                }
+                            });
                 }
             }
         });

@@ -2,6 +2,7 @@ package com.barebrains.gyanith20.statics;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.animation.ScaleAnimation;
 
@@ -40,9 +41,35 @@ public class Anim {
     }
 
     public static void alpha(View view,float from,float to,long duration,AnimatorListenerAdapter listenerAdapter){
+        view.setVisibility(View.VISIBLE);
         view.setAlpha(from);
         view.animate().alpha(to)
                 .setDuration(duration)
                 .setListener(listenerAdapter);
     }
+
+    public static void AnimateHeight(final View view, int from, int to,long duration){
+        ValueAnimator heightAnimator = ValueAnimator.ofFloat(from, to);
+        heightAnimator.setDuration(duration);
+        heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                view.getLayoutParams().height = (int) animation.getAnimatedValue();
+                view.requestLayout();
+            }
+        });
+    }
+
+    public static void AnimateWidth(final View view, int from, int to,long duration){
+        ValueAnimator widthAnimator = ValueAnimator.ofFloat(from, to);
+        widthAnimator.setDuration(duration);
+        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                view.getLayoutParams().width = (int) animation.getAnimatedValue();
+                view.requestLayout();
+            }
+        });
+    }
+
 }
