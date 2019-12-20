@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -60,6 +61,8 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         ((ViewGroup) findViewById(R.id.profile_root)).getLayoutTransition()
                 .enableTransitionType(LayoutTransition.CHANGING);
+
+
         userInfoPanel = findViewById(R.id.userinfo_panel);
         userInfoPanel.setVisibility(View.GONE);
         profileCard = findViewById(R.id.profile_card);
@@ -68,8 +71,9 @@ public class ProfileActivity extends AppCompatActivity {
         backbtn = findViewById(R.id.profile_back_btn);
         qrBack = findViewById(R.id.qr_back_btn);
         qrBtn = findViewById(R.id.qrBtn);
-
         profileBtn = findViewById(R.id.profile_btn);
+
+
         userPanelTransition(false);
         qrPanelTransition(false);
 
@@ -95,6 +99,12 @@ public class ProfileActivity extends AppCompatActivity {
         clg.setText(user.clg);
         email.setText(user.email);
         phoneno.setText(user.phoneNo);
+        ((Button)findViewById(R.id.sign_out_btn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GyanithUserManager.SignOutUser(ProfileActivity.this);
+            }
+        });
     }
 
     private void SetupViewPager(ViewPager viewPager){

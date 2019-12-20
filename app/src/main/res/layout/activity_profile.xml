@@ -11,7 +11,7 @@
     <LinearLayout
         android:id="@+id/top_panel_profile"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:layout_weight="1"
@@ -19,7 +19,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/profile_card"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:cardBackgroundColor="@color/colorPrimaryDark">
@@ -56,7 +56,7 @@
                     android:gravity="center"
                     android:orientation="vertical"
                     android:paddingBottom="150dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -129,6 +129,14 @@
                         android:text="jpushpavel@gmail.com"
                         android:textColor="@android:color/white"
                         android:textStyle="italic" />
+
+                    <Button
+                        android:id="@+id/sign_out_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:padding="15dp"
+                        android:text="SIGN OUT" />
 
                 </LinearLayout>
 

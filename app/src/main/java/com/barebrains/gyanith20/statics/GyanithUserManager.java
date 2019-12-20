@@ -263,7 +263,7 @@ public class GyanithUserManager {
         return gson.fromJson(json,GyanithUser.class);
     }
 
-    private static void SignOutUser(Context context){
+    public static void SignOutUser(Context context){
         if (loggedUser == null)
             return;
         AuthStateChanged();
