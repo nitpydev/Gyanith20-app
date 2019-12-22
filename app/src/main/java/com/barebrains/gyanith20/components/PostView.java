@@ -29,6 +29,7 @@ import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.statics.Anim;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
+import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.Util;
 import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
@@ -166,6 +167,10 @@ public class PostView extends RelativeLayout {
                 likeBtn.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        if (!NetworkManager.getInstance().isNetAvailable()) {
+                            Toast.makeText(context, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         if (!likeState)
                             PostManager.getInstance().likePost(post.postId);
                         else
