@@ -137,7 +137,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
         qrProg.setVisibility(View.VISIBLE);
-        NetworkManager.getInstance(this).addListener(5,new NetworkStateListener(){
+        NetworkManager.getInstance().addListener(5,new NetworkStateListener(){
             @Override
             public void OnAvailable() {
                ProfileActivity.this.runOnUiThread(new Runnable() {

@@ -64,7 +64,6 @@ public class CommunityFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_community,container,false);
 
         initLoader = root.findViewById(R.id.empty_loader);
-
         PostManager.getInstance().setSnackbarParent(root); //Need to check here*/*/
         final View addPostBtn = root.findViewById(R.id.add_post_btn);
 
@@ -298,12 +297,14 @@ class FeedsPagerAdapter extends PagerAdapter{
                         refreshFeed.setRefreshing(false);
                         if (!NetworkManager.getInstance().isNetAvailable())
                             Toast.makeText(activity, "Couldn't Refresh Feed!", Toast.LENGTH_SHORT).show();
-                        initLoader.stopShimmer();
-                        initLoader.setVisibility(View.GONE);
+                        break;
                     case LOADING_MORE:
                         loadFeed.setVisibility(View.VISIBLE);
+                        break;
                     case LOADED:
                         loadFeed.setVisibility(View.GONE);
+                        initLoader.setVisibility(View.GONE);
+                        break;
                 }
             }
         };
