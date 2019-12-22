@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -25,6 +26,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,9 +45,10 @@ public class FavouritesFragment extends Fragment {
     ArrayList<eventitem> items;
     eventitem it;
     ListView lvi;
-    SharedPreferences sp;
+    SharedPreferences sp, json_string;
     ArrayList tag;
-    String cat;
+    String cat = "cat", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE";
+    String cache, name, date, id;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -51,60 +57,73 @@ public class FavouritesFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         // Inflate the layout for this fragment
         final View root = inflater.inflate(R.layout.fragment_favourites, container, false);
         sp = getContext().getSharedPreferences("com.barebrains.Gyanith19", Context.MODE_PRIVATE);
-        ref= FirebaseDatabase.getInstance().getReference();
+        json_string = getContext().getSharedPreferences(PREFS,Context.MODE_PRIVATE);
+
+
+
         items=new ArrayList<eventitem>();
         lvi=root.findViewById(R.id.favlv);
-        final Intent i1=new Intent(this.getContext(), EventDetailsActivity.class);
+        final Intent i1 =new Intent(this.getContext(), EventDetailsActivity.class);
         ada=new eventCategoriesAdapter(R.layout.item_event_category,items,this.getContext());
         tag = new ArrayList();
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                items.clear();
-                for(DataSnapshot sh:dataSnapshot.getChildren()){
-                    for(DataSnapshot snapshot:sh.getChildren()){
-                        if(snapshot.child("desc").exists()){
 
-                            Log.i("tagy",snapshot.getKey());
-                            if(sp.getBoolean(snapshot.getKey(),false)) {
-                                try{
-                                    it = new eventitem(snapshot.child("name").getValue().toString(),timeFormatter(snapshot.child("timestamp").getValue().toString()), snapshot.getKey());
-                                    items.add(it);
-                                    //((TextView)root.findViewById(R.id.textView13)).setVisibility(View.GONE);
-                                    tag.add(snapshot.getKey());
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                }
+        cache = json_string.getString(PREF_KEY, "NOTHING");
+
+        items.clear();
 
 
-                            }
-                        }
+            try
+            {
+                JSONArray jsonArray = new JSONArray(cache);
+                for(int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonobject = jsonArray.getJSONObject(i);
+                    name = jsonobject.getString("name");
+                    date = jsonobject.getString("timestamp");
+                    id = jsonobject.getString("id");
 
-                        ((ProgressBar)root.findViewById(R.id.favload)).setVisibility(View.GONE);
-                        if(items.isEmpty()){
-                            ((TextView)root.findViewById(R.id.textView13)).setVisibility(View.VISIBLE);
-
-                        }else((TextView)root.findViewById(R.id.textView13)).setVisibility(View.GONE);
-
+                    if(sp.getBoolean(id,false)) {
+                        it = new eventitem(name, timeFormatter(date), id);
+                        items.add(it);
+                        tag.add(id);
                         ada.notifyDataSetChanged();
                     }
+
                 }
+
+                ((ProgressBar)root.findViewById(R.id.favload)).setVisibility(View.GONE);
+                if(items.isEmpty()){
+
+                    ((TextView)root.findViewById(R.id.textView13)).setVisibility(View.VISIBLE);
+
+
+                }else((TextView)root.findViewById(R.id.textView13)).setVisibility(View.GONE);
+
+
+            }
+            catch (JSONException e) {
+                //catch exception
+                e.printStackTrace();
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+
+
+
+
+
 
         lvi.setAdapter(ada);
 

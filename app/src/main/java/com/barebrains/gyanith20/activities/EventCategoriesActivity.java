@@ -54,7 +54,7 @@ public class EventCategoriesActivity extends AppCompatActivity {
     ArrayList tag;
 
     SharedPreferences prefs;
-    String PREF_KEY = "json_string", PREFS = "shared_prefs";
+    String PREF_KEY = "JSON_CACHE", PREFS = "shared_prefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
