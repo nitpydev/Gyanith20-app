@@ -187,7 +187,7 @@ public class EventCategoriesActivity extends AppCompatActivity {
                                 eventtag = jsonObject.getString("id");
                                 type = jsonObject.getString("type");
 
-                                it = new eventitem(name, date, eventtag);
+                                it = new eventitem(name, timeFormatter(date), eventtag);
                                 if(type.equals(cat)){
                                 items.add(it);
                                 tag.add(eventtag);
