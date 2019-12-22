@@ -4,14 +4,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.activities.MainActivity;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.Post;
@@ -234,6 +237,7 @@ public class  PostManager{
     {
         for (OnLikeStateChangedListener listener : listeners.get(postId))
             listener.OnChange(true);
+
         likedPosts.add(postId);
         FirebaseDatabase.getInstance().getReference().child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
                 .child("likedPosts").child(postId).setValue(postId);
@@ -376,7 +380,26 @@ public class  PostManager{
                 snackbar.dismiss();
             }
         });
+        snackbar.setActionTextColor(Color.rgb(0,162,255));
         snackbar.show();
+    }
+
+
+    public static Integer postCount = 0;
+
+    public static void StartListeningPostCount(final MainActivity activity){
+        FirebaseDatabase.getInstance().getReference().child("postCount").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                postCount = ((Long) dataSnapshot.getValue()).intValue();
+                activity.NotifyCommunityPosts();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
 

@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
+import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -27,7 +28,7 @@ public class gyanith20 extends Application {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         CreateProgressNotificationChannel();
         HandleUserManagement();
-
+        NetworkManager.initialize(this);
         super.onCreate();
     }
     private void setScreenOrientation(){

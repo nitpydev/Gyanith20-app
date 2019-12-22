@@ -20,6 +20,7 @@
         <item name="colorPrimaryDark">@color/colorBackDrop</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/colorBackDrop</item>
+        <item name="android:fontFamily">@font/poppinsr</item>
     </style>
 
 </resources>

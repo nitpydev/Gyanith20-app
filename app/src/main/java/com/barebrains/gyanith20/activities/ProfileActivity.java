@@ -41,12 +41,14 @@ import com.android.volley.toolbox.Volley;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.adapters.eventCategoriesAdapter;
 import com.barebrains.gyanith20.components.PostView;
+import com.barebrains.gyanith20.interfaces.NetworkStateListener;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.others.PostViewHolder;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.statics.Anim;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
+import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.firebase.ui.database.paging.DatabasePagingOptions;
 import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
@@ -135,7 +137,27 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
         qrProg.setVisibility(View.VISIBLE);
-        RefreshQr();
+        NetworkManager.getInstance().addListener(5,new NetworkStateListener(){
+            @Override
+            public void OnAvailable() {
+               ProfileActivity.this.runOnUiThread(new Runnable() {
+                   @Override
+                   public void run() {
+                       setQr(GyanithUserManager.getCurrentUser().gyanithId);
+                   }
+               });
+            }
+
+            @Override
+            public void OnDisconnected() {
+                ProfileActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setQr(null);
+                    }
+                });
+            }
+        });
     }
 
     private void SetupViewPager(ViewPager viewPager){
@@ -312,7 +334,6 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     qrPanelTransition(false);
-                    RefreshQr();
                 }
             });
         }else {
@@ -323,7 +344,6 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     qrPanelTransition(true);
-                    RefreshQr();
                 }
             });
             qrBack.setOnClickListener(null);
@@ -345,7 +365,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
         super.onBackPressed();
     }
-
+/*
     private void RefreshQr(){
         Volley.newRequestQueue(this).add(new StringRequest(Request.Method.GET,
                 "https://restcountries.eu/rest/v2/capital/india",new Response.Listener<String>(){
@@ -366,6 +386,8 @@ public class ProfileActivity extends AppCompatActivity {
         }));
     }
 
+ */
+
     private void setQr(String value){
         qrProg.setVisibility(View.GONE);
         if (value == null)
@@ -379,7 +401,7 @@ public class ProfileActivity extends AppCompatActivity {
             qrBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    RefreshQr();
+                    setQr(null);
                 }
             });
             return;

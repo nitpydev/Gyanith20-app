@@ -20,13 +20,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.volley.toolbox.Volley;
 import com.barebrains.gyanith20.fragments.CommunityFragment;
 import com.barebrains.gyanith20.fragments.FavouritesFragment;
 import com.barebrains.gyanith20.fragments.HomeFragment;
 import com.barebrains.gyanith20.fragments.NotificationFragment;
 import com.barebrains.gyanith20.fragments.ScheduleFragment;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
+import com.barebrains.gyanith20.statics.PostManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private FavouritesFragment favouritesFragment;
     private NotificationFragment notificationFragment;
     private Fragment communityFragment;
+
+    private BottomNavigationView navigation;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -87,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                     else
                         setActiveFragment(communityFragment);
                     title.setText("Community");
+                    MarkPostsAsRead();
                     return true;
             }
             return false;
@@ -135,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PostManager.StartListeningPostCount(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
             getWindow().setEnterTransition(new Fade());
@@ -146,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         //imageView=findViewById(R.id.topbaricon);
         title = findViewById(R.id.title);
         notif = getSharedPreferences(getString(R.string.package_name), Context.MODE_PRIVATE);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_home);
@@ -177,5 +184,23 @@ public class MainActivity extends AppCompatActivity {
         if(notif.getBoolean("newnot",false)){
             navigation.getMenu().getItem(3).setIcon(R.drawable.ic_notification);
         }
+
+        LastReadPostCount = notif.getInt("lastReadPostCount",0);
+        NotifyCommunityPosts();
+
+}
+public int LastReadPostCount;
+
+public void NotifyCommunityPosts(){
+        if (PostManager.postCount > LastReadPostCount)
+            navigation.getMenu().getItem(4).setIcon(R.drawable.ic_people_dot);
+        else
+            navigation.getMenu().getItem(4).setIcon(R.drawable.ic_people_black_24dp);
+}
+
+public void MarkPostsAsRead(){
+    LastReadPostCount = PostManager.postCount;
+    notif.edit().putInt("lastReadPostCount",LastReadPostCount).apply();
+    NotifyCommunityPosts();
 }
 }

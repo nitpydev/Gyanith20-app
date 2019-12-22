@@ -6,7 +6,7 @@
     <color name="colorSecondaryAccent">#F71976</color>
     <color name="colorBackDrop">#141414</color>
     <color name="colorSecondaryBackDrop">#49546B</color>
-    <color name="colorBackdropAccent">#1f1f1f</color>
+    <color name="colorBackdropAccent">#1F1F1F</color>
 
     <color name="grey">#e9e6e6</color>
     <color name="blackbg">#020203</color>
@@ -19,4 +19,5 @@
     <color name="unselected">#64FFFFFF</color>
     <color name="txtColor">#ffffff</color>
     <color name="profile_tabs">#3F51B5</color>
+    <color name="tint">#474747</color>
 </resources>

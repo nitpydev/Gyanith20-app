@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_gravity="center_vertical"
-            app:cardBackgroundColor="@android:color/transparent"
+            app:cardBackgroundColor="@color/colorBackdropAccent"
             app:cardCornerRadius="0dp"
             app:cardElevation="2dp">
 

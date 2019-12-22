@@ -24,7 +24,7 @@
 
     <item
         android:id="@+id/navigation_community"
-        android:icon="@drawable/ic_community_outline_black_24dp"
+        android:icon="@drawable/ic_people_black_24dp"
         android:title="@string/title_notifications" />
 
 </menu>

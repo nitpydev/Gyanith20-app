@@ -46,6 +46,7 @@ dependencies {
     implementation 'com.github.omadahealth:swipy:1.2.3'
     implementation 'androidx.paging:paging-runtime:2.1.0'
     implementation 'com.synnapps:carouselview:0.1.5'
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
