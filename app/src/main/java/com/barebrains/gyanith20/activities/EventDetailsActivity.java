@@ -21,6 +21,7 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Cache;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -35,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,11 +51,12 @@ public class EventDetailsActivity extends AppCompatActivity {
     Intent intent;
     String child,tag;
     TabLayout dtab;
-    SharedPreferences sp;
+    SharedPreferences sp, cache;
     Button bb2;
     String tab1,tab2,tab3;
     Context context;
-    String id="";
+    String id="", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE";
+
     AlertDialog.Builder a;
     AlertDialog vi;
     String url = "http://gyanith.org/api.php?action=fetchAll&key=2ppagy0";
@@ -83,6 +86,8 @@ public class EventDetailsActivity extends AppCompatActivity {
         eveimage=findViewById(R.id.eveimv);
         favtb=findViewById(R.id.favButton);
 
+
+
         if(child.equals("Workshop"))
         {
             dtab.getTabAt(1).setText("Requisites");
@@ -106,7 +111,16 @@ public class EventDetailsActivity extends AppCompatActivity {
 
 
                {
-                    try
+                   //cache
+                   cache = getSharedPreferences(PREFS,MODE_PRIVATE);
+                   SharedPreferences.Editor edit = cache.edit();
+                   Gson gson = new Gson();
+                   //String Json_cache = gson.toJson(jsonArray);
+                   edit.putString(PREF_KEY, jsonArray.toString());
+                   edit.apply();
+
+
+                   try
                     {
                         int int_tag = Integer.parseInt(tag);
                         JSONObject jsonobject = jsonArray.getJSONObject(int_tag - 1);
@@ -123,6 +137,8 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                         tab3 = jsonobject.getString("contact");
 
+
+
                     }
                     catch (JSONException e) {
                         //catch exception
@@ -138,7 +154,33 @@ public class EventDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
 
-                        Toast.makeText(EventDetailsActivity.this,"network unavailable",Toast.LENGTH_LONG).show();
+                        cache = getSharedPreferences(PREFS,MODE_PRIVATE);
+                        String CACHE = cache.getString(PREF_KEY,"NO INPUT");
+
+
+                        try {
+                            JSONArray jsonArray = new JSONArray(CACHE);
+                            int int_tag = Integer.parseInt(tag);
+                            JSONObject jsonobject = jsonArray.getJSONObject(int_tag - 1);
+
+                            String name = jsonobject.getString("name");
+
+                            title.setText(name);
+
+                            tab1 = jsonobject.getString("des");
+
+                            desc.setText(tab1);
+
+                            tab2 = jsonobject.getString("rules");
+
+                            tab3 = jsonobject.getString("contact");
+
+
+                        }
+                        catch(JSONException J) {
+
+                            Toast.makeText(EventDetailsActivity.this, CACHE, Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
         );
