@@ -153,8 +153,8 @@ public class EventCategoriesActivity extends AppCompatActivity {
 
                         // caches the
                         if(!items.isEmpty()){
-                        Gson gson = new Gson();
-                        String cache_json = gson.toJson(items);
+
+                        String cache_json = jsonArray.toString();
                         prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString(PREF_KEY,cache_json);
@@ -183,8 +183,8 @@ public class EventCategoriesActivity extends AppCompatActivity {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                 name = jsonObject.getString("name");
 
-                                date = jsonObject.getString("time");
-                                eventtag = jsonObject.getString("tag");
+                                date = jsonObject.getString("timestamp");
+                                eventtag = jsonObject.getString("id");
                                 type = jsonObject.getString("type");
 
                                 it = new eventitem(name, date, eventtag);
