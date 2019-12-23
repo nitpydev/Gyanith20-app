@@ -179,7 +179,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                         }
                         catch(JSONException J) {
 
-                            Toast.makeText(EventDetailsActivity.this, CACHE, Toast.LENGTH_LONG).show();
+                            Toast.makeText(EventDetailsActivity.this, "Network Unavailable", Toast.LENGTH_LONG).show();
                         }
                     }
                 }
