@@ -43,7 +43,7 @@ import java.util.Date;
 
 public class EventCategoriesActivity extends AppCompatActivity {
 
-    String s,name,date,eventtag, type, cat;
+    String s,name,date,eventtag, type, cat, timestamp;
     String url_event = "http://gyanith.org/api.php?action=fetchAll&key=2ppagy0";
     eventCategoriesAdapter ada;
     ArrayList<eventitem> items;
@@ -120,36 +120,40 @@ public class EventCategoriesActivity extends AppCompatActivity {
                     public void onResponse(JSONArray jsonArray) {
 
 
+                    try {
+                        for (int i = 0; i < jsonArray.length(); i++) {
 
-                            for(int i = 0; i < jsonArray.length(); i++) {
-                                try
-                                {
-                                JSONObject jsonobject = jsonArray.getJSONObject(i);
-                                type = jsonobject.getString("type");
-                                    name = jsonobject.getString("name");
+                            JSONObject jsonobject = jsonArray.getJSONObject(i);
+                            type = jsonobject.getString("type");
+                            name = jsonobject.getString("name");
 
-                                    date = jsonobject.getString("timestamp");
-                                    eventtag = jsonobject.getString("id");
-
-
-
-                                    it = new eventitem(name, timeFormatter(date), eventtag);
-                                    it.setType(type);
-
-                                if(type.equals(cat)) {
-
-
-                                    items.add(it);
-
-                                    tag.add(eventtag);
-                                }
-                                }
-                                catch (JSONException e) {
-                                    //catch exception
-                                    e.printStackTrace();
-                                }
-
+                            timestamp = jsonobject.getString("timestamp");
+                            eventtag = jsonobject.getString("id");
+                            try {
+                                date = timeFormatter(timestamp);
                             }
+                            catch (NumberFormatException n)
+                            {
+                                date = null;
+                            }
+
+
+                            it = new eventitem(name, date, eventtag);
+                            it.setType(type);
+
+                            if (type.equals(cat)) {
+
+
+                                items.add(it);
+
+                                tag.add(eventtag);
+                            }
+                        }
+                    }
+                    catch (JSONException j)
+                    {
+                        j.printStackTrace();
+                    }
 
                         // caches the
                         if(!items.isEmpty()){
@@ -183,11 +187,19 @@ public class EventCategoriesActivity extends AppCompatActivity {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                 name = jsonObject.getString("name");
 
-                                date = jsonObject.getString("timestamp");
+                                timestamp = jsonObject.getString("timestamp");
                                 eventtag = jsonObject.getString("id");
                                 type = jsonObject.getString("type");
 
-                                it = new eventitem(name, timeFormatter(date), eventtag);
+                                try {
+                                    date = timeFormatter(timestamp);
+                                }
+                                catch (NumberFormatException n)
+                                {
+                                    date = null;
+                                }
+
+                                it = new eventitem(name, date, eventtag);
                                 if(type.equals(cat)){
                                 items.add(it);
                                 tag.add(eventtag);

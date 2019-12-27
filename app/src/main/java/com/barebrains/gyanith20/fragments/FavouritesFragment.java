@@ -48,7 +48,7 @@ public class FavouritesFragment extends Fragment {
     SharedPreferences sp, json_string;
     ArrayList tag;
     String cat = "cat", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE";
-    String cache, name, date, id;
+    String cache, name, date, id, timestamp;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -91,11 +91,19 @@ public class FavouritesFragment extends Fragment {
                 for(int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonobject = jsonArray.getJSONObject(i);
                     name = jsonobject.getString("name");
-                    date = jsonobject.getString("timestamp");
+                    timestamp = jsonobject.getString("timestamp");
                     id = jsonobject.getString("id");
 
+                    try {
+                        date = timeFormatter(timestamp);
+                    }
+                    catch (NumberFormatException n)
+                    {
+                        date = null;
+                    }
+
                     if(sp.getBoolean(id,false)) {
-                        it = new eventitem(name, timeFormatter(date), id);
+                        it = new eventitem(name, date, id);
                         items.add(it);
                         tag.add(id);
                         ada.notifyDataSetChanged();
