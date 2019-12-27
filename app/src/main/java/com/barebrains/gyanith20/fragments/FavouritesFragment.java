@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.adapters.eventCategoriesAdapter;
@@ -63,77 +64,111 @@ public class FavouritesFragment extends Fragment {
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+     if(hidden)
+     {
+
+     }
+     else{
+
+         final View root = getView();
+        update(root);
+
+
+     }
+
+    }
+
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
 
         // Inflate the layout for this fragment
         final View root = inflater.inflate(R.layout.fragment_favourites, container, false);
+
+        update(root);
+        return root;
+
+    }
+
+    public String timeFormatter(String time)
+    {
+        long timeInt = Long.parseLong(time);
+        SimpleDateFormat s=new SimpleDateFormat("MMM dd");
+
+        Calendar c=Calendar.getInstance();
+        c.setTimeInMillis(timeInt);
+        if(c.getTime().getDate()== Calendar.getInstance().getTime().getDate())
+            return "Today";
+        else if(c.getTime().getDate()== Calendar.getInstance().getTime().getDate()+1)
+            return "Tommorow";
+
+        Date d=new Date(timeInt);
+        return s.format(d);
+    }
+        // updating the favorite
+    public void update(View root)
+    {
+        lvi=root.findViewById(R.id.favlv);
+
         sp = getContext().getSharedPreferences("com.barebrains.Gyanith19", Context.MODE_PRIVATE);
         json_string = getContext().getSharedPreferences(PREFS,Context.MODE_PRIVATE);
-
-
-
         items=new ArrayList<eventitem>();
-        lvi=root.findViewById(R.id.favlv);
+
         final Intent i1 =new Intent(this.getContext(), EventDetailsActivity.class);
         ada=new eventCategoriesAdapter(R.layout.item_event_category,items,this.getContext());
         tag = new ArrayList();
-
         cache = json_string.getString(PREF_KEY, "NOTHING");
-
         items.clear();
+        try
+        {
+            JSONArray jsonArray = new JSONArray(cache);
+            for(int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonobject = jsonArray.getJSONObject(i);
+                name = jsonobject.getString("name");
+                timestamp = jsonobject.getString("timestamp");
+                id = jsonobject.getString("id");
 
-
-            try
-            {
-                JSONArray jsonArray = new JSONArray(cache);
-                for(int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonobject = jsonArray.getJSONObject(i);
-                    name = jsonobject.getString("name");
-                    timestamp = jsonobject.getString("timestamp");
-                    id = jsonobject.getString("id");
-
-                    try {
-                        date = timeFormatter(timestamp);
-                    }
-                    catch (NumberFormatException n)
-                    {
-                        date = null;
-                    }
-
-                    if(sp.getBoolean(id,false)) {
-                        it = new eventitem(name, date, id);
-                        items.add(it);
-                        tag.add(id);
-                        ada.notifyDataSetChanged();
-                    }
-
+                try {
+                    date = timeFormatter(timestamp);
+                }
+                catch (NumberFormatException n)
+                {
+                    date = null;
                 }
 
-                ((ProgressBar)root.findViewById(R.id.favload)).setVisibility(View.GONE);
-                if(items.isEmpty()){
-
-                    ((TextView)root.findViewById(R.id.textView13)).setVisibility(View.VISIBLE);
-
-
-                }else((TextView)root.findViewById(R.id.textView13)).setVisibility(View.GONE);
-
+                if(sp.getBoolean(id,false)) {
+                    it = new eventitem(name, date, id);
+                    items.add(it);
+                    tag.add(id);
+                    ada.notifyDataSetChanged();
+                }
 
             }
-            catch (JSONException e) {
-                //catch exception
-                e.printStackTrace();
-            }
 
 
-
-
-
-
+        }
+        catch (JSONException e) {
+            //catch exception
+            e.printStackTrace();
+        }
 
 
         lvi.setAdapter(ada);
+
+        ((ProgressBar)root.findViewById(R.id.favload)).setVisibility(View.GONE);
+        if(items.isEmpty()){
+
+            ((TextView)root.findViewById(R.id.textView13)).setVisibility(View.VISIBLE);
+
+
+        }else((TextView)root.findViewById(R.id.textView13)).setVisibility(View.GONE);
+
+
 
         lvi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -164,23 +199,7 @@ public class FavouritesFragment extends Fragment {
 
 
 
-        return root;
     }
 
-    public String timeFormatter(String time)
-    {
-        long timeInt = Long.parseLong(time);
-        SimpleDateFormat s=new SimpleDateFormat("MMM dd");
-
-        Calendar c=Calendar.getInstance();
-        c.setTimeInMillis(timeInt);
-        if(c.getTime().getDate()== Calendar.getInstance().getTime().getDate())
-            return "Today";
-        else if(c.getTime().getDate()== Calendar.getInstance().getTime().getDate()+1)
-            return "Tommorow";
-
-        Date d=new Date(timeInt);
-        return s.format(d);
-    }
 
 }
