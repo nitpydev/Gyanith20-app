@@ -21,22 +21,16 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.Cache;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
+
 import com.barebrains.gyanith20.R;
-import com.barebrains.gyanith20.models.eventitem;
+
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,11 +49,11 @@ public class EventDetailsActivity extends AppCompatActivity {
     Button bb2;
     String tab1,tab2,tab3;
     Context context;
-    String id="", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE";
+    String id="", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE", tag_id;
 
     AlertDialog.Builder a;
     AlertDialog vi;
-    String url = "http://gyanith.org/api.php?action=fetchAll&key=2ppagy0";
+
 
 
     @Override
@@ -103,91 +97,41 @@ public class EventDetailsActivity extends AppCompatActivity {
             }
         });
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>()
-        {
-            @Override
-            public void onResponse(JSONArray jsonArray) {
+        cache = getSharedPreferences(PREFS,MODE_PRIVATE);
+        String CACHE = cache.getString(PREF_KEY,"NO INPUT");
 
 
+        try {
+            JSONArray jsonArray = new JSONArray(CACHE);
 
-               {
-                   //cache
-                   cache = getSharedPreferences(PREFS,MODE_PRIVATE);
-                   SharedPreferences.Editor edit = cache.edit();
-                   Gson gson = new Gson();
-                   //String Json_cache = gson.toJson(jsonArray);
-                   edit.putString(PREF_KEY, jsonArray.toString());
-                   edit.apply();
+            for(int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonobject = jsonArray.getJSONObject(i);
 
+                tag_id = jsonobject.getString("id");
 
-                   try
-                    {
-                        int int_tag = Integer.parseInt(tag);
-                        JSONObject jsonobject = jsonArray.getJSONObject(int_tag - 1);
+                if(tag_id.equals(tag)) {
+                    String name = jsonobject.getString("name");
 
-                        String name = jsonobject.getString("name");
+                    title.setText(name);
 
-                        title.setText(name);
+                    tab1 = jsonobject.getString("des");
 
-                        tab1 = jsonobject.getString("des");
+                    desc.setText(tab1);
 
-                        desc.setText(tab1);
+                    tab2 = jsonobject.getString("rules");
 
-                        tab2 = jsonobject.getString("rules");
+                    tab3 = jsonobject.getString("contact");
 
-                        tab3 = jsonobject.getString("contact");
-
-
-
-                    }
-                    catch (JSONException e) {
-                        //catch exception
-                        e.printStackTrace();
-                    }
-
+                    break;
                 }
-
-
             }
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-
-                        cache = getSharedPreferences(PREFS,MODE_PRIVATE);
-                        String CACHE = cache.getString(PREF_KEY,"NO INPUT");
 
 
-                        try {
-                            JSONArray jsonArray = new JSONArray(CACHE);
-                            int int_tag = Integer.parseInt(tag);
-                            JSONObject jsonobject = jsonArray.getJSONObject(int_tag - 1);
+        }
+        catch(JSONException J) {
 
-                            String name = jsonobject.getString("name");
-
-                            title.setText(name);
-
-                            tab1 = jsonobject.getString("des");
-
-                            desc.setText(tab1);
-
-                            tab2 = jsonobject.getString("rules");
-
-                            tab3 = jsonobject.getString("contact");
-
-
-                        }
-                        catch(JSONException J) {
-
-                            Toast.makeText(EventDetailsActivity.this, "Network Unavailable", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
-        );
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(jsonArrayRequest);
-
+            Toast.makeText(EventDetailsActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
+        }
 
 
         final ImageView f=(ImageView)findViewById(R.id.fh) ;
