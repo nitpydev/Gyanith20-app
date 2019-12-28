@@ -75,7 +75,6 @@
         android:layout_height="50dp"
         android:alpha="1"
         android:background="@color/colorBackdropAccent"
-        app:itemIconTint="@drawable/botnavselector"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
