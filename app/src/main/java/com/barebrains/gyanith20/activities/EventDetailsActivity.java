@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -20,6 +22,7 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.text.HtmlCompat;
 
 
 import com.barebrains.gyanith20.R;
@@ -114,9 +117,17 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                     title.setText(name);
 
-                    tab1 = jsonobject.getString("des");
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                    {
+                        tab1  = jsonobject.getString("des");
+                        desc.setText(Html.fromHtml(tab1,Html.FROM_HTML_MODE_LEGACY));
+                    }
+                    else
+                    {
+                        desc.setText(Html.fromHtml(tab1));
+                    }
 
-                    desc.setText(tab1);
+
 
                     tab2 = jsonobject.getString("rules");
 
@@ -163,7 +174,15 @@ public class EventDetailsActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 int a=tab.getPosition();
                 if(a==0){
-                    desc.setText(tab1);
+
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                    {
+                        desc.setText(Html.fromHtml(tab1,Html.FROM_HTML_MODE_LEGACY));
+                    }
+                    else
+                    {
+                        desc.setText(Html.fromHtml(tab1));
+                    }
                 }
                 if(a==1){
                     desc.setText(tab2);
