@@ -22,11 +22,14 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.text.HtmlCompat;
 
 
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.barebrains.gyanith20.R;
 
+import com.barebrains.gyanith20.others.ImageVolley;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,7 +45,8 @@ import org.json.JSONObject;
 public class EventDetailsActivity extends AppCompatActivity {
 
     TextView title,desc;
-    ImageView eveimage;
+    NetworkImageView eveimage;
+    ImageLoader imageeve;
     ToggleButton favtb;
     DatabaseReference reference,reg;
     Intent intent;
@@ -52,7 +56,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     Button bb2;
     String tab1,tab2,tab3;
     Context context;
-    String id="", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE", tag_id;
+    String id="", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE", tag_id, img1;
 
     AlertDialog.Builder a;
     AlertDialog vi;
@@ -80,7 +84,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         dtab=findViewById(R.id.dtab);
         context =this;
 
-        eveimage=findViewById(R.id.eveimv);
+        eveimage=(NetworkImageView) findViewById(R.id.eveimv);
         favtb=findViewById(R.id.favButton);
 
 
@@ -127,7 +131,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                         desc.setText(Html.fromHtml(tab1));
                     }
 
-
+                    img1 = jsonobject.getString("img1");
 
                     tab2 = jsonobject.getString("rules");
 
@@ -143,6 +147,18 @@ public class EventDetailsActivity extends AppCompatActivity {
 
             Toast.makeText(EventDetailsActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
         }
+
+
+        imageeve = ImageVolley.getInstance(context).getImageLoader();
+        imageeve.get(img1, ImageLoader.getImageListener(eveimage,
+                R.drawable.l2, R.drawable.l2));
+        eveimage.setImageUrl(img1, imageeve);
+
+
+
+
+
+
 
 
         final ImageView f=(ImageView)findViewById(R.id.fh) ;

@@ -43,7 +43,7 @@ import java.util.Date;
 
 public class EventCategoriesActivity extends AppCompatActivity {
 
-    String s = "null",name,date ,eventtag, type, cat, timestamp;
+    String s = "null",name,date ,eventtag, type, cat, timestamp,img2;
     String url_event = "http://gyanith.org/api.php?action=fetchAll&key=2ppagy0";
     eventCategoriesAdapter ada;
     ArrayList<eventitem> items;
@@ -126,7 +126,7 @@ public class EventCategoriesActivity extends AppCompatActivity {
                             JSONObject jsonobject = jsonArray.getJSONObject(i);
                             type = jsonobject.getString("type");
                             name = jsonobject.getString("name");
-
+                            img2 = jsonobject.getString("img2");
                             timestamp = jsonobject.getString("timestamp");
                             eventtag = jsonobject.getString("id");
                             try {
@@ -137,9 +137,9 @@ public class EventCategoriesActivity extends AppCompatActivity {
                                 date = "Feb 28 10 am";
                             }
 
-
                             it = new eventitem(name, date, eventtag);
                             it.setType(type);
+                            it.setImg2(img2);
 
                             if (type.equals(cat)) {
 
@@ -186,7 +186,7 @@ public class EventCategoriesActivity extends AppCompatActivity {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                 name = jsonObject.getString("name");
-
+                                img2 = jsonObject.getString("img2");
                                 timestamp = jsonObject.getString("timestamp");
                                 eventtag = jsonObject.getString("id");
                                 type = jsonObject.getString("type");
@@ -200,6 +200,8 @@ public class EventCategoriesActivity extends AppCompatActivity {
                                 }
 
                                 it = new eventitem(name, date, eventtag);
+                                it.setType(type);
+                                it.setImg2(img2);
                                 if(type.equals(cat)){
                                 items.add(it);
                                 tag.add(eventtag);

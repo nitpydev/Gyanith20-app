@@ -49,7 +49,7 @@ public class FavouritesFragment extends Fragment {
     SharedPreferences sp, json_string;
     ArrayList tag;
     String cat = "cat", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE";
-    String cache, name, date, id, timestamp, type;
+    String cache, name, date, id, timestamp, type,img2;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -133,6 +133,7 @@ public class FavouritesFragment extends Fragment {
                 timestamp = jsonobject.getString("timestamp");
                 id = jsonobject.getString("id");
                 type = jsonobject.getString("type");
+                img2 = jsonobject.getString("img2");
 
                 try {
                     date = timeFormatter(timestamp);
@@ -145,6 +146,7 @@ public class FavouritesFragment extends Fragment {
                 if(sp.getBoolean(id,false)) {
                     it = new eventitem(name, date, id);
                     it.setType(type);
+                    it.setImg2(img2);
                     items.add(it);
                     tag.add(id);
                     ada.notifyDataSetChanged();
