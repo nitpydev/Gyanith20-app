@@ -2,10 +2,15 @@ package com.barebrains.gyanith20.models;
 
 public class eventitem {
 
-    public String name,time,tag,type;
+    private String name,time,tag;
+    public String type;
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public eventitem(String name, String time , String tag) {

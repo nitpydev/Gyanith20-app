@@ -49,7 +49,7 @@ public class FavouritesFragment extends Fragment {
     SharedPreferences sp, json_string;
     ArrayList tag;
     String cat = "cat", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE";
-    String cache, name, date, id, timestamp;
+    String cache, name, date, id, timestamp, type;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -132,17 +132,19 @@ public class FavouritesFragment extends Fragment {
                 name = jsonobject.getString("name");
                 timestamp = jsonobject.getString("timestamp");
                 id = jsonobject.getString("id");
+                type = jsonobject.getString("type");
 
                 try {
                     date = timeFormatter(timestamp);
                 }
                 catch (NumberFormatException n)
                 {
-                    date = null;
+                    date = "Feb 26 10 am";
                 }
 
                 if(sp.getBoolean(id,false)) {
                     it = new eventitem(name, date, id);
+                    it.setType(type);
                     items.add(it);
                     tag.add(id);
                     ada.notifyDataSetChanged();
@@ -173,20 +175,20 @@ public class FavouritesFragment extends Fragment {
         lvi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch(tag.get(position).toString().charAt(0)){
-                    case 'W':
+                switch(items.get(position).getType()){
+                    case "w":
                         cat= "Workshop";
                         break;
-                    case 'G':
+                    case "gl":
                         cat="Guest Lectures";
                         break;
-                    case 'T':
+                    case "te":
                         cat="Technical Events";
                         break;
-                    case 'N':
+                    case "nte":
                         cat="Non Technical Events";
                         break;
-                    case 'P':
+                    case "ps":
                         cat="Pro Shows";
                         break;
                 }

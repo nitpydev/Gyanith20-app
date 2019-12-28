@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Explode;
-import android.util.Log;
+
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -26,7 +26,7 @@ import com.barebrains.gyanith20.adapters.eventCategoriesAdapter;
 import com.barebrains.gyanith20.models.eventitem;
 import com.barebrains.gyanith20.R;
 
-import com.google.gson.Gson;
+
 
 
 import org.json.JSONArray;
@@ -43,7 +43,7 @@ import java.util.Date;
 
 public class EventCategoriesActivity extends AppCompatActivity {
 
-    String s,name,date,eventtag, type, cat, timestamp;
+    String s = "null",name,date ,eventtag, type, cat, timestamp;
     String url_event = "http://gyanith.org/api.php?action=fetchAll&key=2ppagy0";
     eventCategoriesAdapter ada;
     ArrayList<eventitem> items;
@@ -134,7 +134,7 @@ public class EventCategoriesActivity extends AppCompatActivity {
                             }
                             catch (NumberFormatException n)
                             {
-                                date = null;
+                                date = "Feb 28 10 am";
                             }
 
 
@@ -156,13 +156,13 @@ public class EventCategoriesActivity extends AppCompatActivity {
                     }
 
                         // caches the
-                        if(!items.isEmpty()){
+
 
                         String cache_json = jsonArray.toString();
                         prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString(PREF_KEY,cache_json);
-                        editor.apply();}
+                        editor.apply();
 
                             if(items.isEmpty())
                                 ((TextView)findViewById(R.id.textView14)).setVisibility(View.VISIBLE);
@@ -196,7 +196,7 @@ public class EventCategoriesActivity extends AppCompatActivity {
                                 }
                                 catch (NumberFormatException n)
                                 {
-                                    date = null;
+                                    date = "Feb 26 10 am";
                                 }
 
                                 it = new eventitem(name, date, eventtag);
