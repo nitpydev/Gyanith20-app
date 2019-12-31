@@ -97,7 +97,7 @@ public class EventCategoriesActivity extends AppCompatActivity {
                 cat = "te";
                 break;
             case "Non Technical Events":
-                cat = "nte";
+                cat = "ne";
                 break;
             case "Pro Shows":
                 cat = "ps";

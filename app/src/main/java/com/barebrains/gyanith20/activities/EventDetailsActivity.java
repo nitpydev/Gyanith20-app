@@ -56,7 +56,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     Button bb2;
     String tab1,tab2,tab3;
     Context context;
-    String id="", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE", tag_id, img1;
+    String id="", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE", tag_id, img1,cost;
 
     AlertDialog.Builder a;
     AlertDialog vi;
@@ -121,15 +121,20 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                     title.setText(name);
 
+                    cost = jsonobject.getString("cost");
+
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                     {
                         tab1  = jsonobject.getString("des");
                         desc.setText(Html.fromHtml(tab1,Html.FROM_HTML_MODE_LEGACY));
+
                     }
                     else
                     {
                         desc.setText(Html.fromHtml(tab1));
                     }
+                    if(cost != "null")
+                        desc.append("\nRegistration Cost : Rs." + cost + " per person");
 
                     img1 = jsonobject.getString("img1");
 
@@ -199,6 +204,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                     {
                         desc.setText(Html.fromHtml(tab1));
                     }
+
+                    if(cost != "null")
+                    desc.append("\nRegistration Cost : Rs." + cost + " per person");
                 }
                 if(a==1){
                     desc.setText(tab2);
