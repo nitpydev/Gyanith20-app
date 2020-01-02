@@ -28,8 +28,14 @@ public class ImageVolley {
 
         imageLoader = new ImageLoader(requestQueue,
                 new ImageLoader.ImageCache() {
+
+                    final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
+
+                    final int cacheSize = maxMemory / 8;
+
                     private final LruCache<String, Bitmap>
-                            cache = new LruCache<String, Bitmap>(20);
+                            cache = new LruCache<String, Bitmap>(cacheSize);
 
                     @Override
                     public Bitmap getBitmap(String url) {
