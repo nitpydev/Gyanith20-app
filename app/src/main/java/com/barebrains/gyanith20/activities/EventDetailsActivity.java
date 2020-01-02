@@ -180,7 +180,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                             eveimage.setImageBitmap(img);
 
                             try {
-                                File imgfile = new File(context.getCacheDir().getPath() ,img1);
+                                File imgfile = new File(context.getCacheDir().getPath() ,"d"+tag_id);
                                 Util.putBitmaptoFile(img, imgfile);
                             }catch(Exception e)
                             {
@@ -193,26 +193,22 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                     }
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        eveimage.setImageResource(R.drawable.l2);
-
-
-
-                        File imgfile = new File(context.getCacheDir().getPath(),img1);
-                        try{
-                            Bitmap btm = Util.decodeFile(imgfile);
-                            if(btm != null)
-                                eveimage.setImageBitmap(btm);
-                        }catch(Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-
-
-                    }
+                    public void onErrorResponse(VolleyError error) { }
                 }
         );
         eveimage.setImageUrl(img1, imageeve);
+
+
+        File imgfile = new File(context.getCacheDir().getPath(),"d"+tag_id);
+        try{
+            Bitmap btm = Util.decodeFile(imgfile);
+            if(btm != null)
+                eveimage.setImageBitmap(btm);
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
 
 
 
