@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Explode;
-import android.util.Log;
+
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -26,7 +26,7 @@ import com.barebrains.gyanith20.adapters.eventCategoriesAdapter;
 import com.barebrains.gyanith20.models.eventitem;
 import com.barebrains.gyanith20.R;
 
-import com.google.gson.Gson;
+
 
 
 import org.json.JSONArray;
@@ -43,7 +43,7 @@ import java.util.Date;
 
 public class EventCategoriesActivity extends AppCompatActivity {
 
-    String s,name,date,eventtag, type, cat;
+    String s = "null",name,date ,eventtag, type, cat, timestamp,img2;
     String url_event = "http://gyanith.org/api.php?action=fetchAll&key=2ppagy0";
     eventCategoriesAdapter ada;
     ArrayList<eventitem> items;
@@ -54,7 +54,7 @@ public class EventCategoriesActivity extends AppCompatActivity {
     ArrayList tag;
 
     SharedPreferences prefs;
-    String PREF_KEY = "json_string", PREFS = "shared_prefs";
+    String PREF_KEY = "JSON_CACHE", PREFS = "shared_prefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +97,7 @@ public class EventCategoriesActivity extends AppCompatActivity {
                 cat = "te";
                 break;
             case "Non Technical Events":
-                cat = "nte";
+                cat = "ne";
                 break;
             case "Pro Shows":
                 cat = "ps";
@@ -120,45 +120,49 @@ public class EventCategoriesActivity extends AppCompatActivity {
                     public void onResponse(JSONArray jsonArray) {
 
 
+                    try {
+                        for (int i = 0; i < jsonArray.length(); i++) {
 
-                            for(int i = 0; i < jsonArray.length(); i++) {
-                                try
-                                {
-                                JSONObject jsonobject = jsonArray.getJSONObject(i);
-                                type = jsonobject.getString("type");
-                                    name = jsonobject.getString("name");
-
-                                    date = jsonobject.getString("timestamp");
-                                    eventtag = jsonobject.getString("id");
-
-
-
-                                    it = new eventitem(name, timeFormatter(date), eventtag);
-                                    it.setType(type);
-
-                                if(type.equals(cat)) {
-
-
-                                    items.add(it);
-
-                                    tag.add(eventtag);
-                                }
-                                }
-                                catch (JSONException e) {
-                                    //catch exception
-                                    e.printStackTrace();
-                                }
-
+                            JSONObject jsonobject = jsonArray.getJSONObject(i);
+                            type = jsonobject.getString("type");
+                            name = jsonobject.getString("name");
+                            img2 = jsonobject.getString("img2");
+                            timestamp = jsonobject.getString("timestamp");
+                            eventtag = jsonobject.getString("id");
+                            try {
+                                date = timeFormatter(timestamp);
+                            }
+                            catch (NumberFormatException n)
+                            {
+                                date = "Feb 28 10 am";
                             }
 
+                            it = new eventitem(name, date, eventtag);
+                            it.setType(type);
+                            it.setImg2(img2);
+
+                            if (type.equals(cat)) {
+
+
+                                items.add(it);
+
+                                tag.add(eventtag);
+                            }
+                        }
+                    }
+                    catch (JSONException j)
+                    {
+                        j.printStackTrace();
+                    }
+
                         // caches the
-                        if(!items.isEmpty()){
-                        Gson gson = new Gson();
-                        String cache_json = gson.toJson(items);
+
+
+                        String cache_json = jsonArray.toString();
                         prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString(PREF_KEY,cache_json);
-                        editor.apply();}
+                        editor.apply();
 
                             if(items.isEmpty())
                                 ((TextView)findViewById(R.id.textView14)).setVisibility(View.VISIBLE);
@@ -182,12 +186,22 @@ public class EventCategoriesActivity extends AppCompatActivity {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                 name = jsonObject.getString("name");
-
-                                date = jsonObject.getString("time");
-                                eventtag = jsonObject.getString("tag");
+                                img2 = jsonObject.getString("img2");
+                                timestamp = jsonObject.getString("timestamp");
+                                eventtag = jsonObject.getString("id");
                                 type = jsonObject.getString("type");
 
+                                try {
+                                    date = timeFormatter(timestamp);
+                                }
+                                catch (NumberFormatException n)
+                                {
+                                    date = "Feb 26 10 am";
+                                }
+
                                 it = new eventitem(name, date, eventtag);
+                                it.setType(type);
+                                it.setImg2(img2);
                                 if(type.equals(cat)){
                                 items.add(it);
                                 tag.add(eventtag);

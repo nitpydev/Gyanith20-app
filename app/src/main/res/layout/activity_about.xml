@@ -128,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/sofiaprolight"
                 android:gravity="center"
-                android:text="Gyanith 19"
+                android:text="Gyanith 20"
                 android:textColor="@android:color/white"
                 android:textSize="40sp" />
 
@@ -139,7 +139,7 @@
                 android:layout_marginBottom="50dp"
                 android:fontFamily="@font/sofiaprolight"
                 android:gravity="center"
-                android:text="Feb 28 - Mar 2"
+                android:text="Feb 26 - 29"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 

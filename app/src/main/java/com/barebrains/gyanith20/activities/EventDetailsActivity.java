@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -21,20 +23,20 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
+
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.barebrains.gyanith20.R;
-import com.barebrains.gyanith20.models.eventitem;
+
+import com.barebrains.gyanith20.others.ImageVolley;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,20 +45,22 @@ import org.json.JSONObject;
 public class EventDetailsActivity extends AppCompatActivity {
 
     TextView title,desc;
-    ImageView eveimage;
+    NetworkImageView eveimage;
+    ImageLoader imageeve;
     ToggleButton favtb;
     DatabaseReference reference,reg;
     Intent intent;
     String child,tag;
     TabLayout dtab;
-    SharedPreferences sp;
+    SharedPreferences sp, cache;
     Button bb2;
     String tab1,tab2,tab3;
     Context context;
-    String id="";
+    String id="", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE", tag_id, img1,cost;
+
     AlertDialog.Builder a;
     AlertDialog vi;
-    String url = "http://gyanith.org/api.php?action=fetchAll&key=2ppagy0";
+
 
 
     @Override
@@ -80,8 +84,10 @@ public class EventDetailsActivity extends AppCompatActivity {
         dtab=findViewById(R.id.dtab);
         context =this;
 
-        eveimage=findViewById(R.id.eveimv);
+        eveimage=(NetworkImageView) findViewById(R.id.eveimv);
         favtb=findViewById(R.id.favButton);
+
+
 
         if(child.equals("Workshop"))
         {
@@ -98,53 +104,65 @@ public class EventDetailsActivity extends AppCompatActivity {
             }
         });
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>()
-        {
-            @Override
-            public void onResponse(JSONArray jsonArray) {
+        cache = getSharedPreferences(PREFS,MODE_PRIVATE);
+        String CACHE = cache.getString(PREF_KEY,"NO INPUT");
 
 
+        try {
+            JSONArray jsonArray = new JSONArray(CACHE);
 
-               {
-                    try
+            for(int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonobject = jsonArray.getJSONObject(i);
+
+                tag_id = jsonobject.getString("id");
+
+                if(tag_id.equals(tag)) {
+                    String name = jsonobject.getString("name");
+
+                    title.setText(name);
+
+                    cost = jsonobject.getString("cost");
+
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                     {
-                        int int_tag = Integer.parseInt(tag);
-                        JSONObject jsonobject = jsonArray.getJSONObject(int_tag - 1);
-
-                        String name = jsonobject.getString("name");
-
-                        title.setText(name);
-
-                        tab1 = jsonobject.getString("des");
-
-                        desc.setText(tab1);
-
-                        tab2 = jsonobject.getString("rules");
-
-                        tab3 = jsonobject.getString("contact");
+                        tab1  = jsonobject.getString("des");
+                        desc.setText(Html.fromHtml(tab1,Html.FROM_HTML_MODE_LEGACY));
 
                     }
-                    catch (JSONException e) {
-                        //catch exception
-                        e.printStackTrace();
+                    else
+                    {
+                        desc.setText(Html.fromHtml(tab1));
                     }
+                    if(cost != "null")
+                        desc.append("\nRegistration Cost : Rs." + cost + " per person");
 
+                    img1 = jsonobject.getString("img1");
+
+                    tab2 = jsonobject.getString("rules");
+
+                    tab3 = jsonobject.getString("contact");
+
+                    break;
                 }
-
-
             }
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
 
-                        Toast.makeText(EventDetailsActivity.this,"network unavailable",Toast.LENGTH_LONG).show();
-                    }
-                }
-        );
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(jsonArrayRequest);
+        }
+        catch(JSONException J) {
+
+            Toast.makeText(EventDetailsActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
+        }
+
+
+        imageeve = ImageVolley.getInstance(context).getImageLoader();
+        imageeve.get(img1, ImageLoader.getImageListener(eveimage,
+                R.drawable.l2, R.drawable.l2));
+        eveimage.setImageUrl(img1, imageeve);
+
+
+
+
+
 
 
 
@@ -177,7 +195,18 @@ public class EventDetailsActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 int a=tab.getPosition();
                 if(a==0){
-                    desc.setText(tab1);
+
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                    {
+                        desc.setText(Html.fromHtml(tab1,Html.FROM_HTML_MODE_LEGACY));
+                    }
+                    else
+                    {
+                        desc.setText(Html.fromHtml(tab1));
+                    }
+
+                    if(cost != "null")
+                    desc.append("\nRegistration Cost : Rs." + cost + " per person");
                 }
                 if(a==1){
                     desc.setText(tab2);

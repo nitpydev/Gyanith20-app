@@ -61,6 +61,12 @@
         </receiver>
 
         <activity android:name=".activities.AboutActivity" />
+
+        <receiver android:name=".others.NetworkChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

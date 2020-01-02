@@ -41,11 +41,12 @@
                 android:layout_height="272dp"
                 android:layout_weight="1">
 
-                <ImageView
-                    android:id="@+id/eveimv"
+                <com.android.volley.toolbox.NetworkImageView
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
-                    android:background="@null" />
+                    android:id="@+id/eveimv"
+                    android:background="@null"
+                    />
 
                 <ImageView
                     android:id="@+id/fh"

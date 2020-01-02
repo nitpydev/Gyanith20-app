@@ -26,7 +26,6 @@ import com.barebrains.gyanith20.fragments.HomeFragment;
 import com.barebrains.gyanith20.fragments.NotificationFragment;
 import com.barebrains.gyanith20.fragments.ScheduleFragment;
 import com.barebrains.gyanith20.R;
-import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -153,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         title = findViewById(R.id.title);
         notif = getSharedPreferences(getString(R.string.package_name), Context.MODE_PRIVATE);
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
-
+        navigation.setItemIconTintList(null);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_home);
 
@@ -181,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
        */
         if(notif.getBoolean("newnot",false)){
-            navigation.getMenu().getItem(3).setIcon(R.drawable.ic_notification);
+            navigation.getMenu().getItem(3).setIcon(R.drawable.ic_notification_dot);
         }
 
         LastReadPostCount = notif.getInt("lastReadPostCount",0);
@@ -194,7 +193,7 @@ public void NotifyCommunityPosts(){
         if (PostManager.postCount > LastReadPostCount)
             navigation.getMenu().getItem(4).setIcon(R.drawable.ic_people_dot);
         else
-            navigation.getMenu().getItem(4).setIcon(R.drawable.ic_people_black_24dp);
+            navigation.getMenu().getItem(4).setIcon(R.drawable.nav_people_selector);
 }
 
 public void MarkPostsAsRead(){
