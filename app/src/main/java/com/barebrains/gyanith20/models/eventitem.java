@@ -31,9 +31,7 @@ public class eventitem {
         return time;
     }
 
-
-
-
+    public String getTag() { return tag;}
 
     public String getImg2() { return img2;}
 }

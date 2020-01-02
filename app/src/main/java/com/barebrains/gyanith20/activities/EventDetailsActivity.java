@@ -5,9 +5,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -20,16 +23,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 
-
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.barebrains.gyanith20.R;
 
 import com.barebrains.gyanith20.others.ImageVolley;
+import com.barebrains.gyanith20.statics.Util;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,13 +46,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+
 public class EventDetailsActivity extends AppCompatActivity {
 
     TextView title,desc;
     NetworkImageView eveimage;
     ImageLoader imageeve;
     ToggleButton favtb;
-    DatabaseReference reference,reg;
+    DatabaseReference reg;
     Intent intent;
     String child,tag;
     TabLayout dtab;
@@ -56,10 +62,14 @@ public class EventDetailsActivity extends AppCompatActivity {
     Button bb2;
     String tab1,tab2,tab3;
     Context context;
+
     String id="", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE", tag_id, img1,cost;
 
     AlertDialog.Builder a;
     AlertDialog vi;
+
+
+
 
 
 
@@ -154,15 +164,55 @@ public class EventDetailsActivity extends AppCompatActivity {
         }
 
 
+
+
         imageeve = ImageVolley.getInstance(context).getImageLoader();
-        imageeve.get(img1, ImageLoader.getImageListener(eveimage,
-                R.drawable.l2, R.drawable.l2));
+        imageeve.get(img1, new ImageLoader.ImageListener(){
+
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                        eveimage.setImageResource(R.drawable.l2);
+
+                        Bitmap img = response.getBitmap();
+
+                        if(img != null)
+                        {
+                            eveimage.setImageBitmap(img);
+
+                            try {
+                                File imgfile = new File(context.getCacheDir().getPath() ,img1);
+                                Util.putBitmaptoFile(img, imgfile);
+                            }catch(Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+
+
+
+
+                    }
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        eveimage.setImageResource(R.drawable.l2);
+
+
+
+                        File imgfile = new File(context.getCacheDir().getPath(),img1);
+                        try{
+                            Bitmap btm = Util.decodeFile(imgfile);
+                            if(btm != null)
+                                eveimage.setImageBitmap(btm);
+                        }catch(Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                }
+        );
         eveimage.setImageUrl(img1, imageeve);
-
-
-
-
-
 
 
 
