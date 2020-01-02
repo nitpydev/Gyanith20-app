@@ -23,6 +23,7 @@ import com.synnapps.carouselview.ImageListener;
 public class HomeFragment extends Fragment {
     private long delay1 = 0;
     private long delay2 = 0;
+    private View root;
     CarouselView carouselView;
 
     public HomeFragment() {
@@ -48,7 +49,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        //root = inflater.inflate(R.layout.fragment_home, container, false);
         root = inflater.inflate(R.layout.fragment_home, container, false);
 
         carouselView = (CarouselView) root.findViewById(R.id.carouselView);
@@ -58,6 +59,9 @@ public class HomeFragment extends Fragment {
         ((CardView) root.findViewById(R.id.w)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
                 Intent i = new Intent(getContext(), EventCategoriesActivity.class);
                 i.putExtra("category", "Workshop");
                 startActivity(i);
