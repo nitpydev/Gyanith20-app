@@ -15,7 +15,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2">
+                android:layout_weight="1">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -26,7 +26,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="15dp"
-                        android:layout_weight="1"
+                        android:layout_weight="0.7"
                         app:cardBackgroundColor="@android:color/transparent"
                         app:cardCornerRadius="5dp">
 
@@ -53,10 +53,51 @@
                         </com.synnapps.carouselview.CarouselView>
                     </androidx.cardview.widget.CardView>
 
-                    <Space
-                        android:layout_width="wrap_content"
+                    <FrameLayout
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="2" />
+                        android:layout_weight="2">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/floatingActionButton3"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="20sp"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                app:srcCompat="@color/colorPrimary" />
+
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/floatingActionButton2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="20sp"
+                                android:layout_marginTop="20sp"
+                                android:layout_marginRight="20sp"
+                                android:layout_marginBottom="20sp"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                app:srcCompat="@color/colorPrimary" />
+
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/floatingActionButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="20sp"
+                                android:layout_marginTop="20sp"
+                                android:layout_marginRight="20sp"
+                                android:layout_marginBottom="20sp"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:src="@color/colorPrimary" />
+                        </LinearLayout>
+                    </FrameLayout>
 
                 </LinearLayout>
 
@@ -66,10 +107,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginStart="0dp"
-                android:layout_marginTop="-140sp"
                 android:layout_marginEnd="0dp"
                 android:layout_marginBottom="60dp"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:isScrollContainer="false">
 

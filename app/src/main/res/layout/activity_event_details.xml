@@ -28,7 +28,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorBackDrop">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,11 +43,11 @@
                 android:layout_weight="1">
 
                 <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/eveimv"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
-                    android:id="@+id/eveimv"
                     android:background="@null"
-                    />
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/fh"
