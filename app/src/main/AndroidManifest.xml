@@ -46,6 +46,7 @@
         <activity android:name=".activities.EventCategoriesActivity" />
         <activity android:name=".activities.EventDetailsActivity" />
         <activity android:name=".activities.ProfileActivity" />
+        <activity android:name=".activities.SignUpActivity"/>
         <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class AboutActivity extends AppCompatActivity {
     private Boolean show=false;
-    private String furl,iurl,wurl;
+    private String furl,iurl,wurl,desc;
     private DatabaseReference db,fb;
     Typeface font,fontt;
 
@@ -55,10 +55,18 @@ public class AboutActivity extends AppCompatActivity {
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ((TextView)findViewById(R.id.descr)).setText(dataSnapshot.child("desc").getValue().toString());
+                try{desc = dataSnapshot.child("desc").getValue().toString();
                 furl=dataSnapshot.child("fburl").getValue().toString();
                 iurl=dataSnapshot.child("inurl").getValue().toString();
-                wurl=dataSnapshot.child("wburl").getValue().toString();
+                wurl=dataSnapshot.child("wburl").getValue().toString();}catch (NullPointerException n){
+                    if(desc == null)
+                    ((TextView)findViewById(R.id.descr)).setText(R.string.about);
+                    if(furl == null)
+                        furl = "https://www.facebook.com/gyanith.nitpy/";
+                    if(iurl == null)
+                        iurl = "https://www.instagram.com/nitpy_gyanith/";
+                    if(wurl == null)
+                        wurl = "https://www.gyanith.org/index.html";}
             }
 
             @Override
@@ -67,6 +75,8 @@ public class AboutActivity extends AppCompatActivity {
             }
         });
 
+
+        ((TextView)findViewById(R.id.descr)).setText(desc);
         directions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -27,14 +27,7 @@ import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
@@ -52,8 +45,10 @@ public class LoginActivity extends AppCompatActivity {
 
 
     EditText uid,pwd;
+    TextView signup;
     Button signinBtn, backBtn;
     ProgressBar loginprog;
+    Context cnt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +58,8 @@ public class LoginActivity extends AppCompatActivity {
         loginprog=findViewById(R.id.loginprog);
         uid=findViewById(R.id.uid);
         pwd=findViewById(R.id.password);
+        cnt = this;
+        signup = (TextView) findViewById(R.id.sign_up);
         pwd.setTransformationMethod(new PasswordTransformationMethod());
         signinBtn =findViewById(R.id.signinBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +74,13 @@ public class LoginActivity extends AppCompatActivity {
         boolean resolved = GyanithUserManager.resolveUserState(LoginActivity.this);
         if (resolved)
             OnSignInSuccess();
+
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signup_act();
+            }
+        });
 
         signinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +132,12 @@ public class LoginActivity extends AppCompatActivity {
             loginprog.setVisibility(View.GONE);
             signinBtn.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void signup_act()
+    {
+        Intent signupint = new Intent(cnt,SignUpActivity.class);
+        startActivity(signupint);
     }
 }
 
