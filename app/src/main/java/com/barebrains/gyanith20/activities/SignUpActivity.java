@@ -170,13 +170,13 @@ public class SignUpActivity extends AppCompatActivity {
             switch(view.getId())
             {
                 case R.id.male:
-                    gender = "male";
+                    gender = "m";
                     break;
                 case R.id.female:
-                    gender = "female";
+                    gender = "f";
                     break;
                 case R.id.other:
-                    gender = "other";
+                    gender = "o";
                     break;
             }
 
