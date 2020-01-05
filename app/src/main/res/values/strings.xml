@@ -27,6 +27,7 @@
     <string name="topbar_schedule">Schedule</string>
     <string name="topbar_favourites">Favourites</string>
     <string name="topbar_notification">Notification</string>
+    <string name="topbar_community">Community</string>
     <!--Schedule Tabs-->
     <string name="schedule_tab0">LIVE</string>
     <string name="schedule_tab1">DAY 0</string>

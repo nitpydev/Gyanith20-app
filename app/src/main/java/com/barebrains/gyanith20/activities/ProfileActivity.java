@@ -95,7 +95,6 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         userInfoPanel = findViewById(R.id.userinfo_panel);
-        userInfoPanel.setVisibility(View.GONE);
         profileCard = findViewById(R.id.profile_card);
         qrCard = findViewById(R.id.qr_card);
         topPanel = findViewById(R.id.top_panel_profile);

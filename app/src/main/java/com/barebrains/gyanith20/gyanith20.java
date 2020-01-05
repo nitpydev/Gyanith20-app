@@ -90,15 +90,12 @@ public class gyanith20 extends Application {
             GyanithUserManager.SignInReturningUser(this, new ResultListener<GyanithUser>() {
                 @Override
                 public void OnResult(GyanithUser gyanithUser) {
-                    if (gyanithUser == null)
-                        Log.d("asd","User Token Expired");
-                    else
-                        Log.d("asd","user return successful");
+                    Log.d("asd","user return successful");
                 }
 
                 @Override
                 public void OnError(String error) {
-                    Log.d("asd","Error in returning user");
+                    Log.d("asd","SignInReturningUser : " + error);
                 }
             });
         } catch (IllegalStateException e) {
