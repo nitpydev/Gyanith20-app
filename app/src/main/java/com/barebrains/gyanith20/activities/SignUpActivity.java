@@ -22,8 +22,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.barebrains.gyanith20.R;
+import com.google.gson.JsonObject;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -98,12 +101,13 @@ public class SignUpActivity extends AppCompatActivity {
                 //jsonobject request
 
                 RequestQueue requestQueue = Volley.newRequestQueue(context);
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
+                StringRequest stringrequest = new StringRequest(Request.Method.POST, url,  new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(String response) {
 
                         try{
-                        result = response.getString("result");
+                            JSONObject obj = new JSONObject(response);
+                            String result = obj.getString("result");
                         if(result.equals("success")){
                             builder.setTitle("Verify Email");
                             builder.setMessage(R.string.msg);
@@ -122,14 +126,15 @@ public class SignUpActivity extends AppCompatActivity {
                            dialog.show();
                         }
                         else{
-                            String text = response.getString("text");
+                            JSONObject txtobj = new JSONObject(response);
+                            String text = txtobj.getString("text");
                             builder.setTitle("Error");
                             builder.setMessage(text);
                             AlertDialog dialog = builder.create();
                             dialog.show();
                         }
                         }catch (JSONException j){Toast.makeText(context,"server error",Toast.LENGTH_SHORT).show(); isLoading(false);}
-
+                        isLoading(false);
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -151,7 +156,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                     }
                 };
-                requestQueue.add(jsonObjectRequest);}
+                requestQueue.add(stringrequest);}
 
             }
         });
