@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.ArraySet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +14,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.adapters.eventCategoriesAdapter;
-import com.barebrains.gyanith20.models.eventitem;
+import com.barebrains.gyanith20.interfaces.ResultListener;
+import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.barebrains.gyanith20.statics.eventsManager;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,20 +32,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class FavouritesFragment extends Fragment {
 
 
-    DatabaseReference ref;
-    eventCategoriesAdapter ada;
-    ArrayList<eventitem> items;
-    eventitem it;
-    ListView lvi;
-    SharedPreferences sp, json_string;
-    ArrayList tag;
-    String cat = "cat", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE";
-    String cache, name, date, id, timestamp, type,img2;
+    eventCategoriesAdapter adapter;
+    SharedPreferences sp;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -66,18 +57,8 @@ public class FavouritesFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-     if(hidden)
-     {
-
-     }
-     else{
-
-         final View root = getView();
-        update(root);
-
-
-     }
-
+     if(!hidden)
+        refreshFavs();
     }
 
 
@@ -90,11 +71,48 @@ public class FavouritesFragment extends Fragment {
         // Inflate the layout for this fragment
         final View root = inflater.inflate(R.layout.fragment_favourites, container, false);
 
-        update(root);
+        View emptyState = root.findViewById(R.id.textView13);
+        View progress = root.findViewById(R.id.favload);
+
+        adapter = new eventCategoriesAdapter(R.layout.item_event_category
+        ,emptyState
+        ,progress
+        ,new ArrayList<EventItem>()
+        ,getContext());
+
+        ListView favListView = root.findViewById(R.id.favlv);
+
+        favListView.setAdapter(adapter);
+
+        refreshFavs();
         return root;
 
     }
 
+
+
+    private void refreshFavs(){
+        sp = getContext().getSharedPreferences(getString(R.string.package_name), Context.MODE_PRIVATE);
+        Set<String> favIds = sp.getStringSet(getString(R.string.favSet),new HashSet<String>());
+
+        eventsManager.getEventsbyId(new ArrayList<>(favIds),new ResultListener<EventItem[]>(){
+            @Override
+            public void OnResult(EventItem[] eventItems) {
+                adapter.clear();
+                for (EventItem item : eventItems)
+                    adapter.add(item);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void OnError(String error) {
+                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+/*
     public String timeFormatter(String time)
     {
         long timeInt = Long.parseLong(time);
@@ -115,12 +133,12 @@ public class FavouritesFragment extends Fragment {
     {
         lvi=root.findViewById(R.id.favlv);
 
-        sp = getContext().getSharedPreferences("com.barebrains.Gyanith19", Context.MODE_PRIVATE);
+        sp = getContext().getSharedPreferences(getString(R.string.package_name), Context.MODE_PRIVATE);
         json_string = getContext().getSharedPreferences(PREFS,Context.MODE_PRIVATE);
-        items=new ArrayList<eventitem>();
+        items=new ArrayList<EventItem>();
 
         final Intent i1 =new Intent(this.getContext(), EventDetailsActivity.class);
-        ada=new eventCategoriesAdapter(R.layout.item_event_category,items,this.getContext());
+        ada=new eventCategoriesAdapter(R.layout.item_event_category,(EventItem[]) items.toArray(),this.getContext());
         tag = new ArrayList();
         cache = json_string.getString(PREF_KEY, "NOTHING");
         items.clear();
@@ -133,7 +151,7 @@ public class FavouritesFragment extends Fragment {
                 timestamp = jsonobject.getString("timestamp");
                 id = jsonobject.getString("id");
                 type = jsonobject.getString("type");
-                img2 = jsonobject.getString("img2");
+                img2 = jsonobject.getString("iconImgUrl");
 
                 try {
                     date = timeFormatter(timestamp);
@@ -144,9 +162,9 @@ public class FavouritesFragment extends Fragment {
                 }
 
                 if(sp.getBoolean(id,false)) {
-                    it = new eventitem(name, date, id);
-                    it.setType(type);
-                    it.setImg2(img2);
+                    //it = new EventItem(name, date, id);
+                    //it.setType(type);
+                    //it.setIconImgUrl(img2);
                     items.add(it);
                     tag.add(id);
                     ada.notifyDataSetChanged();
@@ -177,7 +195,7 @@ public class FavouritesFragment extends Fragment {
         lvi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch(items.get(position).getType()){
+                switch(items.get(position).type){
                     case "w":
                         cat= "Workshop";
                         break;
@@ -204,6 +222,6 @@ public class FavouritesFragment extends Fragment {
 
 
     }
-
+*/
 
 }

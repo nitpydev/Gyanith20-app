@@ -62,7 +62,7 @@ public class ScheduleTab1_Fragment extends Fragment {
                 list.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren())
                 {
-                    String starttime = snapshot.child("startTime").getValue().toString();//timeFormatter("gsadg");
+                    String starttime = snapshot.child("startTime").getValue().toString();//timeToDate("gsadg");
                     String endtime = snapshot.child("endTime").getValue().toString();
 
                     Long now = Calendar.getInstance().getTimeInMillis();

@@ -5,12 +5,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -20,50 +17,41 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
-
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.barebrains.gyanith20.R;
-
-import com.barebrains.gyanith20.others.ImageVolley;
-import com.barebrains.gyanith20.statics.Util;
+import com.barebrains.gyanith20.models.EventItem;
+import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
+    EventItem eventItem;
+
     TextView title,desc;
-    NetworkImageView eveimage;
-    ImageLoader imageeve;
+    ImageView eveimage;
     ToggleButton favtb;
     DatabaseReference reg;
     Intent intent;
-    String child,tag;
+    String catType, eventId;
     TabLayout dtab;
-    SharedPreferences sp, cache;
-    Button bb2;
+    SharedPreferences sp;
+    Button backBtn;
     String tab1,tab2,tab3;
     Context context;
 
-    String id="", PREFS = "shared_prefs", PREF_KEY = "JSON_CACHE", tag_id, img1,cost;
+    String id="",cost;
 
     AlertDialog.Builder a;
     AlertDialog vi;
@@ -76,149 +64,85 @@ public class EventDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-       // getWindow().setEnterTransition(new Explode());
-       // getWindow().setExitTransition(new Explode());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        }
         setContentView(R.layout.activity_event_details);
         a=new AlertDialog.Builder(this);
 
 
-        sp= this.getSharedPreferences("com.barebrains.Gyanith19",MODE_PRIVATE);
+        sp= this.getSharedPreferences(getString(R.string.package_name),MODE_PRIVATE);
 
-        bb2=findViewById(R.id.backbut2);
+        backBtn =findViewById(R.id.backbut2);
         intent = getIntent();
-        child=intent.getStringExtra("category");
-        tag= intent.getStringExtra("tag");
+        String eiJSON = intent.getStringExtra("eventItem");
+        eventItem = (new Gson()).fromJson(eiJSON,EventItem.class);
+        catType = eventItem.type;
+        eventId = eventItem.id;
         title=findViewById(R.id.evedttitle);
         desc=findViewById(R.id.evedesc);
         dtab=findViewById(R.id.dtab);
         context =this;
 
-        eveimage=(NetworkImageView) findViewById(R.id.eveimv);
+        eveimage= findViewById(R.id.eveimv);
         favtb=findViewById(R.id.favButton);
 
 
-
-        if(child.equals("Workshop"))
-        {
-            dtab.getTabAt(1).setText("Requisites");
-        }
-
-
-
-
-        bb2.setOnClickListener(new View.OnClickListener() {
+        backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
-        cache = getSharedPreferences(PREFS,MODE_PRIVATE);
-        String CACHE = cache.getString(PREF_KEY,"NO INPUT");
+        Glide.with(this)
+                .load(eventItem.img1)
+                .placeholder(R.drawable.l2)
+                .error(R.drawable.gyanith_error)
+                .into(eveimage);
 
-
-        try {
-            JSONArray jsonArray = new JSONArray(CACHE);
-
-            for(int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonobject = jsonArray.getJSONObject(i);
-
-                tag_id = jsonobject.getString("id");
-
-                if(tag_id.equals(tag)) {
-                    String name = jsonobject.getString("name");
-
-                    title.setText(name);
-
-                    cost = jsonobject.getString("cost");
-
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                    {
-                        tab1  = jsonobject.getString("des");
-                        desc.setText(Html.fromHtml(tab1,Html.FROM_HTML_MODE_LEGACY));
-
-                    }
-                    else
-                    {
-                        desc.setText(Html.fromHtml(tab1));
-                    }
-                    if(cost != "null")
-                        desc.append("\nRegistration Cost : Rs." + cost + " per person");
-
-                    img1 = jsonobject.getString("img1");
-
-                    tab2 = jsonobject.getString("rules");
-
-                    tab3 = jsonobject.getString("contact");
-
-                    break;
-                }
-            }
-
-
-        }
-        catch(JSONException J) {
-
-            Toast.makeText(EventDetailsActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
-        }
-
-
-
-
-        imageeve = ImageVolley.getInstance(context).getImageLoader();
-        imageeve.get(img1, new ImageLoader.ImageListener(){
-
-                    @Override
-                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                        eveimage.setImageResource(R.drawable.l2);
-
-                        Bitmap img = response.getBitmap();
-
-                        if(img != null)
-                        {
-                            eveimage.setImageBitmap(img);
-
-                            try {
-                                File imgfile = new File(context.getCacheDir().getPath() ,"d"+tag_id);
-                                Util.putBitmaptoFile(img, imgfile);
-                            }catch(Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
-
-
-
-
-                    }
-                    @Override
-                    public void onErrorResponse(VolleyError error) { }
-                }
-        );
-        eveimage.setImageUrl(img1, imageeve);
-
-
-        File imgfile = new File(context.getCacheDir().getPath(),"d"+tag_id);
-        try{
-            Bitmap btm = Util.decodeFile(imgfile);
-            if(btm != null)
-                eveimage.setImageBitmap(btm);
-        }catch(Exception e)
+        if(eventItem.id.equals("w"))
         {
-            e.printStackTrace();
+            dtab.getTabAt(1).setText("Requisites");
         }
 
+        title.setText(eventItem.name);
+
+        tab1 = eventItem.des;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            desc.setText(Html.fromHtml(eventItem.des,Html.FROM_HTML_MODE_LEGACY));
+        else
+            desc.setText(Html.fromHtml(eventItem.des));
+        id =
+        cost = eventItem.cost;
+        if(cost != null)
+            desc.append("\nRegistration Cost : Rs." + cost + " per person");
+
+        tab2 = eventItem.rules;
+        tab3 = eventItem.contact;
 
 
+        final ImageView f= findViewById(R.id.fh);
 
-        final ImageView f=(ImageView)findViewById(R.id.fh) ;
+        Set<String> favIds = sp.getStringSet(getString(R.string.favSet), new HashSet<String>());
 
-        favtb.setChecked(sp.getBoolean(tag,false));
+        favtb.setChecked(favIds.contains(eventId));
+
+
         favtb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sp.edit().putBoolean(tag,favtb.isChecked()).commit();
+                if (isChecked) {
+                    Set<String> favIds = sp.getStringSet(getString(R.string.favSet), new HashSet<String>());
+                    favIds.add(eventId);
+                    sp.edit().putStringSet(getString(R.string.favSet), favIds).apply();
+                }
+                else {
+                    Set<String> favIds = sp.getStringSet(getString(R.string.favSet), new HashSet<String>());
+                    favIds.remove(eventId);
+                    sp.edit().putStringSet(getString(R.string.favSet), favIds).apply();
+                }
+
                 if(isChecked){
                     ObjectAnimator fa=ObjectAnimator.ofFloat(f,"alpha",1,0);
                     fa.setDuration(500);
@@ -251,7 +175,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                         desc.setText(Html.fromHtml(tab1));
                     }
 
-                    if(cost != "null")
+                    if(!cost.equals("null"))
                     desc.append("\nRegistration Cost : Rs." + cost + " per person");
                 }
                 if(a==1){
@@ -273,15 +197,15 @@ public class EventDetailsActivity extends AppCompatActivity {
 
             }
         });
-        if(tag.charAt(0)=='N'||tag.charAt(0)=='P'||tag.charAt(0)=='G')
-            ((Button)findViewById(R.id.reg)).setVisibility(View.GONE);
-        if(tag.equals("P1"))
-            ((Button)findViewById(R.id.reg)).setVisibility(View.GONE);
+        if(eventId.charAt(0)=='N'|| eventId.charAt(0)=='P'|| eventId.charAt(0)=='G')
+            findViewById(R.id.reg).setVisibility(View.GONE);
+        if(eventId.equals("P1"))
+            findViewById(R.id.reg).setVisibility(View.GONE);
 
 
 
 
-        reg = FirebaseDatabase.getInstance().getReference().child(child).child(tag);
+        reg = FirebaseDatabase.getInstance().getReference().child(catType).child(eventId);
 
         reg.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -290,7 +214,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 try {
                     tm = dataSnapshot.child("tm").getValue().toString();
                 }catch(Exception e){}
-                Button b[] = new Button[2];
+                Button[] b = new Button[2];
                 LinearLayout linlay = new LinearLayout(context);
                 linlay.setOrientation(LinearLayout.VERTICAL);
                 Log.i("alert",tm);
@@ -311,8 +235,8 @@ public class EventDetailsActivity extends AppCompatActivity {
                             catch(Exception e){}
                             intent.putExtra("id", id);
                             intent.putExtra("token", "");
-                            if (tag.equals("W7"))
-                                intent.putExtra("ex", tag);
+                            if (eventId.equals("W7"))
+                                intent.putExtra("ex", eventId);
                             else
                                 intent.putExtra("ex", "");
                             startActivity(intent);
@@ -337,7 +261,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
 
 
-        ((Button)findViewById(R.id.reg)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.reg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

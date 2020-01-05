@@ -30,8 +30,8 @@
                         app:cardBackgroundColor="@android:color/transparent"
                         app:cardCornerRadius="5dp">
 
-                        <com.synnapps.carouselview.CarouselView
-                            android:id="@+id/carouselView"
+                        <com.glide.slider.library.SliderLayout
+                            android:id="@+id/img_slider"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginStart="0dp"
@@ -50,7 +50,7 @@
                             <Space
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
-                        </com.synnapps.carouselview.CarouselView>
+                        </com.glide.slider.library.SliderLayout>
                     </androidx.cardview.widget.CardView>
 
                     <FrameLayout
@@ -132,6 +132,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/wgrad"
                         android:minHeight="100dp"
+                        android:tag="@string/workshop"
                         app:cardCornerRadius="5dp">
 
                         <LinearLayout
@@ -160,7 +161,7 @@
                                 android:layout_weight="3"
                                 android:fontFamily="@font/poppinsr"
                                 android:gravity="center"
-                                android:text="Workshops"
+                                android:text="@string/workshop"
                                 android:textColor="@color/txtColor"
                                 android:textSize="14sp" />
                         </LinearLayout>
@@ -178,6 +179,7 @@
                         android:layout_marginRight="7.5dp"
                         android:layout_marginBottom="7.5dp"
                         android:layout_weight="1"
+                        android:tag="@string/non_tech_Events"
                         app:cardBackgroundColor="@color/colorBackdropAccent"
                         app:cardCornerRadius="5dp">
 
@@ -208,8 +210,8 @@
                                 android:ellipsize="marquee"
                                 android:fontFamily="@font/poppinsr"
                                 android:gravity="center"
-                                android:maxLines="1"
-                                android:text="Non Technical Events"
+                                android:singleLine="true"
+                                android:text="@string/non_tech_Events"
                                 android:textColor="@color/txtColor"
                                 android:textSize="14sp" />
 
@@ -227,6 +229,7 @@
                         android:layout_marginRight="7.5dp"
                         android:layout_marginBottom="7.5dp"
                         android:layout_weight="1"
+                        android:tag="@string/pro_shows"
                         app:cardBackgroundColor="@color/colorBackdropAccent"
                         app:cardCornerRadius="5dp">
 
@@ -254,7 +257,7 @@
                                 android:layout_weight="3"
                                 android:fontFamily="@font/poppinsr"
                                 android:gravity="center"
-                                android:text="Pro Shows"
+                                android:text="@string/pro_shows"
                                 android:textColor="@color/txtColor"
                                 android:textSize="14sp" />
                         </LinearLayout>
@@ -279,6 +282,7 @@
                         android:layout_marginRight="15dp"
                         android:layout_marginBottom="7.5dp"
                         android:layout_weight="1"
+                        android:tag="@string/tech_Events"
                         app:cardBackgroundColor="@color/colorBackdropAccent"
                         app:cardCornerRadius="5dp">
 
@@ -306,7 +310,7 @@
                                 android:layout_weight="3"
                                 android:fontFamily="@font/poppinsr"
                                 android:gravity="center"
-                                android:text="Technical Events"
+                                android:text="@string/tech_Events"
                                 android:textColor="@color/txtColor"
                                 android:textSize="14sp" />
                         </LinearLayout>
@@ -323,6 +327,7 @@
                         android:layout_marginRight="15dp"
                         android:layout_marginBottom="7.5dp"
                         android:layout_weight="1"
+                        android:tag="@string/guest_lectures"
                         app:cardBackgroundColor="@color/colorBackdropAccent"
                         app:cardCornerRadius="5dp">
 
@@ -350,7 +355,7 @@
                                 android:layout_weight="3"
                                 android:fontFamily="@font/poppinsr"
                                 android:gravity="center"
-                                android:text="Guest Lectures"
+                                android:text="@string/guest_lectures"
                                 android:textColor="@color/txtColor"
                                 android:textSize="14sp" />
                         </LinearLayout>
@@ -358,7 +363,7 @@
                     </com.google.android.material.card.MaterialCardView>
 
                     <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/ud"
+                        android:id="@+id/au"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="fill_horizontal|fill_vertical"
@@ -367,6 +372,7 @@
                         android:layout_marginRight="15dp"
                         android:layout_marginBottom="7.5dp"
                         android:layout_weight="1"
+                        android:tag="@string/about_us"
                         app:cardBackgroundColor="@color/colorBackdropAccent"
                         app:cardCornerRadius="5dp">
 
@@ -394,7 +400,7 @@
                                 android:layout_weight="3"
                                 android:fontFamily="@font/poppinsr"
                                 android:gravity="center"
-                                android:text="About Us"
+                                android:text="@string/about_us"
                                 android:textColor="@color/txtColor"
                                 android:textSize="14sp" />
                         </LinearLayout>

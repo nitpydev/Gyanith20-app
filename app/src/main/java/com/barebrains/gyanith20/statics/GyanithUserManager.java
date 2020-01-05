@@ -3,25 +3,22 @@ package com.barebrains.gyanith20.statics;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.barebrains.gyanith20.interfaces.ResultListener;
-import com.barebrains.gyanith20.interfaces.AuthStateListener;
-import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.interfaces.AuthStateListener;
+import com.barebrains.gyanith20.interfaces.ResultListener;
+import com.barebrains.gyanith20.models.GyanithUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -36,7 +33,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 
 public class GyanithUserManager {
@@ -62,23 +58,26 @@ public class GyanithUserManager {
         return loggedUser;
     }
 
+    //Use this sign in only if all the traces of a user is removed
     public static void SignInUser(final Context context, String username, String password, final ResultListener<GyanithUser> result) throws IllegalStateException
     {
         if (loggedUser != null)
-            throw new IllegalStateException();
+            throw new IllegalStateException("SignInUser : Already user Signed in");
+
         GetGyanithUserToken(context,username, password, new ResultListener<String>() {
             @Override
             public void OnResult(String token) {
 
-                if (token == null){
-                    result.OnResult(null);//Invalid Credentials
+                if (token == null){//Implies Invalid Credentials
+                    result.OnResult(null);
                     return;
                 }
+
                 GyanithSignInWithToken(context, token, new ResultListener<GyanithUser>() {
                     @Override
                     public void OnResult(GyanithUser gyanithUser) {
-                        if (gyanithUser == null) {
-                            SignOutUser(context);//Token Expired
+                        if (gyanithUser == null) {//Implies Token Expired
+                            SignOutUser(context);
                             return;
                         }
                         loggedUser = gyanithUser;
@@ -126,54 +125,6 @@ public class GyanithUserManager {
         });
     }
 
-    private static void FirebaseUserSignIn(final GyanithUser gyanithUser) {
-        if(FirebaseAuth.getInstance().getCurrentUser() != null)
-            return;
-
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(gyanithUser.email, gyanithUser.gyanithId)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            PostManager.getInstance().Initialize();
-                            return;
-                        }
-
-                        Exception e = task.getException();
-
-                        if (e instanceof FirebaseAuthInvalidCredentialsException)
-                            Log.d("asd", "FirebaseAuth : Invalid Password");
-                        else if (e instanceof FirebaseAuthInvalidUserException) {
-                            FirebaseUserSignUp(gyanithUser, gyanithUser.gyanithId, new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (FirebaseAuth.getInstance().getCurrentUser() != null)
-                                        return;
-                                    Log.d("asd", "FirebaseAuth : New User " + task.isSuccessful());
-                                }
-                            });
-                        }
-                    }
-                });
-
-    }
-
-    private static void FirebaseUserSignUp(final GyanithUser gyanithUser, String password, final OnCompleteListener<Void> completeListener) {
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(gyanithUser.email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        DatabaseReference root = FirebaseDatabase.getInstance().getReference();
-                        root.child("users").child(gyanithUser.gyanithId).setValue(gyanithUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                completeListener.onComplete(task);
-                            }
-                        });
-                    }
-                });
-    }
-
     private static void GetGyanithUserToken(Context context, final String username, final String password, final ResultListener<String> result){
 
         JsonObjectRequest userTokenRequest = new JsonObjectRequest
@@ -213,14 +164,9 @@ public class GyanithUserManager {
             @Override
             public void onResponse(JSONObject response) {
                 if (response.has("user"))
-                {
-                    Log.d("asd","Token user");
                     callback.OnResult(Util.jsonToGyanithUser(response.toString(),token));
-                }
                 else if (response.has("error"))
-                {
                     callback.OnResult(null);
-                }
             }
         },new Response.ErrorListener(){
 
@@ -244,6 +190,56 @@ public class GyanithUserManager {
         return "http://gyanith.org/api.php?action=login&key=2ppagy0&token=" + token;
     }
 
+    private static void FirebaseUserSignIn(final GyanithUser gyanithUser) {
+        if(FirebaseAuth.getInstance().getCurrentUser() != null)
+            return;
+
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(gyanithUser.email, gyanithUser.gyanithId)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            PostManager.getInstance().Initialize();
+                            return;
+                        }
+
+                        Exception e = task.getException();
+
+                        if (e instanceof FirebaseAuthInvalidCredentialsException)
+                            Log.d("asd", "FirebaseAuth : Invalid Password");
+                        else if (e instanceof FirebaseAuthInvalidUserException) {
+                            FirebaseUserSignUp(gyanithUser, new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (FirebaseAuth.getInstance().getCurrentUser() != null)
+                                        return;
+                                    Log.d("asd", "FirebaseAuth : New User " + task.isSuccessful());
+                                }
+                            });
+                        }
+                    }
+                });
+
+    }
+
+    private static void FirebaseUserSignUp(final GyanithUser gyanithUser, final OnCompleteListener<Void> completeListener) {
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(gyanithUser.email, gyanithUser.gyanithId)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        DatabaseReference root = FirebaseDatabase.getInstance().getReference();
+                        root.child("users").child(gyanithUser.gyanithId).child("postCount").setValue(0).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                completeListener.onComplete(task);
+                            }
+                        });
+                    }
+                });
+    }
+
+
+    //Should be called to save a user with new token
     private static void SaveGyanithUser(Context context, GyanithUser user) {
         SharedPreferences sp = context.getSharedPreferences(context.getString(R.string.package_name), Context.MODE_PRIVATE);
         Gson gson = new Gson();
@@ -255,6 +251,7 @@ public class GyanithUserManager {
         AuthStateChanged();
     }
 
+    //Should be called to get the user if it exists from prefs
     private static GyanithUser RetriveGyanithUser(Context context){
         SharedPreferences sp = context.getSharedPreferences(context.getString(R.string.package_name), Context.MODE_PRIVATE);
         String json = sp.getString(context.getString(R.string.gyanithUserKey),"");
@@ -264,6 +261,7 @@ public class GyanithUserManager {
         return gson.fromJson(json,GyanithUser.class);
     }
 
+    //Completely removes the trace of a user
     public static void SignOutUser(Context context){
         if (loggedUser == null)
             return;
@@ -274,6 +272,7 @@ public class GyanithUserManager {
         loggedUser = null;
     }
 
+    //Handles conflicts with firebase login and stale auth state
     public static boolean resolveUserState(final Context context){
         if (loggedUser == null) {
             SignOutUser(context);

@@ -10,8 +10,15 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.barebrains.gyanith20.interfaces.NetworkStateListener;
+import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.others.NetworkChangeReceiver;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +56,19 @@ public class NetworkManager {
             instance = new NetworkManager();
         if (instance.cm == null)
             instance.cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        String url = "https://restcountries.eu/rest/v2/name/india?fields=name";
+        JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+               instance.lastAvailability = true;
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                instance.lastAvailability = false;
+            }
+        });
+        VolleyManager.requestQueue.add(request);
     }
 
     public void addListener(NetworkStateListener listener){

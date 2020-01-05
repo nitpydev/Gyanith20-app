@@ -85,7 +85,45 @@ public class  PostManager{
         return pics;
     }
 
+    private static Transaction.Handler incrementer = new Transaction.Handler() {
+        @NonNull
+        @Override
+        public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+            Long p = mutableData.getValue(Long.class);
+            if (p == null) {
+                return Transaction.success(mutableData);
+            }
+            p++;
+            // Set value and report transaction success
+            mutableData.setValue(p);
+            return Transaction.success(mutableData);
+        }
 
+        @Override
+        public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+        }
+    };
+
+    private static Transaction.Handler decrementer = new Transaction.Handler() {
+        @NonNull
+        @Override
+        public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+            Long p = mutableData.getValue(Long.class);
+            if (p == null) {
+                return Transaction.success(mutableData);
+            }
+            p--;
+            // Set value and report transaction success
+            mutableData.setValue(p);
+            return Transaction.success(mutableData);
+        }
+
+        @Override
+        public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+        }
+    };
 
     public static void CommitPostToDB(Post post, final CompletionListener result){
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -99,25 +137,8 @@ public class  PostManager{
                 result.OnComplete();
             }
         });
-        rootRef.child("postCount").runTransaction(new Transaction.Handler() {
-            @NonNull
-            @Override
-            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-                Long p = mutableData.getValue(Long.class);
-                if (p == null) {
-                    return Transaction.success(mutableData);
-                }
-                p++;
-                // Set value and report transaction success
-                mutableData.setValue(p);
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
-
-            }
-        });
+        rootRef.child("users").child(post.gyanithId).child("postCount").runTransaction(incrementer);
+        rootRef.child("postCount").runTransaction(incrementer);
 
         rootRef.child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
                 .child("posts").child(post.postId).setValue(post);
@@ -182,25 +203,8 @@ public class  PostManager{
             }
         });
 
-        rootRef.child("postCount").runTransaction(new Transaction.Handler() {
-            @NonNull
-            @Override
-            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-                Long p = mutableData.getValue(Long.class);
-                if (p == null) {
-                    return Transaction.success(mutableData);
-                }
-                p--;
-                // Set value and report transaction success
-                mutableData.setValue(p);
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
-
-            }
-        });
+        rootRef.child("postCount").runTransaction(decrementer);
+        rootRef.child("users").child(post.gyanithId).child("postCount").runTransaction(decrementer);
         for (String imgId : post.imgIds)
             FirebaseStorage.getInstance().getReference().child("PostImages").child(imgId).delete();
     }
@@ -213,12 +217,27 @@ public class  PostManager{
     //LIKES MANAGEMENT
     private Set<String> likedPosts;
 
+    public static Integer userPostCount = 0;
+
     public void Initialize()
     {
         getRemoteLikedPosts(new ResultListener<String[]>()  {
             @Override
             public void OnResult(String[] strings) {
                 likedPosts = new HashSet<>(Arrays.asList(strings));
+            }
+        });
+
+        FirebaseDatabase.getInstance().getReference().child("users")
+                .child(GyanithUserManager.getCurrentUser().gyanithId).child("postCount").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userPostCount = dataSnapshot.getValue(Integer.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
@@ -391,7 +410,7 @@ public class  PostManager{
         FirebaseDatabase.getInstance().getReference().child("postCount").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                postCount = ((Long) dataSnapshot.getValue()).intValue();
+                postCount =  dataSnapshot.getValue(Integer.class);
                 activity.NotifyCommunityPosts();
             }
 

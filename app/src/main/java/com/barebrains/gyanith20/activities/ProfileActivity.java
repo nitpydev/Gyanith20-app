@@ -43,6 +43,7 @@ import com.barebrains.gyanith20.adapters.eventCategoriesAdapter;
 import com.barebrains.gyanith20.components.PostView;
 import com.barebrains.gyanith20.interfaces.NetworkStateListener;
 import com.barebrains.gyanith20.interfaces.ResultListener;
+import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.others.PostViewHolder;
 import com.barebrains.gyanith20.models.Post;
@@ -57,6 +58,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.zxing.WriterException;
+
+import java.util.ArrayList;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -161,7 +164,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void SetupViewPager(ViewPager viewPager){
-        PagerAdapter adapter = new PagerAdapter() {
+        PagerAdapter pagerAdapter = new PagerAdapter() {
 
             private final PagedList.Config config = new PagedList.Config.Builder()
                     .setEnablePlaceholders(false)
@@ -207,17 +210,35 @@ public class ProfileActivity extends AppCompatActivity {
 
             private void setupRegisteredWorkshopsList(){
                 ListView regList = findViewById(R.id.reg_w_list);
-                regList.setAdapter(new eventCategoriesAdapter(R.layout.item_event_category
-                        ,GyanithUserManager.getCurrentUser().reg_w
-                        ,ProfileActivity.this));
+                View progress = findViewById(R.id.w_load);
+                View emptyState = findViewById(R.id.w_es);
+                eventCategoriesAdapter adapter = new eventCategoriesAdapter(R.layout.item_event_category
+                        ,emptyState
+                        ,progress
+                        ,new ArrayList<EventItem>()
+                        ,ProfileActivity.this);
+                regList.setAdapter(adapter);
+                adapter.clear();
+                for (EventItem item : GyanithUserManager.getCurrentUser().reg_w)
+                    adapter.add(item);
 
+                adapter.notifyDataSetChanged();
             }
 
             private void setupRegisteredTechnicalEventsList(){
                 ListView regList = findViewById(R.id.reg_te_list);
-                regList.setAdapter(new eventCategoriesAdapter(R.layout.item_event_category
-                        ,GyanithUserManager.getCurrentUser().reg_te
-                        ,ProfileActivity.this));
+                View progress = findViewById(R.id.te_load);
+                View emptyState = findViewById(R.id.te_es);
+                eventCategoriesAdapter adapter = new eventCategoriesAdapter(R.layout.item_event_category
+                        ,emptyState
+                        ,progress
+                        ,new ArrayList<EventItem>()
+                        ,ProfileActivity.this);
+                regList.setAdapter(adapter);
+                adapter.clear();
+                for (EventItem item : GyanithUserManager.getCurrentUser().reg_te)
+                    adapter.add(item);
+                adapter.notifyDataSetChanged();
             }
 
             private void setupUserPosts(){
@@ -248,6 +269,10 @@ public class ProfileActivity extends AppCompatActivity {
                         return new PostViewHolder(item);
                     }
 
+                    @Override
+                    public int getItemCount() {
+                        return (PostManager.userPostCount < super.getItemCount())?PostManager.userPostCount:super.getItemCount();
+                    }
 
                     @Override
                     protected void onLoadingStateChanged(@NonNull LoadingState state) {
@@ -276,7 +301,7 @@ public class ProfileActivity extends AppCompatActivity {
                 });
             }
         };
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(1);
     }
 

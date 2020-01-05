@@ -1,60 +1,34 @@
 package com.barebrains.gyanith20.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Explode;
 
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
+
 import com.barebrains.gyanith20.adapters.eventCategoriesAdapter;
-import com.barebrains.gyanith20.models.eventitem;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.interfaces.NetworkStateListener;
+import com.barebrains.gyanith20.interfaces.ResultListener;
+import com.barebrains.gyanith20.models.EventItem;
+import com.barebrains.gyanith20.statics.NetworkManager;
+import com.barebrains.gyanith20.statics.eventsManager;
 
-
-
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Arrays;
 
 
 public class EventCategoriesActivity extends AppCompatActivity {
 
-    String s = "null",name,date ,eventtag, type, cat, timestamp,img2;
-    String url_event = "http://gyanith.org/api.php?action=fetchAll&key=2ppagy0";
-    eventCategoriesAdapter ada;
-    ArrayList<eventitem> items;
+    ArrayList<EventItem> eventItems;
 
-
-    eventitem it;
-    ListView lvi;
-    ArrayList tag;
-
-    SharedPreferences prefs;
-    String PREF_KEY = "JSON_CACHE", PREFS = "shared_prefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,206 +38,69 @@ public class EventCategoriesActivity extends AppCompatActivity {
             getWindow().setEnterTransition(new Explode());
             getWindow().setExitTransition(new Explode());
         }
-
-
-        items=new ArrayList<eventitem>();
         setContentView(R.layout.activity_event_categories);
-        lvi=findViewById(R.id.eveitlv);
-        final Intent i1=new Intent(this,EventDetailsActivity.class);
-        /*if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            getWindow().setStatusBarColor(getResources().getColor(android.R.color.white));
-        }*/
 
+        if (!NetworkManager.getInstance().isNetAvailable())
+            Toast.makeText(this, "No Internet!", Toast.LENGTH_SHORT).show();
 
+        final ListView eventListView = findViewById(R.id.eveitlv);
 
-        ((Button)findViewById(R.id.backbut)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.backbut).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
-        Intent i=getIntent();
-        ((TextView)findViewById(R.id.cattitle)).setText(i.getStringExtra("category"));
-        s=i.getStringExtra("category");
+        final Intent i1=new Intent(this,EventDetailsActivity.class);
+        Intent i =getIntent();
+        String catName = i.getStringExtra("category");
+        final String catType = i.getStringExtra("type");
 
-        switch(s)
-        {
-            case "Workshop":
-                cat = "w";
-                break;
-            case "Technical Events":
-                cat = "te";
-                break;
-            case "Non Technical Events":
-                cat = "ne";
-                break;
-            case "Pro Shows":
-                cat = "ps";
-            case "Guest Lectures":
-                cat = "gl";
-                break;
-             default:
-                 cat = "not found";
-                 break;
-        }
+        ((TextView)findViewById(R.id.cattitle)).setText(catName);
 
-        ada=new eventCategoriesAdapter(R.layout.item_event_category,items,this);
-        tag = new ArrayList();
+        final View emptyState = findViewById(R.id.textView14);
+        final View progress = findViewById(R.id.catload);
+        eventItems = new ArrayList<>();
+        final eventCategoriesAdapter adapter =new eventCategoriesAdapter(R.layout.item_event_category
+                ,emptyState
+                ,progress
+                ,eventItems
+                ,EventCategoriesActivity.this);
+        eventListView.setAdapter(adapter);
 
-        //Json request
-
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url_event, new Response.Listener<JSONArray>()
-        {
-                    @Override
-                    public void onResponse(JSONArray jsonArray) {
-
-
-                    try {
-                        for (int i = 0; i < jsonArray.length(); i++) {
-
-                            JSONObject jsonobject = jsonArray.getJSONObject(i);
-                            type = jsonobject.getString("type");
-                            name = jsonobject.getString("name");
-                            img2 = jsonobject.getString("img2");
-                            timestamp = jsonobject.getString("timestamp");
-                            eventtag = jsonobject.getString("id");
-                            try {
-                                date = timeFormatter(timestamp);
-                            }
-                            catch (NumberFormatException n)
-                            {
-                                date = "Feb 28 10 am";
-                            }
-
-                            it = new eventitem(name, date, eventtag);
-                            it.setType(type);
-                            it.setImg2(img2);
-
-                            if (type.equals(cat)) {
-
-
-                                items.add(it);
-
-                                tag.add(eventtag);
-                            }
-                        }
-                    }
-                    catch (JSONException j)
-                    {
-                        j.printStackTrace();
-                    }
-
-                        // caches the
-
-
-                        String cache_json = jsonArray.toString();
-                        prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putString(PREF_KEY,cache_json);
-                        editor.apply();
-
-                            if(items.isEmpty())
-                                ((TextView)findViewById(R.id.textView14)).setVisibility(View.VISIBLE);
-                            else
-                                ((TextView)findViewById(R.id.textView14)).setVisibility(View.GONE);
-                                ((ProgressBar)findViewById(R.id.catload)).setVisibility(View.GONE);
-                            ada.notifyDataSetChanged();
-
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-
-                        SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-                        String string = prefs.getString(PREF_KEY, "no input");
-                        try {
-                            JSONArray jsonArray = new JSONArray(string);
-
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                name = jsonObject.getString("name");
-                                img2 = jsonObject.getString("img2");
-                                timestamp = jsonObject.getString("timestamp");
-                                eventtag = jsonObject.getString("id");
-                                type = jsonObject.getString("type");
-
-                                try {
-                                    date = timeFormatter(timestamp);
-                                }
-                                catch (NumberFormatException n)
-                                {
-                                    date = "Feb 26 10 am";
-                                }
-
-                                it = new eventitem(name, date, eventtag);
-                                it.setType(type);
-                                it.setImg2(img2);
-                                if(type.equals(cat)){
-                                items.add(it);
-                                tag.add(eventtag);
-                                }
-
-                            }
-
-                            if(items.isEmpty())
-                                ((TextView)findViewById(R.id.textView14)).setVisibility(View.VISIBLE);
-                            else
-                                ((TextView)findViewById(R.id.textView14)).setVisibility(View.GONE);
-                            ((ProgressBar)findViewById(R.id.catload)).setVisibility(View.GONE);
-                            ada.notifyDataSetChanged();
-                        }
-                        catch(JSONException e)
-                        {
-                            Toast.makeText(EventCategoriesActivity.this,"network unavailable",Toast.LENGTH_LONG).show();
-                        }
-
-
-
-
-
-
-                    }
-                }
-        );
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(jsonArrayRequest);
-
-
-        lvi.setAdapter(ada);
-
-        lvi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        NetworkManager.getInstance().addListener(8448,new NetworkStateListener(){
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                i1.putExtra("category",s);
-                i1.putExtra("tag",tag.get(position).toString());
-                startActivity(i1);
+            public void OnChange() {
+                eventsManager.getCatEvents(catType,new ResultListener<EventItem[]>(){
+                    @Override
+                    public void OnResult(final EventItem[] eventItems1) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.clear();
+                                for (EventItem item : eventItems1)
+                                    adapter.add(item);
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void OnError(String error) {
+                        Toast.makeText(EventCategoriesActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
-
-
-    }
-
-    public String timeFormatter(String time)
-    {
-        long timeInt = Long.parseLong(time);
-        SimpleDateFormat s=new SimpleDateFormat("MMM dd");
-
-        Calendar c=Calendar.getInstance();
-        c.setTimeInMillis(timeInt);
-        if(c.getTime().getDate()== Calendar.getInstance().getTime().getDate())
-            return "Today";
-        else if(c.getTime().getDate()== Calendar.getInstance().getTime().getDate()+1)
-            return "Tommorow";
-
-        Date d=new Date(timeInt);
-        return s.format(d);
     }
 
 
+    @Override
+    protected void onDestroy() {
+        NetworkManager.getInstance().removeListener(8448);
+        super.onDestroy();
+    }
 }

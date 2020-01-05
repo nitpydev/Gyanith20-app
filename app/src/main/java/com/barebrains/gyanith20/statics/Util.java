@@ -10,9 +10,8 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.barebrains.gyanith20.models.GyanithUser;
-import com.barebrains.gyanith20.models.eventitem;
+import com.barebrains.gyanith20.models.EventItem;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,10 +21,36 @@ import java.io.OutputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Util {
+    public static String timeToDate(String time)
+    {
+        String date;
+        try {
+            long timeInt = Long.parseLong(time);
+            SimpleDateFormat s = new SimpleDateFormat("MMM dd");
+
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(timeInt);
+            if (c.getTime().getDate() == Calendar.getInstance().getTime().getDate())
+                return "Today";
+            else if (c.getTime().getDate() == Calendar.getInstance().getTime().getDate() + 1)
+                return "Tommorow";
+
+            Date d = new Date(timeInt);
+            date = s.format(d);
+        }catch (NumberFormatException n)
+        {
+            date = "Feb 26 10 am";
+        }
+        return date;
+    }
+
     public static String UriAbsPath(Context context,Uri imgUri){
         String[] filePathColumn = { MediaStore.Images.Media.DATA };
         // Get the cursor
@@ -79,6 +104,7 @@ public class Util {
         else
             return diff/days + " days ago";
     }
+
     public static void putBitmaptoFile(Bitmap bitmap,File file) throws IOException {
         OutputStream os;
         try {
@@ -91,6 +117,7 @@ public class Util {
         }
 
     }
+
     public static Bitmap decodeFile(File f) {
         Bitmap b = null;
 
@@ -128,8 +155,8 @@ public class Util {
         return b;
     }
 
-    public static String sha1(String input)
-    { try {
+    public static String sha1(String input){
+        try {
         // getInstance() method is called with algorithm SHA-1
         MessageDigest md = MessageDigest.getInstance("SHA-1");
 
@@ -169,7 +196,6 @@ public class Util {
         ,json.phoneNumber
         ,json.clg
         ,json.token);*/
-       //FOR NOW AS USER INFO FIELDS IN THE BACKEND ARE NOT YET IMPLEMENTED,WE CREATE A DUMMY USER
         json.registeredEvents = new ArrayList<>();
         eventItemJson a = new eventItemJson();
         a.name = "nameed";
@@ -182,8 +208,9 @@ public class Util {
         b.id = "tageg_te";
         b.timestamp = "6a4446464_te";
         b.type = "w";
+        b.img2 = "https://www.w3schools.com/w3css/img_snowtops.jpg";
         json.registeredEvents.add(b);
-        Pair<ArrayList<eventitem>,ArrayList<eventitem>> events = segregateEvents(jsonToEventItem(json.registeredEvents));
+        Pair<ArrayList<EventItem>,ArrayList<EventItem>> events = segregateEvents(jsonToEventItem(json.registeredEvents));
         return new GyanithUser("GYsd59",
                "Pushpavel",
                "Pixel54","jpushpavel@gmail.com",
@@ -195,26 +222,27 @@ public class Util {
                token);
     }
 
-    public static ArrayList<eventitem> jsonToEventItem(ArrayList<eventItemJson> jsons){
-        ArrayList<eventitem> eventitems = new ArrayList<>(jsons.size());
+    public static ArrayList<EventItem> jsonToEventItem(ArrayList<eventItemJson> jsons){
+        ArrayList<EventItem> EventItems = new ArrayList<>(jsons.size());
         for (int i = 0; i < jsons.size();i++){
             eventItemJson itemJson = jsons.get(i);
 
-            eventitem item = new eventitem(itemJson.name,itemJson.timestamp,itemJson.id);
-            item.setType(itemJson.type);
-            eventitems.add(item);
+           // EventItem item = new EventItem(itemJson.name,itemJson.timestamp,itemJson.id);
+            //item.setType(itemJson.type);
+            //item.setIconImgUrl(itemJson.img2);
+            //EventItems.add(item);
         }
 
-        return eventitems;
+        return EventItems;
     }
 
-    public static Pair<ArrayList<eventitem>,ArrayList<eventitem>> segregateEvents(ArrayList<eventitem> unsorted){
-        ArrayList<eventitem> te,w;
+    public static Pair<ArrayList<EventItem>,ArrayList<EventItem>> segregateEvents(ArrayList<EventItem> unsorted){
+        ArrayList<EventItem> te,w;
         te = new ArrayList<>();
         w = new ArrayList<>();
 
-        for (eventitem eventitem : unsorted){
-            if (eventitem.type == "w")
+        for (EventItem eventitem : unsorted){
+            if (eventitem.type.equals("w"))
                 w.add(eventitem);
             else
                 te.add(eventitem);

@@ -1,5 +1,7 @@
 package com.barebrains.gyanith20.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class GyanithUser {
@@ -11,10 +13,10 @@ public class GyanithUser {
     public String clg;
     public String token;
     public boolean verified;
-    public ArrayList<eventitem> reg_te;
-    public ArrayList<eventitem> reg_w;
+    public ArrayList<EventItem> reg_te;
+    public ArrayList<EventItem> reg_w;
 
-    public GyanithUser(String gyanithId,String name,String userName,String email,String phoneNo,String clg,ArrayList<eventitem> reg_te,ArrayList<eventitem> reg_w,boolean verified,String token){
+    public GyanithUser(String gyanithId, String name, String userName, String email, String phoneNo, String clg, ArrayList<EventItem> reg_te, ArrayList<EventItem> reg_w, boolean verified, String token){
         this.gyanithId = gyanithId;
         this.name = name;
         this.userName = userName;
