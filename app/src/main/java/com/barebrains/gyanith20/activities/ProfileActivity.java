@@ -51,6 +51,7 @@ import com.barebrains.gyanith20.statics.Anim;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.PostManager;
+import com.barebrains.gyanith20.statics.eventsManager;
 import com.firebase.ui.database.paging.DatabasePagingOptions;
 import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
 import com.firebase.ui.database.paging.LoadingState;
@@ -218,9 +219,10 @@ public class ProfileActivity extends AppCompatActivity {
                         ,ProfileActivity.this);
                 regList.setAdapter(adapter);
                 adapter.clear();
-                for (EventItem item : GyanithUserManager.getCurrentUser().reg_w)
+                GyanithUser user = GyanithUserManager.getCurrentUser();
+                if (user != null)
+                for (EventItem item : user.reg_w)
                     adapter.add(item);
-
                 adapter.notifyDataSetChanged();
             }
 
@@ -235,8 +237,10 @@ public class ProfileActivity extends AppCompatActivity {
                         ,ProfileActivity.this);
                 regList.setAdapter(adapter);
                 adapter.clear();
-                for (EventItem item : GyanithUserManager.getCurrentUser().reg_te)
-                    adapter.add(item);
+                GyanithUser user = GyanithUserManager.getCurrentUser();
+                if (user != null)
+                    for (EventItem item : user.reg_te)
+                        adapter.add(item);
                 adapter.notifyDataSetChanged();
             }
 

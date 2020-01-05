@@ -194,16 +194,6 @@ public class PostView extends RelativeLayout {
             }
 
             @Override
-            public void UnVerifiedUser() {
-                likeBtn.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(getContext(),"Verify Email to Like Posts",Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
             public void NullUser() {
                 likeBtn.setOnClickListener(new OnClickListener() {
                     @Override

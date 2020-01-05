@@ -73,6 +73,7 @@
                         android:id="@+id/post_profile_img"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
+                        android:visibility="gone"
                         app:srcCompat="@drawable/about" />
 
                     <TextView
@@ -151,7 +152,6 @@
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
-                    android:foreground="?android:attr/selectableItemBackground"
                     android:gravity="center"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

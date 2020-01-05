@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.barebrains.gyanith20.fragments.BottomSheetFragment;
 import com.barebrains.gyanith20.fragments.CommunityFragment;
 import com.barebrains.gyanith20.fragments.FavouritesFragment;
 import com.barebrains.gyanith20.fragments.HomeFragment;
@@ -147,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
             getWindow().setEnterTransition(new Fade());
         }
         setContentView(R.layout.activity_main);
+
+
 
         doubleBackToExitPressedOnce = false;
         fragmentManager = getSupportFragmentManager();

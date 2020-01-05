@@ -9,6 +9,7 @@
     <string name="gyanithUserKey">gyanithUser</string>
     <string name="likedPostsKey">likedPosts</string>
     <string name="eventItemsKey">eventItems</string>
+    <string name="regItemsKey">regEventItems</string>
     <string name="favSet">favIdsSet</string>
 
 

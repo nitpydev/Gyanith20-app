@@ -12,11 +12,10 @@ public class GyanithUser {
     public String phoneNo;
     public String clg;
     public String token;
-    public boolean verified;
-    public ArrayList<EventItem> reg_te;
-    public ArrayList<EventItem> reg_w;
+    public ArrayList<EventItem> reg_w = new ArrayList<>();
+    public ArrayList<EventItem> reg_te = new ArrayList<>();
 
-    public GyanithUser(String gyanithId, String name, String userName, String email, String phoneNo, String clg, ArrayList<EventItem> reg_te, ArrayList<EventItem> reg_w, boolean verified, String token){
+    public GyanithUser(String gyanithId, String name, String userName, String email, String phoneNo, String clg, String token){
         this.gyanithId = gyanithId;
         this.name = name;
         this.userName = userName;
@@ -24,9 +23,6 @@ public class GyanithUser {
         this.phoneNo = phoneNo;
         this.clg = clg;
         this.token = token;
-        this.reg_te = reg_te;
-        this.reg_w = reg_w;
-        this.verified = verified;
     }
 
 }

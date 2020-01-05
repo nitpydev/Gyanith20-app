@@ -6,17 +6,20 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+import com.android.volley.toolbox.StringRequest;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.interfaces.AuthStateListener;
+import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
+import com.barebrains.gyanith20.models.SignUpDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -64,25 +67,13 @@ public class GyanithUserManager {
         if (loggedUser != null)
             throw new IllegalStateException("SignInUser : Already user Signed in");
 
-        GetGyanithUserToken(context,username, password, new ResultListener<String>() {
+        GetGyanithUserToken(username, password, new ResultListener<String>() {
             @Override
             public void OnResult(String token) {
-
-                if (token == null){//Implies Invalid Credentials
-                    result.OnError("Invalid Credentials");
-                    return;
-                }
-
-                Log.d("asd","recieved token : " + token);
 
                 GyanithSignInWithToken(context, token, new ResultListener<GyanithUser>() {
                     @Override
                     public void OnResult(GyanithUser gyanithUser) {
-                        if (gyanithUser == null) {//Implies Token Expired
-                            SignOutUser(context);
-                            result.OnError("User Session Expired");
-                            return;
-                        }
                         loggedUser = gyanithUser;
                         SaveGyanithUser(context,loggedUser);
                         result.OnResult(gyanithUser);
@@ -90,7 +81,12 @@ public class GyanithUserManager {
 
                     @Override
                     public void OnError(String error) {
-                        result.OnError(error);
+                        if (error.equals("")){//Implies Token Expired
+                            SignOutUser(context);
+                            result.OnError("User Session Expired");
+                        }
+                        else
+                            result.OnError(error);
                     }
                 });
             }
@@ -128,7 +124,7 @@ public class GyanithUserManager {
         });
     }
 
-    private static void GetGyanithUserToken(Context context, final String username, final String password, final ResultListener<String> result){
+    private static void GetGyanithUserToken(final String username, final String password, final ResultListener<String> result){
 
         JsonObjectRequest userTokenRequest = new JsonObjectRequest
                 (Request.Method.GET, buildTokenRequestUrl(username,password), null, new Response.Listener<JSONObject>() {
@@ -138,11 +134,11 @@ public class GyanithUserManager {
                         try {
                             if(response.has("token"))
                                 result.OnResult(response.getString("token"));
-                            else
-                                result.OnResult(null);
+                            else if (response.has("error"))
+                                result.OnError(response.getString("error"));
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            result.OnError("Internal Error");
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -154,21 +150,29 @@ public class GyanithUserManager {
                     }
                 });
 
-        Volley.newRequestQueue(context).add(userTokenRequest);
+        VolleyManager.requestQueue.add(userTokenRequest);
     }
 
     private static void GyanithSignInWithToken(final Context context, final String token, final ResultListener<GyanithUser> callback) {
 
-        RequestQueue requestQueue = Volley.newRequestQueue(context.getApplicationContext());
+        RequestQueue requestQueue = VolleyManager.requestQueue;
         JsonObjectRequest userInfoRequest = new JsonObjectRequest(Request.Method.GET,buildUserInfoRequestUrl(token), null
                 ,new Response.Listener<JSONObject>(){
 
             @Override
             public void onResponse(JSONObject response) {
-                if (response.has("usr"))
-                    callback.OnResult(Util.jsonToGyanithUser(response.toString(),token));
-                else
-                    callback.OnResult(null);
+                try {
+
+                    if (response.has("usr"))
+                        callback.OnResult(Util.jsonToGyanithUser(response.toString(), token));
+                    else if (response.has("error"))
+                        callback.OnError(response.getString("error"));
+                    else
+                        callback.OnError("Internal Error");
+
+                } catch (JSONException e) {
+                    callback.OnError("Internal Error");
+                }
             }
         },new Response.ErrorListener(){
 
@@ -185,6 +189,53 @@ public class GyanithUserManager {
         requestQueue.add(userInfoRequest);
     }
 
+    public static void GyanithUserSignUp(final SignUpDetails details, final CompletionListener listener){
+
+        String url = "http://gyanith.org/api.php?action=signup&key=2ppagy0";
+
+        StringRequest signUpRequest = new StringRequest(Request.Method.POST,url,new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response) {
+                JSONObject obj = null;
+                try {
+                    obj = new JSONObject(response);
+                    String result = obj.getString("result");
+                    if (result.equals("success"))
+                        listener.OnComplete();
+                    else
+                        listener.OnError(obj.getString("text"));
+
+                } catch (JSONException e) {
+                    listener.OnError("Internal Error");
+                    e.printStackTrace();
+                }
+
+            }
+        },new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.OnError("Network Error");
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("pname",details.name);
+                params.put("usr",details.usrname);
+                params.put("clg",details.clg);
+                params.put("gdr",details.gender);
+                params.put("email",details.email);
+                params.put("pswd1",details.pwd);
+                params.put("phone",details.phn);
+
+                return params;
+            }
+        };
+
+        VolleyManager.requestQueue.add(signUpRequest);
+
+    }
+
     private static String buildTokenRequestUrl(String username, String password){
         return "http://gyanith.org/api.php?action=login&key=2ppagy0&uname=" + username + "&pwd=" + Util.sha1(password);
     }
@@ -196,7 +247,7 @@ public class GyanithUserManager {
         if(FirebaseAuth.getInstance().getCurrentUser() != null)
             return;
 
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(gyanithUser.email, gyanithUser.gyanithId)
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(gyanithUser.email, gyanithUser.gyanithId + "extra123!@#")
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -214,8 +265,10 @@ public class GyanithUserManager {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (FirebaseAuth.getInstance().getCurrentUser() != null)
-                                        return;
-                                    Log.d("asd", "FirebaseAuth : New User " + task.isSuccessful());
+                                        Log.d("asd", "FirebaseAuth : New User Created");
+                                    else
+                                        Log.d("asd","FirebaseAuth : New User Creation Error : " + task.getException());
+
                                 }
                             });
                         }
@@ -225,10 +278,11 @@ public class GyanithUserManager {
     }
 
     private static void FirebaseUserSignUp(final GyanithUser gyanithUser, final OnCompleteListener<Void> completeListener) {
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(gyanithUser.email, gyanithUser.gyanithId)
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(gyanithUser.email, gyanithUser.gyanithId + "extra123!@#")
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d("asd",  task.isSuccessful() + " " + task.getException());
                         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
                         root.child("users").child(gyanithUser.gyanithId).child("postCount").setValue(0).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -246,8 +300,7 @@ public class GyanithUserManager {
         SharedPreferences sp = context.getSharedPreferences(context.getString(R.string.package_name), Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = gson.toJson(user);
-        sp.edit().putString(context.getString(R.string.gyanithUserKey), json)
-                .apply();
+        sp.edit().putString(context.getString(R.string.gyanithUserKey), json).apply();
         loggedUser = user;
         resolveUserState(context);
         AuthStateChanged();
@@ -298,10 +351,8 @@ public class GyanithUserManager {
         listener.onChange();
         if (loggedUser == null)
             listener.NullUser();
-        else if (loggedUser.verified)
-            listener.VerifiedUser();
         else
-            listener.UnVerifiedUser();
+            listener.VerifiedUser();
         getInstance().userStateListeners.put(code,listener);
     }
 
@@ -317,10 +368,8 @@ public class GyanithUserManager {
         listener.onChange();
         if (loggedUser == null)
             listener.NullUser();
-        else if (loggedUser.verified)
-            listener.VerifiedUser();
         else
-            listener.UnVerifiedUser();
+            listener.VerifiedUser();
         getInstance().userStateListenersUnMapped.add(listener);
     }
 
@@ -329,19 +378,15 @@ public class GyanithUserManager {
             listener.onChange();
             if (loggedUser == null)
                 listener.NullUser();
-            else if (loggedUser.verified)
-                listener.VerifiedUser();
             else
-                listener.UnVerifiedUser();
+                listener.VerifiedUser();
         }
         for (AuthStateListener listener : getInstance().userStateListenersUnMapped) {
             listener.onChange();
             if (loggedUser == null)
                 listener.NullUser();
-            else if (loggedUser.verified)
-                listener.VerifiedUser();
             else
-                listener.UnVerifiedUser();
+                listener.VerifiedUser();
         }
 
 

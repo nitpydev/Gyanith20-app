@@ -1,10 +1,6 @@
 package com.barebrains.gyanith20.activities;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -14,64 +10,41 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+
 import com.barebrains.gyanith20.R;
-import com.google.gson.JsonObject;
+import com.barebrains.gyanith20.fragments.BottomSheetFragment;
+import com.barebrains.gyanith20.interfaces.CompletionListener;
+import com.barebrains.gyanith20.models.SignUpDetails;
+import com.barebrains.gyanith20.statics.GyanithUserManager;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.security.InvalidParameterException;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    AlertDialog.Builder builder;
     EditText name,usrname,pwd,conpwd,clg,email,num;
     ProgressBar prog;
     Button signup, back;
-    Context context;
-    Boolean checked = false, passmatch;
-    String fullname, username, pass,conpass, college, mail, gender,phone;
-    String url = "http://gyanith.org/api.php?action=signup&key=2ppagy0",result;
-    String EMAIL_CHECK ="^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
-    static Pattern pattern;
-    Matcher matcher;
+    Boolean checked = false;
+    String gender;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        name = (EditText) findViewById(R.id.name);
-        num =(EditText) findViewById(R.id.phone);
-        usrname = (EditText) findViewById(R.id.username);
-        pwd = (EditText) findViewById(R.id.password);
+        name = findViewById(R.id.name);
+        num = findViewById(R.id.phone);
+        usrname = findViewById(R.id.username);
+        pwd = findViewById(R.id.password);
         pwd.setTransformationMethod(new PasswordTransformationMethod());
-        conpwd =(EditText) findViewById(R.id.confirmpassword);
-        clg = (EditText) findViewById(R.id.Collegename);
-        email = (EditText) findViewById(R.id.email);
-        signup = (Button) findViewById(R.id.signupBtn);
-        back =(Button) findViewById(R.id.backbutsignup);
-        prog =(ProgressBar) findViewById(R.id.signupprog);
-        context = this;
-        builder = new AlertDialog.Builder(context);
-
-        pattern = Pattern.compile(EMAIL_CHECK,Pattern.CASE_INSENSITIVE);
-
+        conpwd = findViewById(R.id.confirmpassword);
+        clg = findViewById(R.id.Collegename);
+        email = findViewById(R.id.email);
+        signup = findViewById(R.id.signupBtn);
+        back = findViewById(R.id.backbutsignup);
+        prog = findViewById(R.id.signupprog);
         isLoading(false);
 
 //back click
-
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,98 +52,55 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-
-
 //click event
         signup.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 isLoading(true);
-                fullname = name.getText().toString();
-                username = usrname.getText().toString();
-                String ws = username.replace(" ","");
-                college = clg.getText().toString();
-                mail = email.getText().toString();
-                pass = pwd.getText().toString();
-                conpass = conpwd.getText().toString();
-                passmatch = pass.equals(conpass);
-                phone = num.getText().toString();
-                if( !emailValidate(mail)|| (phone.length() > 10) || !username.equals(ws)||(!passmatch) || fullname.equals("")|| username.equals("") || college.equals("") || mail.equals("") || pass.equals("")|| (!checked)){
+                try {
+                    SignUpDetails details = new SignUpDetails(
+                            usrname.getText().toString()
+                            ,name.getText().toString()
+                            ,pwd.getText().toString()
+                            ,conpwd.getText().toString()
+                            ,email.getText().toString()
+                            ,clg.getText().toString()
+                            ,num.getText().toString()
+                            ,gender
+                    );
 
-                    isLoading(false);
+                    GyanithUserManager.GyanithUserSignUp(details, new CompletionListener() {
 
-                    if(!passmatch)
-                        Toast.makeText(getApplicationContext(),"PassWord not matched",Toast.LENGTH_SHORT).show();
-                    else if(!username.equals(ws))
-                        Toast.makeText(getApplicationContext(),"Whitespace in username not Allowed",Toast.LENGTH_SHORT).show();
-                    else if(phone.length() > 10)
-                        Toast.makeText(getApplicationContext(),"phone number should not exceed 10 digits",Toast.LENGTH_SHORT).show();
-                    else  if(!emailValidate(mail))
-                        Toast.makeText(getApplicationContext(),"Please check your email, email is invalid",Toast.LENGTH_SHORT).show();
-
-                    else
-                        Toast.makeText(getApplicationContext(),"Please Fill all details",Toast.LENGTH_SHORT).show();
-
-                }
-                else{
-
-                //jsonobject request
-
-                RequestQueue requestQueue = Volley.newRequestQueue(context);
-                StringRequest stringrequest = new StringRequest(Request.Method.POST, url,  new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        try{
-                            JSONObject obj = new JSONObject(response);
-                            String result = obj.getString("result");
-                        if(result.equals("success")){
-                            builder.setTitle("Verify Email");
-                            builder.setMessage(R.string.msg);
-                            builder.setPositiveButton("Verify now", new DialogInterface.OnClickListener() {
+                        public void OnComplete() {
+                            isLoading(false);
+                            //Verify User
+                            BottomSheetFragment fragment = new BottomSheetFragment("Verify mail",getString(R.string.msg),true,new CompletionListener(){
                                 @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    try{ Intent email = new Intent(Intent.ACTION_MAIN);
-                                        email.addCategory(Intent.CATEGORY_APP_EMAIL);
-                                        startActivity(email);}catch (ActivityNotFoundException n){ Toast.makeText(context,"Error opening Default Email app, sorry",Toast.LENGTH_SHORT).show();}}});
+                                public void OnComplete() {
+                                    finish();
+                                }
+                            });
+                            fragment.show(getSupportFragmentManager(), "TAG");
 
-                           AlertDialog dialog = builder.create();
-                           dialog.show();
                         }
-                        else{
-                            JSONObject txtobj = new JSONObject(response);
-                            String text = txtobj.getString("text");
-                            builder.setTitle("Error");
-                            builder.setMessage(text);
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
+
+                        @Override
+                        public void OnError(String error) {
+                            isLoading(false);
+                            //Show Error
+                            BottomSheetFragment fragment = new BottomSheetFragment("Error",error,false,new CompletionListener(){
+                                @Override
+                                public void OnComplete() {
+                                    finish();
+                                }
+                            });
+                            fragment.show(getSupportFragmentManager(), "TAG");
                         }
-                        }catch (JSONException j){Toast.makeText(context,"server error",Toast.LENGTH_SHORT).show(); isLoading(false);}
-                        isLoading(false);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        isLoading(false);
-                        Toast.makeText(context,"Network Error",Toast.LENGTH_SHORT).show();  }               }){
-
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String,String> params = new HashMap<String, String>();
-                        params.put("pname",fullname);
-                        params.put("usr",username);
-                        params.put("clg",college);
-                        params.put("gdr",gender);
-                        params.put("email",mail);
-                        params.put("pswd1",pass);
-                        params.put("phone",phone);
-                        return params;
-
-                    }
-                };
-                requestQueue.add(stringrequest);}
-
+                    });
+                }catch (InvalidParameterException e){
+                    isLoading(false);
+                    Toast.makeText(SignUpActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -196,10 +126,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    public  Boolean emailValidate(String email){
-        matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
+
     private void isLoading(boolean state){
         if (state){
             prog.setVisibility(View.VISIBLE);

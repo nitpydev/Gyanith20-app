@@ -54,7 +54,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         boolean resolved = GyanithUserManager.resolveUserState(LoginActivity.this);
-        Log.d("asd","res : "+ resolved);
         if (resolved)
             OnSignInSuccess();
 
@@ -106,8 +105,12 @@ public class LoginActivity extends AppCompatActivity {
 
                                 @Override
                                 public void OnError(String error) {
-                                    Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
-                                    isLoading(false);
+                                        if (error.equals("not verified"))
+                                        {
+                                            //Should show verify to continue
+                                        }
+                                        Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
+                                        isLoading(false);
                                 }
                             });
                 }
@@ -137,6 +140,3 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(signupint);
     }
 }
-
-// Login https://api.jsonbin.io/b/5c67b234a83a29317735e26c/1
-// Details https://api.jsonbin.io/b/5c67b201a83a29317735e24c/1

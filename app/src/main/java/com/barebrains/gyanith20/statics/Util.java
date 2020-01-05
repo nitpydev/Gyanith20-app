@@ -189,37 +189,13 @@ public class Util {
     public static GyanithUser jsonToGyanithUser(String s,String token){
         Gson gson = new Gson();
         GyanithUserJsonResponse json = gson.fromJson(s,GyanithUserJsonResponse.class);
-       /* return new GyanithUser(json.gyanithId
+        return new GyanithUser(json.gyid
         ,json.name
-        ,json.username
+        ,json.usr
         ,json.email
-        ,json.phoneNumber
+        ,json.phno
         ,json.clg
-        ,json.token);*/
-        json.registeredEvents = new ArrayList<>();
-        eventItemJson a = new eventItemJson();
-        a.name = "nameed";
-        a.id = "tageg";
-        a.timestamp = "6a4446464";
-        a.type = "te";
-        json.registeredEvents.add(a);
-        eventItemJson b = new eventItemJson();
-        b.name = "nameed_te";
-        b.id = "tageg_te";
-        b.timestamp = "6a4446464_te";
-        b.type = "w";
-        b.img2 = "https://www.w3schools.com/w3css/img_snowtops.jpg";
-        json.registeredEvents.add(b);
-        Pair<ArrayList<EventItem>,ArrayList<EventItem>> events = segregateEvents(jsonToEventItem(json.registeredEvents));
-        return new GyanithUser("GYsd59",
-               "Pushpavel",
-               "Pixel54","jpushpavel@gmail.com",
-               "4897854541",
-               "NITPY",
-               events.first,
-               events.second,
-               true,
-               token);
+        ,token);
     }
 
     public static ArrayList<EventItem> jsonToEventItem(ArrayList<eventItemJson> jsons){
@@ -236,34 +212,19 @@ public class Util {
         return EventItems;
     }
 
-    public static Pair<ArrayList<EventItem>,ArrayList<EventItem>> segregateEvents(ArrayList<EventItem> unsorted){
-        ArrayList<EventItem> te,w;
-        te = new ArrayList<>();
-        w = new ArrayList<>();
-
-        for (EventItem eventitem : unsorted){
-            if (eventitem.type.equals("w"))
-                w.add(eventitem);
-            else
-                te.add(eventitem);
-        }
-
-        return new Pair<>(te,w);
-    }
 }
 
 class GyanithUserJsonResponse{
-    public String username;
+
+    public String gyid;
+    public String usr;
     public String name;
-    public String email;
-    public String gyanithId;
-    public String phoneNumber;
     public String clg;
-    public String token;
-    public ArrayList<eventItemJson> registeredEvents;
+    public String email;
+    public String phno;
+    public String gender;
 
     public GyanithUserJsonResponse(){}
-    //Other Fields will be updated following the backend
 }
 
 

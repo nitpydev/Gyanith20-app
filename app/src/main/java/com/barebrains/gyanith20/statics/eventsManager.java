@@ -2,12 +2,12 @@ package com.barebrains.gyanith20.statics;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Pair;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.barebrains.gyanith20.R;
-import com.barebrains.gyanith20.interfaces.NetworkStateListener;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.EventItem;
 import com.google.gson.Gson;
@@ -20,8 +20,9 @@ public class eventsManager {
 
     private static EventItem[] eventItems;
 
+
     private static SharedPreferences sp;
-    private static String key;
+    private static String allEventsKey;
 
 
     public static void getCatEvents(final String catType, final ResultListener<EventItem[]> listener){
@@ -87,9 +88,11 @@ public class eventsManager {
 
 
 
+
+
     public static void initialize(Context context){
         sp = context.getSharedPreferences(context.getString(R.string.package_name), Context.MODE_PRIVATE);
-        key = context.getString(R.string.eventItemsKey);
+        allEventsKey = context.getString(R.string.eventItemsKey);
 
         fetchEventsData(new ResultListener<EventItem[]>(){
             @Override
@@ -97,24 +100,6 @@ public class eventsManager {
                 eventsManager.eventItems = eventItems;
             }
         });
-        /*NetworkManager.getInstance().addListener(87,new NetworkStateListener(){
-            @Override
-            public void OnAvailable() {
-                fetchEventsData(new ResultListener<EventItem[]>(){
-                    @Override
-                    public void OnResult(EventItem[] eventItems) {
-                        eventsManager.eventItems = eventItems;
-                    }
-                });
-            }
-
-            @Override
-            public void OnDisconnected() {
-                eventsManager.eventItems = getEventItemsFromCache();
-            }
-        });
-
-         */
     }
 
     private static void fetchEventsData(final ResultListener<EventItem[]> listener){
@@ -124,13 +109,13 @@ public class eventsManager {
             public void onResponse(JSONArray response) {
                 Gson gson = new Gson();
                 listener.OnResult(gson.fromJson(response.toString(), EventItem[].class));
-                sp.edit().putString(key,response.toString()).apply();
+                sp.edit().putString(allEventsKey,response.toString()).apply();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //if error continue using cache
-                EventItem[] eventItems = getEventItemsFromCache();
+                eventItems = getEventItemsFromCache();
                 if (eventItems != null)
                     listener.OnResult(eventItems);
                 else
@@ -140,11 +125,14 @@ public class eventsManager {
         VolleyManager.requestQueue.add(request);
     }
 
+    //Fetches reg events ids
     private static EventItem[] getEventItemsFromCache(){
-        String response = sp.getString(key,"");
+        String response = sp.getString(allEventsKey,"");
         if (response.equals(""))
             return null;
         Gson gson = new Gson();
         return gson.fromJson(response, EventItem[].class);
     }
+
+
 }
