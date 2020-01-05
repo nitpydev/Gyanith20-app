@@ -82,19 +82,23 @@ public class SignUpActivity extends AppCompatActivity {
                 isLoading(true);
                 fullname = name.getText().toString();
                 username = usrname.getText().toString();
+                String ws = username.replace(" ","");
                 college = clg.getText().toString();
                 mail = email.getText().toString();
                 pass = pwd.getText().toString();
                 conpass = conpwd.getText().toString();
                 passmatch = pass.equals(conpass);
-                if((!passmatch) || fullname.equals("")|| username.equals("") || college.equals("") || mail.equals("") || pass.equals("")|| (!checked)){
+                if( !username.equals(ws)||(!passmatch) || fullname.equals("")|| username.equals("") || college.equals("") || mail.equals("") || pass.equals("")|| (!checked)){
 
                     isLoading(false);
 
                     if(!passmatch)
                         Toast.makeText(getApplicationContext(),"PassWord not matched",Toast.LENGTH_SHORT).show();
+                    else if(!username.equals(ws))
+                        Toast.makeText(getApplicationContext(),"Whitespace in username not Allowed",Toast.LENGTH_SHORT).show();
                     else
                         Toast.makeText(getApplicationContext(),"Please Fill all details",Toast.LENGTH_SHORT).show();
+
                 }
                 else{
 
@@ -111,17 +115,13 @@ public class SignUpActivity extends AppCompatActivity {
                         if(result.equals("success")){
                             builder.setTitle("Verify Email");
                             builder.setMessage(R.string.msg);
-                            builder.setPositiveButton("Later", new DialogInterface.OnClickListener() {
+                            builder.setPositiveButton("Verify now", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent login = new Intent(context,LoginActivity.class);
-                                    startActivity(login); }});
-                            builder.setNegativeButton("Verify now", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                   try{ Intent email = new Intent(Intent.ACTION_MAIN);
-                                       email.addCategory(Intent.CATEGORY_APP_EMAIL);
-                                       startActivity(email);}catch (ActivityNotFoundException n){ Toast.makeText(context,"Error opening Default Email app, sorry",Toast.LENGTH_SHORT).show();}}});
+                                    try{ Intent email = new Intent(Intent.ACTION_MAIN);
+                                        email.addCategory(Intent.CATEGORY_APP_EMAIL);
+                                        startActivity(email);}catch (ActivityNotFoundException n){ Toast.makeText(context,"Error opening Default Email app, sorry",Toast.LENGTH_SHORT).show();}}});
+
                            AlertDialog dialog = builder.create();
                            dialog.show();
                         }
