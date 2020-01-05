@@ -69,15 +69,18 @@ public class GyanithUserManager {
             public void OnResult(String token) {
 
                 if (token == null){//Implies Invalid Credentials
-                    result.OnResult(null);
+                    result.OnError("Invalid Credentials");
                     return;
                 }
+
+                Log.d("asd","recieved token : " + token);
 
                 GyanithSignInWithToken(context, token, new ResultListener<GyanithUser>() {
                     @Override
                     public void OnResult(GyanithUser gyanithUser) {
                         if (gyanithUser == null) {//Implies Token Expired
                             SignOutUser(context);
+                            result.OnError("User Session Expired");
                             return;
                         }
                         loggedUser = gyanithUser;
@@ -106,9 +109,9 @@ public class GyanithUserManager {
         GyanithSignInWithToken(context, user.token, new ResultListener<GyanithUser>() {
             @Override
             public void OnResult(GyanithUser gyanithUser) {
-                if (gyanithUser == null) {
+                if (gyanithUser == null) {//Implies Token Expired
                     SignOutUser(context);
-                    result.OnResult(null);
+                    result.OnError("User Session Expired");
                     return;
                 }
 
@@ -135,10 +138,9 @@ public class GyanithUserManager {
                         try {
                             if(response.has("token"))
                                 result.OnResult(response.getString("token"));
-                            else if (response.has("error"))
-                                result.OnResult(null);
                             else
-                                throw new UnknownError();
+                                result.OnResult(null);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -163,9 +165,9 @@ public class GyanithUserManager {
 
             @Override
             public void onResponse(JSONObject response) {
-                if (response.has("user"))
+                if (response.has("usr"))
                     callback.OnResult(Util.jsonToGyanithUser(response.toString(),token));
-                else if (response.has("error"))
+                else
                     callback.OnResult(null);
             }
         },new Response.ErrorListener(){

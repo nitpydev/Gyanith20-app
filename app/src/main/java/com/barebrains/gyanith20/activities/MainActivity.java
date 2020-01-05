@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.transition.Fade;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -32,7 +33,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    BottomNavigationView botnav;
     private TextView title;
     boolean doubleBackToExitPressedOnce;
    // private ImageView imageView;
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                         initFragment((communityFragment = new CommunityFragment()), "5");
                     else
                         setActiveFragment(communityFragment);
-                    title.setText("Community");
+                    title.setText(R.string.topbar_community);
                     MarkPostsAsRead();
                     return true;
             }
@@ -163,11 +163,7 @@ public class MainActivity extends AppCompatActivity {
         ((Button)findViewById(R.id.account)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            	Class<?> c = LoginActivity.class;
-                boolean resolved = GyanithUserManager.resolveUserState(MainActivity.this);
-                if (resolved) c = ProfileActivity.class;
-
-                Intent i=new Intent(getApplicationContext(),c);
+                Intent i=new Intent(getApplicationContext(),LoginActivity.class);
                 startActivity(i);
             }
         });

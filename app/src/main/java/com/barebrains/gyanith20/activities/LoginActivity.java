@@ -53,6 +53,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        boolean resolved = GyanithUserManager.resolveUserState(LoginActivity.this);
+        Log.d("asd","res : "+ resolved);
+        if (resolved)
+            OnSignInSuccess();
+
         setContentView(R.layout.activity_login);
         backBtn =findViewById(R.id.backbutlogin);
         loginprog=findViewById(R.id.loginprog);
@@ -71,9 +76,6 @@ public class LoginActivity extends AppCompatActivity {
 
         isLoading(false);
 
-        boolean resolved = GyanithUserManager.resolveUserState(LoginActivity.this);
-        if (resolved)
-            OnSignInSuccess();
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,17 +96,12 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Enter credentials!", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    Log.d("asd","asdasd");
                     GyanithUserManager.SignInUser(LoginActivity.this
                             , username, pas, new ResultListener<GyanithUser>() {
                                     @Override
                                     public void OnResult(GyanithUser gyanithUser) {
-                                        isLoading(false);
-                                        if (gyanithUser == null) {
-                                            Toast.makeText(getApplicationContext(), "Invalid Credentials", Toast.LENGTH_LONG).show();
-                                            return;
-                                        }
                                         OnSignInSuccess();
+                                        isLoading(false);
                                     }
 
                                 @Override
