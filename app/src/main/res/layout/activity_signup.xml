@@ -180,6 +180,32 @@
 
 
             <EditText
+                android:id="@+id/phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sofiaprolight"
+                android:maxLines="1"
+                android:ems="10"
+                android:inputType="phone"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/whitealpha"
+                android:hint="Phone Number"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="40dp"
+            android:textColorHint="#64ffffff"
+            app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
+
+
+            <EditText
                 android:id="@+id/Collegename"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

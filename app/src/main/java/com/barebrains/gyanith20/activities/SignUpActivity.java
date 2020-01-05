@@ -32,23 +32,28 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SignUpActivity extends AppCompatActivity {
 
     AlertDialog.Builder builder;
-    EditText name,usrname,pwd,conpwd,clg,email;
+    EditText name,usrname,pwd,conpwd,clg,email,num;
     ProgressBar prog;
     Button signup, back;
     Context context;
     Boolean checked = false, passmatch;
-    String fullname, username, pass,conpass, college, mail, gender;
+    String fullname, username, pass,conpass, college, mail, gender,phone;
     String url = "http://gyanith.org/api.php?action=signup&key=2ppagy0",result;
-
+    String EMAIL_CHECK ="^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
+    static Pattern pattern;
+    Matcher matcher;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         name = (EditText) findViewById(R.id.name);
+        num =(EditText) findViewById(R.id.phone);
         usrname = (EditText) findViewById(R.id.username);
         pwd = (EditText) findViewById(R.id.password);
         pwd.setTransformationMethod(new PasswordTransformationMethod());
@@ -61,6 +66,7 @@ public class SignUpActivity extends AppCompatActivity {
         context = this;
         builder = new AlertDialog.Builder(context);
 
+        pattern = Pattern.compile(EMAIL_CHECK,Pattern.CASE_INSENSITIVE);
 
         isLoading(false);
 
@@ -88,7 +94,8 @@ public class SignUpActivity extends AppCompatActivity {
                 pass = pwd.getText().toString();
                 conpass = conpwd.getText().toString();
                 passmatch = pass.equals(conpass);
-                if( !username.equals(ws)||(!passmatch) || fullname.equals("")|| username.equals("") || college.equals("") || mail.equals("") || pass.equals("")|| (!checked)){
+                phone = num.getText().toString();
+                if( !emailValidate(mail)|| (phone.length() > 10) || !username.equals(ws)||(!passmatch) || fullname.equals("")|| username.equals("") || college.equals("") || mail.equals("") || pass.equals("")|| (!checked)){
 
                     isLoading(false);
 
@@ -96,6 +103,11 @@ public class SignUpActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"PassWord not matched",Toast.LENGTH_SHORT).show();
                     else if(!username.equals(ws))
                         Toast.makeText(getApplicationContext(),"Whitespace in username not Allowed",Toast.LENGTH_SHORT).show();
+                    else if(phone.length() > 10)
+                        Toast.makeText(getApplicationContext(),"phone number should not exceed 10 digits",Toast.LENGTH_SHORT).show();
+                    else  if(!emailValidate(mail))
+                        Toast.makeText(getApplicationContext(),"Please check your email, email is invalid",Toast.LENGTH_SHORT).show();
+
                     else
                         Toast.makeText(getApplicationContext(),"Please Fill all details",Toast.LENGTH_SHORT).show();
 
@@ -152,6 +164,7 @@ public class SignUpActivity extends AppCompatActivity {
                         params.put("gdr",gender);
                         params.put("email",mail);
                         params.put("pswd1",pass);
+                        params.put("phone",phone);
                         return params;
 
                     }
@@ -181,6 +194,11 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
 
+    }
+
+    public  Boolean emailValidate(String email){
+        matcher = pattern.matcher(email);
+        return matcher.matches();
     }
     private void isLoading(boolean state){
         if (state){
