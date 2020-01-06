@@ -55,7 +55,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/pnreg"
-                        android:text="Sun 2:43 PM"
+                        android:text="6 , Mon 4:54 PM"
                         android:textColor="@android:color/white"
                         android:textSize="18sp" />
                 </LinearLayout>

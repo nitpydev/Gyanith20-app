@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="50dp"
     tools:context="fragments.NotificationFragment">
 
     <FrameLayout
@@ -11,16 +12,42 @@
         android:layout_height="match_parent"
         android:foregroundGravity="center_horizontal">
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:tint="#FFFFFF"
+            app:backgroundTint="@color/colorAccent"
+            app:layout_behavior=".others.MoveUpwardBehavior"
+            app:srcCompat="@drawable/ic_baseline_add_24px" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/pnbold"
+            android:gravity="center"
+            android:text="Notification feed is Empty"
+            android:textColor="#96ffffff"
+            android:textSize="24sp"
+            android:visibility="visible" />
+
         <ProgressBar
             android:id="@+id/notload"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="200dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,6 +60,7 @@
             android:divider="@null"
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="0dp" />
+
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

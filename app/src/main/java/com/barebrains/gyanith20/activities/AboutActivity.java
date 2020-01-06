@@ -136,7 +136,7 @@ public class AboutActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
+                sharingIntent.setType("body/plain");
                 String shareBody = "Check out the Gyanith app\n https://play.google.com/store/apps/details?id=com.barebrains.gyanith19";
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download Gyanith app");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);

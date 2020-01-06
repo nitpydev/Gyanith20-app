@@ -1,19 +1,23 @@
 package com.barebrains.gyanith20.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.barebrains.gyanith20.activities.AddNotificationActivity;
 import com.barebrains.gyanith20.adapters.notificationAdapter;
-import com.barebrains.gyanith20.models.notificationItem;
+import com.barebrains.gyanith20.interfaces.ResultListener;
+import com.barebrains.gyanith20.models.NotificationItem;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.statics.AppNotiManager;
+import com.barebrains.gyanith20.statics.NetworkManager;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,14 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class NotificationFragment extends Fragment {
-
-    private ListView notificationList;
-    private DatabaseReference ref;
-    private notificationItem item1;
-    private notificationAdapter madapter;
-    private ArrayList<notificationItem> arrListItem;
 
     public NotificationFragment() {
         // Required empty public constructor
@@ -45,50 +44,52 @@ public class NotificationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View root= inflater.inflate(R.layout.fragment_notifications, container, false);
-        notificationList = root.findViewById(R.id.notificationListView);
-        ref = FirebaseDatabase.getInstance().getReference().child("NotificationFragment");
-        Log.d("qwer",ref.toString());
-        arrListItem = new ArrayList<notificationItem>();
+        ListView notiListView = root.findViewById(R.id.notificationListView);
 
-        madapter = new notificationAdapter(getContext(), arrListItem, R.layout.item_notification);
+        final View emptyState = root.findViewById(R.id.textView2);
 
-        DatabaseReference db=FirebaseDatabase.getInstance().getReference();
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
 
+        emptyState.setVisibility(View.GONE);
+
+        root.findViewById(R.id.notload).setVisibility(View.VISIBLE);
+
+        final notificationAdapter madapter = new notificationAdapter(getContext(), new ArrayList<NotificationItem>(), R.layout.item_notification);
+        notiListView.setAdapter(madapter);
+
+        AppNotiManager.addNotificationListener(789,new ResultListener<NotificationItem[]>(){
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("asd",dataSnapshot.toString());
-            }
+            public void OnResult(NotificationItem[] notificationItems) {
+                if (notificationItems.length == 0)
+                    emptyState.setVisibility(View.VISIBLE);
+                else
+                    emptyState.setVisibility(View.GONE);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                arrListItem.clear();
-                Log.d("qwer",dataSnapshot.toString());
-                for (DataSnapshot snapshot:dataSnapshot.getChildren())
-                {
-                    item1 = new notificationItem(snapshot.child("sender").getValue().toString(), snapshot.child("time").getValue().toString(), snapshot.child("text").getValue().toString());
-                    arrListItem.add(0,item1);
-                    Log.d("qwer","noti");
+                madapter.clear();
+                for (NotificationItem item : notificationItems){
+                    madapter.add(item);
                 }
                 madapter.notifyDataSetChanged();
-                ((ProgressBar)root.findViewById(R.id.notload)).setVisibility(View.GONE);
+                root.findViewById(R.id.notload).setVisibility(View.GONE);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            public void OnError(String error) {
+                root.findViewById(R.id.notload).setVisibility(View.GONE);
+                emptyState.setVisibility(View.VISIBLE);
+                Toast.makeText(getContext(),error, Toast.LENGTH_SHORT).show();
             }
         });
 
-        notificationList.setAdapter(madapter);
+
+        View addBtn = root.findViewById(R.id.add_notification);
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), AddNotificationActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return root;
     }
 }
