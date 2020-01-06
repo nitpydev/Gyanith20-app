@@ -25,6 +25,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.barebrains.gyanith20.activities.StartPostActivity;
 import com.barebrains.gyanith20.activities.UploadPostActivity;
 import com.barebrains.gyanith20.components.PostView;
 import com.barebrains.gyanith20.interfaces.AuthStateListener;
@@ -47,9 +48,6 @@ import com.polyak.iconswitch.IconSwitch;
 import static android.app.Activity.RESULT_OK;
 
 public class CommunityFragment extends Fragment {
-    private static final int IMAGE_GALLERY_CODE = 12;
-    private static final int UPLOAD_POST_COMPLETED = 18;
-    private static final int PERMISSIONS_REQUEST = 25;
 
 
     public ShimmerFrameLayout initLoader;
@@ -85,7 +83,8 @@ public class CommunityFragment extends Fragment {
                 addPostBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startPosting();
+                        Intent intent = new Intent(getContext(), StartPostActivity.class);
+                        startActivity(intent);
                     }
                 });
             }
@@ -115,22 +114,6 @@ public class CommunityFragment extends Fragment {
         super.onDestroyView();
     }
 
-    private void startPosting(){
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED)
-        {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    PERMISSIONS_REQUEST);
-            return;
-        }
-
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        String[] mimeTypes = {"image/jpeg"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        startActivityForResult(intent, IMAGE_GALLERY_CODE);
-    }
 
     private void SetupViewPager(View root){
         final ViewPager viewPager = root.findViewById(R.id.feedViewPager);
@@ -170,56 +153,6 @@ public class CommunityFragment extends Fragment {
         viewPager.setAdapter(new FeedsPagerAdapter(this));
     }
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode != PERMISSIONS_REQUEST)
-            return;
-
-        if (grantResults.length != 0) {
-            for (int result : grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getContext(),"Cannot Post Without Permission",Toast.LENGTH_LONG).show();
-                    return;
-                }
-             }
-        }
-        else {
-            Toast.makeText(getContext(),"Cannot Post Without Permission",Toast.LENGTH_LONG).show();
-            return;
-        }
-        startPosting();
-    }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != RESULT_OK)
-            return;
-        switch (requestCode){
-            case IMAGE_GALLERY_CODE:
-                String[] imgPaths;
-                ClipData clipData = data.getClipData();
-                if (clipData == null)//USER SELECTS SINGLE IMAGE
-                {
-                    imgPaths = new String[1];
-                    imgPaths[0] = Util.UriAbsPath(getContext(),data.getData());
-                }
-                else//USER SELECTS MULTIPLE IMAGES
-                {
-                    imgPaths = new String[clipData.getItemCount()];
-                    for (int i = 0;i< imgPaths.length;i++)
-                        imgPaths[i] = Util.UriAbsPath(getContext(),clipData.getItemAt(i).getUri());
-                }
-                Intent intent = new Intent(getActivity(), UploadPostActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putStringArray("EXTRA_IMG_PATHS",imgPaths);
-                Log.d("asd", "img path : " + imgPaths[0]);
-                intent.putExtras(bundle);
-                startActivityForResult(intent,UPLOAD_POST_COMPLETED);
-                return;
-            case UPLOAD_POST_COMPLETED:
-                Log.d("gyanith20", "Post_Uploaded");
-        }
-    }
 
 }
 

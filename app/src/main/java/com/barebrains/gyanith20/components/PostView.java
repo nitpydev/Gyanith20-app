@@ -281,13 +281,13 @@ public class PostView extends RelativeLayout {
     private void setLikeState(boolean state){
         if (state)
         {
-            likeCountText.setText(String.valueOf(-post.likes + isUserLiked - 1));
+            likeCountText.setText(String.valueOf(post.likes - isUserLiked + 1));
             likeIcon.setImageDrawable(likedDrawable);
         }
         else
         {
             likeIcon.setImageDrawable(unlikedDrawable);
-            likeCountText.setText(String.valueOf(-post.likes + isUserLiked));
+            likeCountText.setText(String.valueOf(post.likes - isUserLiked));
         }
         likeState = state;
     }

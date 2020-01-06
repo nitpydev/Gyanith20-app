@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class eventsManager {
 
@@ -53,7 +54,7 @@ public class eventsManager {
         listener.OnResult(list.toArray(new EventItem[0]));
     }
 
-    public static void getEventsbyId(final ArrayList<String> ids,final ResultListener<EventItem[]> listener){
+    public static void getEventsbyId(final String[] ids,final ResultListener<EventItem[]> listener){
         if (eventItems == null)
             eventItems = getEventItemsFromCache();
 
@@ -77,16 +78,57 @@ public class eventsManager {
         ArrayList<EventItem> list = new ArrayList<>();
         for (EventItem item : eventItems) {
             for (String id : ids) {
-                if (item.id.equals(id)) {
+                if (item.id.equals(id))
                     list.add(item);
-                    ids.remove(id);
-                }
             }
         }
         listener.OnResult(list.toArray(new EventItem[0]));
     }
 
+    public static void getRegEventsPair(final String[] ids,final ResultListener<Pair<ArrayList<EventItem>,ArrayList<EventItem>>> listener){
+        if (eventItems == null)
+            eventItems = getEventItemsFromCache();
 
+        if (eventItems == null)
+        {
+            fetchEventsData(new ResultListener<EventItem[]>(){
+                @Override
+                public void OnResult(EventItem[] eventItems) {
+                    eventsManager.eventItems = eventItems;
+                    getRegEventsPair(ids,listener);
+                }
+
+                @Override
+                public void OnError(String error) {
+                    listener.OnError(error);
+                }
+            });
+        }
+        getEventsbyId(ids, new ResultListener<EventItem[]>(){
+            @Override
+            public void OnResult(EventItem[] eventItems) {
+                ArrayList<EventItem> w = new ArrayList<>();
+                ArrayList<EventItem> te = new ArrayList<>();
+
+                for (EventItem item : eventItems) {
+                    if (item.type.equals("w"))
+                        w.add(item);
+                    else if (item.type.equals("te"))
+                        te.add(item);
+                }
+
+                listener.OnResult(new Pair<>(w,te));
+            }
+
+            @Override
+            public void OnError(String error) {
+                listener.OnError(error);
+            }
+        });
+
+
+
+    }
 
 
 

@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -246,6 +247,8 @@ public class  PostManager{
     {
         if (likedPosts == null) {
             Log.d("asd","isLiked : not initialized");
+            if (FirebaseAuth.getInstance().getCurrentUser() != null)
+                Initialize();
             return false;
         }
 
@@ -264,25 +267,7 @@ public class  PostManager{
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                 .child("posts").child(postId)
                 .child("likes");
-        reference.runTransaction(new Transaction.Handler() {
-            @NonNull
-            @Override
-            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-                Long p = mutableData.getValue(Long.class);
-                if (p == null) {
-                    return Transaction.success(mutableData);
-                }
-                p--;
-                // Set value and report transaction success
-                mutableData.setValue(p);
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
-
-            }
-        });
+        reference.runTransaction(decrementer);
     }
     public void dislikePost(String postId){
         for (OnLikeStateChangedListener listener : listeners.get(postId))
@@ -293,25 +278,7 @@ public class  PostManager{
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                 .child("posts").child(postId)
                 .child("likes");
-        reference.runTransaction(new Transaction.Handler() {
-            @NonNull
-            @Override
-            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-                Long p = mutableData.getValue(Long.class);
-                if (p == null) {
-                    return Transaction.success(mutableData);
-                }
-                p++;
-                // Set value and report transaction success
-                mutableData.setValue(p);
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
-
-            }
-        });
+        reference.runTransaction(incrementer);
     }
 
     private void getRemoteLikedPosts(final ResultListener<String[]> callback){
@@ -357,25 +324,6 @@ public class  PostManager{
     //private Set<String> userPostIds;
     private View snackbarParent;
     private FirebaseRecyclerPagingAdapter[] refresh = new FirebaseRecyclerPagingAdapter[2];
-    public void getRemoteUserPosts(final ResultListener<Post[]> callback){
-        FirebaseDatabase.getInstance().getReference().child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
-                .child("posts").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Post[] posts = new Post[(int) dataSnapshot.getChildrenCount()];
-                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
-                for (int i = 0;i<posts.length;i++)
-                    posts[i] = iterator.next().getValue(Post.class);
-
-                callback.OnResult(posts);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 
     public void setSnackbarParent(View view){
         snackbarParent = view;

@@ -198,63 +198,30 @@
         app:tabIndicatorColor="@android:color/white"
         app:tabSelectedTextColor="@android:color/white"
         app:tabTextColor="@color/whitealpha"/>
-
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/profile_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_weight="2"
-        android:background="@color/colorBackDrop"
-        android:foregroundGravity="center">
-
-        <RelativeLayout
-            android:id="@+id/reg_w"
+            android:id="@+id/profile_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ProgressBar
-                android:id="@+id/w_load"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|center_horizontal"
-                android:layout_marginTop="200dp" />
-
-            <TextView
-                android:id="@+id/w_es"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|center_horizontal"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="20dp"
-                android:fontFamily="@font/pnbold"
-                android:text="Your Registered Workshops Show up here."
-                android:textColor="#96ffffff"
-                android:textSize="24sp"
-                android:visibility="gone" />
-
-            <ListView
-                android:id="@+id/reg_w_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </RelativeLayout>
+            android:layout_height="0dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_weight="2"
+            android:background="@color/colorBackDrop"
+            android:foregroundGravity="center">
 
         <RelativeLayout
             android:id="@+id/reg_te"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="visible">
 
             <ProgressBar
                 android:id="@+id/te_load"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:layout_gravity="center|center_horizontal"
                 android:layout_marginTop="200dp" />
 
@@ -262,6 +229,7 @@
                 android:id="@+id/te_es"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:layout_gravity="center|center_horizontal"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
@@ -279,10 +247,82 @@
                 android:layout_height="match_parent" />
         </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/reg_w"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <ProgressBar
+                    android:id="@+id/w_load"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+
+                <TextView
+                    android:id="@+id/w_es"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center|center_horizontal"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/pnbold"
+                    android:text="Your Registered Workshops Show up here."
+                    android:textColor="#96ffffff"
+                    android:textSize="24sp"
+                    android:visibility="visible" />
+
+                <ListView
+                    android:id="@+id/reg_w_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/profile_posts"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:visibility="visible">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add_post_btn2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:tint="#FFFFFF"
+                app:backgroundTint="@color/colorAccent"
+                app:layout_behavior=".others.MoveUpwardBehavior"
+                app:srcCompat="@drawable/ic_baseline_add_24px" />
+
+            <TextView
+                android:id="@+id/up_es"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="0dp"
+                android:fontFamily="@font/pnbold"
+                android:gravity="center"
+                android:text="Your Posts Show Up Here"
+                android:textColor="#96ffffff"
+                android:textSize="24sp"
+                android:visibility="visible" />
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/profile_feed_refresh"
@@ -301,9 +341,14 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="0dp"
                 android:layout_marginBottom="0dp"
                 android:foregroundGravity="bottom|center_vertical"
                 android:indeterminate="true" />
         </RelativeLayout>
-    </androidx.viewpager.widget.ViewPager>
+        </androidx.viewpager.widget.ViewPager>
 </LinearLayout>

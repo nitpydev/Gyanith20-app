@@ -12,16 +12,16 @@ public class GyanithUser {
     public String phoneNo;
     public String clg;
     public String token;
-    public ArrayList<EventItem> reg_w = new ArrayList<>();
-    public ArrayList<EventItem> reg_te = new ArrayList<>();
+    public String[] regEventIds;
 
-    public GyanithUser(String gyanithId, String name, String userName, String email, String phoneNo, String clg, String token){
+    public GyanithUser(String gyanithId, String name, String userName, String email, String phoneNo, String clg,String[] regEventIds, String token){
         this.gyanithId = gyanithId;
         this.name = name;
         this.userName = userName;
         this.email = email;
         this.phoneNo = phoneNo;
         this.clg = clg;
+        this.regEventIds = regEventIds;
         this.token = token;
     }
 

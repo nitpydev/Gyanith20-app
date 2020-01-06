@@ -26,6 +26,7 @@ import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.VolleyManager;
 import com.barebrains.gyanith20.statics.eventsManager;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
@@ -91,6 +92,8 @@ public class gyanith20 extends Application {
                 @Override
                 public void OnResult(GyanithUser gyanithUser) {
                     Log.d("asd","user return successful");
+                    if (gyanithUser != null && FirebaseAuth.getInstance().getCurrentUser() != null)
+                        PostManager.getInstance().Initialize();
                 }
 
                 @Override

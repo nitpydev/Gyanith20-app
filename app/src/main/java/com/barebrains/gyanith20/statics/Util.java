@@ -189,12 +189,17 @@ public class Util {
     public static GyanithUser jsonToGyanithUser(String s,String token){
         Gson gson = new Gson();
         GyanithUserJsonResponse json = gson.fromJson(s,GyanithUserJsonResponse.class);
+
+        //Dummy till server updates
+        json.regEventIds = new String[]{"5","4","6","23","21","22","20"};
+
         return new GyanithUser(json.gyid
         ,json.name
         ,json.usr
         ,json.email
         ,json.phno
         ,json.clg
+        ,json.regEventIds
         ,token);
     }
 
@@ -223,6 +228,7 @@ class GyanithUserJsonResponse{
     public String email;
     public String phno;
     public String gender;
+    public String[] regEventIds;
 
     public GyanithUserJsonResponse(){}
 }

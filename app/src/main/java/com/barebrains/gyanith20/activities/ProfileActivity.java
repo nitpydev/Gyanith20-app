@@ -1,9 +1,12 @@
 package com.barebrains.gyanith20.activities;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -12,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +28,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -56,6 +61,7 @@ import com.firebase.ui.database.paging.DatabasePagingOptions;
 import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
 import com.firebase.ui.database.paging.LoadingState;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.zxing.WriterException;
@@ -66,7 +72,6 @@ import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
 public class ProfileActivity extends AppCompatActivity {
-
 
     View userInfoPanel;
     View profileCard;
@@ -80,6 +85,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     Drawable errorQrDrawable;
 
+    eventCategoriesAdapter w_adapter,te_adapter;
 
     boolean userInfoBackReserved,qrBackReserved;
 
@@ -94,7 +100,7 @@ public class ProfileActivity extends AppCompatActivity {
         ((ViewGroup) findViewById(R.id.profile_root)).getLayoutTransition()
                 .enableTransitionType(LayoutTransition.CHANGING);
 
-
+        PostManager.getInstance().setSnackbarParent((ViewGroup) findViewById(R.id.profile_root));
         userInfoPanel = findViewById(R.id.userinfo_panel);
         profileCard = findViewById(R.id.profile_card);
         qrCard = findViewById(R.id.qr_card);
@@ -191,24 +197,46 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public Object instantiateItem(@NonNull ViewGroup container, int position) {
                 int res;
+
                 if(position == 0) {
                     res = R.id.reg_w;
-                    setupRegisteredWorkshopsList();
+                    w_adapter = setupRegisteredWorkshopsList();
                 }
                 else if (position == 1) {
                     res = R.id.reg_te;
-                    setupRegisteredTechnicalEventsList();
+                    te_adapter = setupRegisteredTechnicalEventsList();
                 }
                 else {
                     res = R.id.profile_posts;
                     setupUserPosts();
                 }
 
+                GyanithUser user = GyanithUserManager.getCurrentUser();
+                if (user != null)
+                    eventsManager.getRegEventsPair(user.regEventIds,new ResultListener<Pair<ArrayList<EventItem>, ArrayList<EventItem>>>(){
+                        @Override
+                        public void OnResult(Pair<ArrayList<EventItem>, ArrayList<EventItem>> pair) {
+                            if (w_adapter != null){
+                                w_adapter.clear();
+                                for (EventItem item : pair.first)
+                                    w_adapter.add(item);
+                                w_adapter.notifyDataSetChanged();
+                            }
+
+                            if (te_adapter != null){
+                                te_adapter.clear();
+                                for (EventItem item : pair.second)
+                                    te_adapter.add(item);
+                                te_adapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
+
 
                 return findViewById(res);
             }
 
-            private void setupRegisteredWorkshopsList(){
+            private eventCategoriesAdapter setupRegisteredWorkshopsList(){
                 ListView regList = findViewById(R.id.reg_w_list);
                 View progress = findViewById(R.id.w_load);
                 View emptyState = findViewById(R.id.w_es);
@@ -218,15 +246,10 @@ public class ProfileActivity extends AppCompatActivity {
                         ,new ArrayList<EventItem>()
                         ,ProfileActivity.this);
                 regList.setAdapter(adapter);
-                adapter.clear();
-                GyanithUser user = GyanithUserManager.getCurrentUser();
-                if (user != null)
-                for (EventItem item : user.reg_w)
-                    adapter.add(item);
-                adapter.notifyDataSetChanged();
+                return adapter;
             }
 
-            private void setupRegisteredTechnicalEventsList(){
+            private eventCategoriesAdapter setupRegisteredTechnicalEventsList(){
                 ListView regList = findViewById(R.id.reg_te_list);
                 View progress = findViewById(R.id.te_load);
                 View emptyState = findViewById(R.id.te_es);
@@ -236,15 +259,27 @@ public class ProfileActivity extends AppCompatActivity {
                         ,new ArrayList<EventItem>()
                         ,ProfileActivity.this);
                 regList.setAdapter(adapter);
-                adapter.clear();
-                GyanithUser user = GyanithUserManager.getCurrentUser();
-                if (user != null)
-                    for (EventItem item : user.reg_te)
-                        adapter.add(item);
-                adapter.notifyDataSetChanged();
+                return adapter;
             }
 
             private void setupUserPosts(){
+                NetworkManager.getInstance().addListener(78,new NetworkStateListener(){
+                    @Override
+                    public void OnDisconnected() {
+                        Toast.makeText(ProfileActivity.this, "Couldn't Refresh feed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                findViewById(R.id.add_post_btn2).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(ProfileActivity.this, StartPostActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+
+
                 Query query = FirebaseDatabase.getInstance().getReference().child("users")
                         .child(GyanithUserManager.getCurrentUser().gyanithId)
                         .child("posts").orderByChild("time");
@@ -258,6 +293,12 @@ public class ProfileActivity extends AppCompatActivity {
                         .build();
 
                 final FirebaseRecyclerPagingAdapter<Post, PostViewHolder> adapter = new FirebaseRecyclerPagingAdapter<Post, PostViewHolder>(options) {
+
+                    @Override
+                    public void init() {
+                        super.init();
+                    }
+
                     @Override
                     protected void onBindViewHolder(@NonNull final PostViewHolder viewHolder, int position, @NonNull Post model) {
                         viewHolder.postView.SetPost(ProfileActivity.this,model);
@@ -282,14 +323,35 @@ public class ProfileActivity extends AppCompatActivity {
                         switch (state){
                             case LOADING_INITIAL:
                                 refreshFeed.setRefreshing(false);
+                                break;
                             case LOADING_MORE:
                                 loadFeed.setVisibility(View.VISIBLE);
+                                break;
                             case LOADED:
+                                refreshFeed.setRefreshing(false);
                                 loadFeed.setVisibility(View.GONE);
+                                findViewById(R.id.up_es).setVisibility(View.GONE);
+                                break;
+                            case ERROR:
+                                loadFeed.setVisibility(View.GONE);
+                                refreshFeed.setRefreshing(false);
+                                findViewById(R.id.up_es).setVisibility(View.VISIBLE);
+                                break;
+                            case FINISHED:
+                                loadFeed.setVisibility(View.GONE);
+                                refreshFeed.setRefreshing(false);
+                                Toast.makeText(ProfileActivity.this, "Reached end of Posts", Toast.LENGTH_SHORT).show();
+                                break;
                         }
                     }
 
-
+                    @Override
+                    protected void onError(@NonNull DatabaseError databaseError) {
+                        super.onError(databaseError);
+                        if (!NetworkManager.getInstance().isNetAvailable())
+                            Toast.makeText(ProfileActivity.this, "Could'nt Refresh feed", Toast.LENGTH_SHORT).show();
+                        Log.d("asd","dbError : " + databaseError.getCode() + " " + databaseError.getMessage());
+                    }
                 };
                 PostManager.getInstance().setRefreshs(adapter);
 
@@ -305,7 +367,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         };
         viewPager.setAdapter(pagerAdapter);
-        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(2);
     }
 
     private void userPanelTransition(boolean open){
@@ -455,5 +517,7 @@ public class ProfileActivity extends AppCompatActivity {
             qrPanelTransition(false);
         }
     }
+
+
 
 }

@@ -95,7 +95,7 @@ public class FavouritesFragment extends Fragment {
         sp = getContext().getSharedPreferences(getString(R.string.package_name), Context.MODE_PRIVATE);
         Set<String> favIds = sp.getStringSet(getString(R.string.favSet),new HashSet<String>());
 
-        eventsManager.getEventsbyId(new ArrayList<>(favIds),new ResultListener<EventItem[]>(){
+        eventsManager.getEventsbyId(favIds.toArray(new String[0]),new ResultListener<EventItem[]>(){
             @Override
             public void OnResult(EventItem[] eventItems) {
                 adapter.clear();
