@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.text.method.DateTimeKeyListener;
 import android.util.Log;
 import android.util.Pair;
 
@@ -50,6 +51,46 @@ public class Util {
         }
         return date;
     }
+
+    public static String BuildDateString(long time){
+        Calendar cl = Calendar.getInstance();
+        cl.setTimeInMillis(time);
+
+        return cl.get(Calendar.DAY_OF_MONTH)
+                + " , "
+                + weekDayToDay(cl.get(Calendar.DAY_OF_WEEK))
+                + " " + cl.get(Calendar.HOUR)
+                + ":" + cl.get(Calendar.MINUTE)
+                + " " + amPm(cl.get(Calendar.AM_PM));
+    }
+
+    private static String weekDayToDay(int day){
+        switch (day){
+            case 1:
+                return "Sun";
+            case 2:
+                return "Mon";
+            case 3:
+                return "Tue";
+            case 4:
+                return "Wed";
+            case 5:
+                return "Thur";
+            case 6:
+                return "Fri";
+            case 7:
+                return "Sat";
+                default:
+                    return "";
+        }
+    }
+
+private static String amPm(int i){
+        if (i == 0)
+            return "AM";
+        else
+            return "PM";
+}
 
     public static String UriAbsPath(Context context,Uri imgUri){
         String[] filePathColumn = { MediaStore.Images.Media.DATA };

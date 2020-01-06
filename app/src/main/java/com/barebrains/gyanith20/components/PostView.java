@@ -132,7 +132,7 @@ public class PostView extends RelativeLayout {
             @Override
             public void onClick(View view) {
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
+                sharingIntent.setType("body/plain");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Gyanith Community Post");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, buildDeepLink(post.postId));
                 context.startActivity(Intent.createChooser(sharingIntent, "Share via"));

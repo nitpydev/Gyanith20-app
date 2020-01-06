@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.transition.Fade;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -21,14 +20,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.barebrains.gyanith20.fragments.BottomSheetFragment;
 import com.barebrains.gyanith20.fragments.CommunityFragment;
 import com.barebrains.gyanith20.fragments.FavouritesFragment;
 import com.barebrains.gyanith20.fragments.HomeFragment;
 import com.barebrains.gyanith20.fragments.NotificationFragment;
 import com.barebrains.gyanith20.fragments.ScheduleFragment;
 import com.barebrains.gyanith20.R;
-import com.barebrains.gyanith20.statics.GyanithUserManager;
+import com.barebrains.gyanith20.interfaces.ResultListener;
+import com.barebrains.gyanith20.models.NotificationItem;
+import com.barebrains.gyanith20.statics.AppNotiManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView title;
     boolean doubleBackToExitPressedOnce;
    // private ImageView imageView;
-    SharedPreferences notif;
+    SharedPreferences sp;
 
     private FragmentManager fragmentManager;
     private Fragment activeFragment;
@@ -82,8 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     else
                         setActiveFragment(notificationFragment);
                     title.setText(R.string.topbar_notification);
-                    item.setIcon(R.drawable.ic_baseline_notifications_24px);
-                    notif.edit().putBoolean("newnot",false).apply();
+                    MarkNotiAsRead();
                     return true;
                 case R.id.navigation_community:
                     if (communityFragment == null)
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
         //imageView=findViewById(R.id.topbaricon);
         title = findViewById(R.id.title);
-        notif = getSharedPreferences(getString(R.string.package_name), Context.MODE_PRIVATE);
+        sp = getSharedPreferences(getString(R.string.package_name), Context.MODE_PRIVATE);
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setItemIconTintList(null);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -163,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
         ((TextView)findViewById(R.id.title)).setText(R.string.topbar_home);
 
-        ((Button)findViewById(R.id.account)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.account).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i=new Intent(getApplicationContext(),LoginActivity.class);
@@ -171,24 +170,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-      /*  imageView.setOnClickListener(new View.OnClickListener() {
+        LastReadPostCount = sp.getInt("lastReadPostCount",0);
+        NotifyCommunityPosts();
+        LastReadNotiCount = sp.getInt("lastReadNotiCount",0);
+        NotifyNotiPosts();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AppNotiManager.addNotificationListener(1,new ResultListener<NotificationItem[]>(){
             @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this,"Presented to you by HV,BP,KR,SR,AM",Toast.LENGTH_SHORT).show();
+            public void OnResult(NotificationItem[] notificationItems) {
+                NotifyNotiPosts();
             }
         });
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        AppNotiManager.removeNotificationListener(1);
+    }
 
-       */
-        if(notif.getBoolean("newnot",false)){
-            navigation.getMenu().getItem(3).setIcon(R.drawable.ic_notification_dot);
-        }
-
-        LastReadPostCount = notif.getInt("lastReadPostCount",0);
-        NotifyCommunityPosts();
-
-}
-public int LastReadPostCount;
+    public int LastReadPostCount;
 
 public void NotifyCommunityPosts(){
         if (PostManager.postCount > LastReadPostCount)
@@ -199,7 +204,36 @@ public void NotifyCommunityPosts(){
 
 public void MarkPostsAsRead(){
     LastReadPostCount = PostManager.postCount;
-    notif.edit().putInt("lastReadPostCount",LastReadPostCount).apply();
+    sp.edit().putInt("lastReadPostCount",LastReadPostCount).apply();
     NotifyCommunityPosts();
+}
+
+public int LastReadNotiCount;
+
+public void NotifyNotiPosts(){
+    if (AppNotiManager.notiItems == null) {
+        navigation.getMenu().getItem(3).setIcon(R.drawable.nav_not_selector);
+        return;
+    }
+
+
+    if (AppNotiManager.notiItems.length > LastReadNotiCount)
+        navigation.getMenu().getItem(3).setIcon(R.drawable.ic_notification_dot);
+    else
+        navigation.getMenu().getItem(3).setIcon(R.drawable.nav_not_selector);
+
+
+    if (activeFragment.getTag().equals("4"))
+        MarkPostsAsRead();
+}
+
+public void MarkNotiAsRead(){
+    if (AppNotiManager.notiItems == null){
+        return;
+    }
+
+    LastReadNotiCount = AppNotiManager.notiItems.length;
+    sp.edit().putInt("lastReadNotiCount",LastReadNotiCount).apply();
+    NotifyNotiPosts();
 }
 }

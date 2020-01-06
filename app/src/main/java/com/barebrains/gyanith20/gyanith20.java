@@ -21,6 +21,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.models.GyanithUser;
+import com.barebrains.gyanith20.statics.AppNotiManager;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.PostManager;
@@ -38,11 +39,12 @@ public class gyanith20 extends Application {
     public static final String PROGRESS_CHANNEL = "progress";
     @Override
     public void onCreate() {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         VolleyManager.setRequestQueue(this);
         NetworkManager.initialize(this);
         setScreenOrientation();
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         CreateProgressNotificationChannel();
+        AppNotiManager.initNotifications();
         HandleUserManagement();
         eventsManager.initialize(getApplicationContext());
         super.onCreate();

@@ -203,7 +203,7 @@ public class GyanithUserManager {
                     if (result.equals("success"))
                         listener.OnComplete();
                     else
-                        listener.OnError(obj.getString("text"));
+                        listener.OnError(obj.getString("body"));
 
                 } catch (JSONException e) {
                     listener.OnError("Internal Error");

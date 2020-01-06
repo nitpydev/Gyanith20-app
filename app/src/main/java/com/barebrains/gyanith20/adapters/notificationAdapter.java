@@ -7,34 +7,34 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.barebrains.gyanith20.models.notificationItem;
+import com.barebrains.gyanith20.models.NotificationItem;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.statics.Util;
 
 import java.util.ArrayList;
 
-public class notificationAdapter extends ArrayAdapter {
-    private Context c;
-    private ArrayList<notificationItem> list;
+public class notificationAdapter extends ArrayAdapter<NotificationItem> {
     private int res;
-    int pos=0;
 
-    public notificationAdapter(Context c, ArrayList<notificationItem> list, int res) {
-        super(c, res, list);
-        this.c = c;
-        this.list = list;
+    public notificationAdapter(Context c, ArrayList<NotificationItem> list, int res) {
+        super(c,res, list);
         this.res = res;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater li = LayoutInflater.from(c);
-        View root = li.inflate(res, null, false);
+        View root;
 
-        ((TextView) root.findViewById(R.id.notificationSender)).setText(list.get(position).getSender());
-        ((TextView) root.findViewById(R.id.notificationTime)).setText(list.get(position).getTime());
-        ((TextView) root.findViewById(R.id.notificationText)).setText(list.get(position).getText());
+        if (convertView != null)
+            root = convertView;
+        else
+            root = LayoutInflater.from(getContext()).inflate(res,parent,false);
 
 
+        NotificationItem item = getItem(position);
+        ((TextView) root.findViewById(R.id.notificationSender)).setText(item.title);
+        ((TextView) root.findViewById(R.id.notificationTime)).setText(Util.BuildDateString(item.time));
+        ((TextView) root.findViewById(R.id.notificationText)).setText(item.body);
 
         return root;
     }

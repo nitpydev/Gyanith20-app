@@ -1,7 +1,6 @@
 package com.barebrains.gyanith20.activities;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Fade;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.barebrains.gyanith20.others.notreceiver;
 import com.barebrains.gyanith20.R;
 
 import java.util.Timer;
@@ -33,7 +31,6 @@ public class SplashActivity extends AppCompatActivity {
         ImageView l=(ImageView)findViewById(R.id.imageView4);
 
 
-        getApplicationContext().registerReceiver(new notreceiver(),new IntentFilter("gyanith.notify"));
         //registerReceiver(new notreceiver(),new IntentFilter("BOOT_COMPLETED"));
 
 

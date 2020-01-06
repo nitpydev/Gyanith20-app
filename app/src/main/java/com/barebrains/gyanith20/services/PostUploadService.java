@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
-import com.barebrains.gyanith20.statics.NotificationManager;
+import com.barebrains.gyanith20.statics.AppNotiManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,13 +48,13 @@ public class PostUploadService extends Service {
     }
 
     private void HandleProgress(){
-        NotificationManager.Create(this,getTotalSize(imgPaths));//CREATE PROGRESS NOTIFICATION
+        AppNotiManager.Create(this,getTotalSize(imgPaths));//CREATE PROGRESS NOTIFICATION
 
         ImgProgress = new HashMap<>();
         for (Pair<String,UploadTask> imgUpload : imgUploads)
             ImgProgress.put(imgUpload.first,0);
 
-        NotificationManager.setProgress(0);  //Show Notification
+        AppNotiManager.setProgress(0);  //Show Notification
 
         for (int i = 0;i<imgUploads.size();i++)
         {
@@ -68,13 +68,13 @@ public class PostUploadService extends Service {
                     ImgProgress.remove(id);//Remove object with ID
                     ImgProgress.put(id,(int)taskSnapshot.getBytesTransferred());//Put new object with ID
 
-                    NotificationManager.setProgress(getProgress());
+                    AppNotiManager.setProgress(getProgress());
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d("asd", "error : " + e);
-                    NotificationManager.setProgressTitle("Posting Interrupted");
+                    AppNotiManager.setProgressTitle("Posting Interrupted");
                 }
             })
             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -97,7 +97,7 @@ public class PostUploadService extends Service {
                                 stopSelf();
                             }
                         });
-                        NotificationManager.CompleteProgress();
+                        AppNotiManager.CompleteProgress();
                     }
                 }
             });
