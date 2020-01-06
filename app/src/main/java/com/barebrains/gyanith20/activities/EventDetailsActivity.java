@@ -17,12 +17,14 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.models.EventItem;
+import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -50,7 +52,6 @@ public class EventDetailsActivity extends AppCompatActivity {
     Button backBtn;
     String tab1,tab2,tab3;
     Context context;
-
     String id="", tm, cost;
 
 
@@ -216,6 +217,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     b[i].setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(GyanithUserManager.getCurrentUser() != null){
                             Intent intent = new Intent(context, RegisterActivity.class);
                             intent.putExtra("id", eventId);
                             intent.putExtra("token", "");
@@ -223,7 +225,10 @@ public class EventDetailsActivity extends AppCompatActivity {
                                 intent.putExtra("ex", eventId);
                             else
                                 intent.putExtra("ex", "");
-                            startActivity(intent);
+                            startActivity(intent);}
+                            else{
+                                Toast.makeText(context, "please login to register", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
                 }
