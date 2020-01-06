@@ -51,15 +51,10 @@ public class EventDetailsActivity extends AppCompatActivity {
     String tab1,tab2,tab3;
     Context context;
 
-    String id="",cost;
+    String id="",cost, tm;
 
     AlertDialog.Builder a;
     AlertDialog vi;
-
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +78,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         desc=findViewById(R.id.evedesc);
         dtab=findViewById(R.id.dtab);
         context =this;
+
+
+        if(eventItem.max_ptps == null){tm = "1";}else{tm = eventItem.max_ptps;}
 
         eveimage= findViewById(R.id.eveimv);
         favtb=findViewById(R.id.favButton);
@@ -113,7 +111,6 @@ public class EventDetailsActivity extends AppCompatActivity {
             desc.setText(Html.fromHtml(eventItem.des,Html.FROM_HTML_MODE_LEGACY));
         else
             desc.setText(Html.fromHtml(eventItem.des));
-        id =
         cost = eventItem.cost;
         if(cost != null)
             desc.append("\nRegistration Cost : Rs." + cost + " per person");
@@ -175,7 +172,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                         desc.setText(Html.fromHtml(tab1));
                     }
 
-                    if(!cost.equals("null"))
+                    if(!(cost == null))
                     desc.append("\nRegistration Cost : Rs." + cost + " per person");
                 }
                 if(a==1){
@@ -204,16 +201,6 @@ public class EventDetailsActivity extends AppCompatActivity {
 
 
 
-
-        reg = FirebaseDatabase.getInstance().getReference().child(catType).child(eventId);
-
-        reg.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                String tm="1";
-                try {
-                    tm = dataSnapshot.child("tm").getValue().toString();
-                }catch(Exception e){}
                 Button[] b = new Button[2];
                 LinearLayout linlay = new LinearLayout(context);
                 linlay.setOrientation(LinearLayout.VERTICAL);
@@ -228,12 +215,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(context, RegisterActivity.class);
-                            try {
-                                id = dataSnapshot.child("id").getValue().toString();
-                                id = id.substring(3 * i1, 3 * (i1 + 1));
-                            }
-                            catch(Exception e){}
-                            intent.putExtra("id", id);
+                            intent.putExtra("id", eventId);
                             intent.putExtra("token", "");
                             if (eventId.equals("W7"))
                                 intent.putExtra("ex", eventId);
@@ -247,17 +229,6 @@ public class EventDetailsActivity extends AppCompatActivity {
                 a.setTitle("Register");
                 a.setView(linlay);
                 vi=a.create();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        });
-
-
-
 
 
 
