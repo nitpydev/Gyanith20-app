@@ -51,7 +51,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     String tab1,tab2,tab3;
     Context context;
 
-    String id="",cost, tm;
+    String id="", tm, cost;
+
 
     AlertDialog.Builder a;
     AlertDialog vi;
@@ -78,6 +79,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         desc=findViewById(R.id.evedesc);
         dtab=findViewById(R.id.dtab);
         context =this;
+         cost = eventItem.cost;
 
 
         if(eventItem.max_ptps == null){tm = "1";}else{tm = eventItem.max_ptps;}
@@ -106,12 +108,12 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         title.setText(eventItem.name);
 
-        tab1 = eventItem.des;
+        if(eventItem.des == null){tab1 = "";}else{tab1 = eventItem.des;}
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            desc.setText(Html.fromHtml(eventItem.des,Html.FROM_HTML_MODE_LEGACY));
+            desc.setText(Html.fromHtml(tab1,Html.FROM_HTML_MODE_LEGACY));
         else
-            desc.setText(Html.fromHtml(eventItem.des));
-        cost = eventItem.cost;
+            desc.setText(Html.fromHtml(tab1));
+
         if(cost != null)
             desc.append("\nRegistration Cost : Rs." + cost + " per person");
 
@@ -171,9 +173,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                     {
                         desc.setText(Html.fromHtml(tab1));
                     }
+                    if(cost != null)
+                        desc.append("\nRegistration Cost : Rs." + cost + " per person");
 
-                    if(!(cost == null))
-                    desc.append("\nRegistration Cost : Rs." + cost + " per person");
                 }
                 if(a==1){
                     desc.setText(tab2);
