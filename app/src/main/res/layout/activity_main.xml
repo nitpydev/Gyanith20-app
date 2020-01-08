@@ -69,12 +69,13 @@
 
     </LinearLayout>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <com.barebrains.gyanith20.components.BotNavView
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:alpha="1"
         android:background="@color/colorBackdropAccent"
+        app:itemIconTint="@color/botnav_tint"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

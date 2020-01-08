@@ -10,10 +10,19 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.FileUtils;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.barebrains.gyanith20.statics.Util;
+import com.google.android.gms.common.util.IOUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class StartPostActivity extends AppCompatActivity {
     private static final int UPLOAD_POST_COMPLETED = 18;
@@ -53,12 +62,14 @@ public class StartPostActivity extends AppCompatActivity {
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this,"Cannot Post Without Permission",Toast.LENGTH_LONG).show();
+                    finish();
                     return;
                 }
             }
         }
         else {
             Toast.makeText(this,"Cannot Post Without Permission",Toast.LENGTH_LONG).show();
+            finish();
             return;
         }
         startPosting();
@@ -73,30 +84,53 @@ public class StartPostActivity extends AppCompatActivity {
 
         switch (requestCode){
             case IMAGE_GALLERY_CODE:
-                String[] imgPaths;
-                ClipData clipData = data.getClipData();
-                if (clipData == null)//USER SELECTS SINGLE IMAGE
-                {
-                    imgPaths = new String[1];
-                    imgPaths[0] = Util.UriAbsPath(this,data.getData());
-                }
-                else//USER SELECTS MULTIPLE IMAGES
-                {
-                    imgPaths = new String[clipData.getItemCount()];
-                    for (int i = 0;i< imgPaths.length;i++)
-                        imgPaths[i] = Util.UriAbsPath(this,clipData.getItemAt(i).getUri());
-                }
                 Intent intent = new Intent(this, UploadPostActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putStringArray("EXTRA_IMG_PATHS",imgPaths);
-                Log.d("asd", "img path : " + imgPaths[0]);
+                try {
+                    bundle.putStringArray("EXTRA_IMG_PATHS",getImgPaths(data));
+                } catch (IOException e) {
+                    Toast.makeText(this, "Error Reading ImageFile", Toast.LENGTH_LONG).show();
+                    finish();
+                }
                 intent.putExtras(bundle);
                 startActivityForResult(intent,UPLOAD_POST_COMPLETED);
                 return;
             case UPLOAD_POST_COMPLETED:
+                Toast.makeText(this, "Uploading Post", Toast.LENGTH_SHORT).show();
                 finish();
         }
         super.onActivityResult(requestCode,resultCode,data);
+    }
+
+    private String[] getImgPaths(Intent data) throws IOException {
+        String[] imgPaths;
+
+        ClipData clipData = data.getClipData();
+        if (clipData != null){//USER SELECTED MORE THAN ONE IMAGE
+            imgPaths = new String[clipData.getItemCount()];
+
+            for (int i = 0; i < imgPaths.length;i++){
+                ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(clipData.getItemAt(i).getUri(), "r", null);
+                FileInputStream inputStream = new FileInputStream(parcelFileDescriptor.getFileDescriptor());
+                File file = new File(getCacheDir(),Util.generateUniqueId());
+
+                FileOutputStream outputStream = new  FileOutputStream(file);
+                FileUtils.copy(inputStream,outputStream);
+                imgPaths[i] = file.getAbsolutePath();
+            }
+        }
+        else //USER SELECTS MULTIPLE IMAGES
+        {
+            imgPaths = new String[1];
+            ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(data.getData(), "r", null);
+            FileInputStream inputStream = new FileInputStream(parcelFileDescriptor.getFileDescriptor());
+            File file = new File(getCacheDir(),Util.generateUniqueId());
+            FileOutputStream outputStream = new  FileOutputStream(file);
+            FileUtils.copy(inputStream,outputStream);
+            imgPaths[0] = file.getAbsolutePath();
+        }
+
+        return imgPaths;
     }
 
 }

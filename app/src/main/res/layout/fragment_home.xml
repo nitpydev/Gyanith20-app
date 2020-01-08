@@ -36,16 +36,7 @@
                             android:layout_height="match_parent"
                             android:layout_marginStart="0dp"
                             android:layout_marginTop="0dp"
-                            android:layout_marginEnd="0dp"
-                            android:fadeScrollbars="true"
-                            android:fitsSystemWindows="true"
-                            app:fillColor="#FFFFFFFF"
-                            app:indicatorVisibility="gone"
-                            app:pageColor="#00000000"
-                            app:radius="6dp"
-                            app:slideInterval="3000"
-                            app:strokeColor="#FF777777"
-                            app:strokeWidth="1dp">
+                            android:layout_marginEnd="0dp">
 
                             <Space
                                 android:layout_width="wrap_content"

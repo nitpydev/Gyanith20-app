@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Noactionbar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.AddNotificationActivity"></activity>
+        <activity android:name=".activities.AddNotificationActivity" />
         <activity android:name=".activities.StartPostActivity" />
         <activity
             android:name=".activities.SpecificPostActivity"
@@ -28,7 +28,6 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "http://recipe-app.com/recipe" -->
                 <data
                     android:host="gyanith.com"
                     android:pathPrefix="/post"
@@ -36,7 +35,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.PostUploadService" />
+        <service android:name=".services.PostUploadService"
+            android:exported="false"/>
 
         <activity android:name=".activities.UploadPostActivity" />
         <activity android:name=".activities.RegisterActivity" />

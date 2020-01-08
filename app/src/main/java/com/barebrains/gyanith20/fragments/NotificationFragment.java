@@ -2,6 +2,7 @@ package com.barebrains.gyanith20.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.barebrains.gyanith20.activities.AddNotificationActivity;
+import com.barebrains.gyanith20.activities.MainActivity;
 import com.barebrains.gyanith20.adapters.notificationAdapter;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.NotificationItem;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.AppNotiManager;
 import com.barebrains.gyanith20.statics.NetworkManager;
 import com.google.firebase.database.DataSnapshot;
@@ -27,17 +30,26 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class NotificationFragment extends Fragment {
+public class NotificationFragment extends mFragment {
 
     public NotificationFragment() {
         // Required empty public constructor
+        markBadges(3);
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("asd","start");
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onStop() {
+        super.onStop();
+        Log.d("asd","stop");
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,5 +103,11 @@ public class NotificationFragment extends Fragment {
         });
 
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        AppNotiManager.removeNotificationListener(789);
     }
 }

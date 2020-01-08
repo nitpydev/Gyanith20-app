@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.multidex.MultiDexApplication;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -23,6 +24,7 @@ import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.statics.AppNotiManager;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
+import com.barebrains.gyanith20.statics.LikesSystem;
 import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.VolleyManager;
@@ -35,18 +37,26 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 
-public class gyanith20 extends Application {
+public class gyanith20 extends MultiDexApplication {
     public static final String PROGRESS_CHANNEL = "progress";
     @Override
     public void onCreate() {
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        VolleyManager.setRequestQueue(this);
-        NetworkManager.initialize(this);
+        //APP BASICS INITIATIONS
         setScreenOrientation();
         CreateProgressNotificationChannel();
-        AppNotiManager.initNotifications();
-        HandleUserManagement();
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        //NETWORKING INITIATIONS
+        VolleyManager.setRequestQueue(this);
+        NetworkManager.initialize(this);
         eventsManager.initialize(getApplicationContext());
+        AppNotiManager.initNotifications();
+        PostManager.StartListeningPostCount();
+
+        //USER SYSTEM INITIATIONS
+        HandleUserManagement();
+        LikesSystem.Initialize();
+
         super.onCreate();
     }
     private void setScreenOrientation(){
@@ -94,8 +104,6 @@ public class gyanith20 extends Application {
                 @Override
                 public void OnResult(GyanithUser gyanithUser) {
                     Log.d("asd","user return successful");
-                    if (gyanithUser != null && FirebaseAuth.getInstance().getCurrentUser() != null)
-                        PostManager.getInstance().Initialize();
                 }
 
                 @Override
