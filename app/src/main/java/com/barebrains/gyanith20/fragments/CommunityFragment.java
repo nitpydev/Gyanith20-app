@@ -1,11 +1,8 @@
 package com.barebrains.gyanith20.fragments;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,7 +21,6 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.barebrains.gyanith20.R;
-import com.barebrains.gyanith20.activities.MainActivity;
 import com.barebrains.gyanith20.activities.StartPostActivity;
 import com.barebrains.gyanith20.components.PostView;
 import com.barebrains.gyanith20.interfaces.AuthStateListener;
@@ -34,7 +29,6 @@ import com.barebrains.gyanith20.interfaces.NetworkStateListener;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.others.PostViewHolder;
 import com.barebrains.gyanith20.others.mFragment;
-import com.barebrains.gyanith20.services.PostUploadService;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.PostManager;
@@ -44,27 +38,21 @@ import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
 import com.firebase.ui.database.paging.LoadingState;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.polyak.iconswitch.IconSwitch;
-
-import static com.barebrains.gyanith20.services.PostUploadService.*;
 
 public class CommunityFragment extends mFragment {
 
 
     ShimmerFrameLayout initLoader;
-    View root;
-    SwipeRefreshLayout hotRefresh;
-    SwipeRefreshLayout trendRefresh;
+    private View root;
+    private SwipeRefreshLayout hotRefresh;
+    private SwipeRefreshLayout trendRefresh;
 
 
-    public CommunityFragment() {
-        // Required empty public constructor
+    private CommunityFragment() {
         markBadges(4);
     }
 
@@ -74,6 +62,7 @@ public class CommunityFragment extends mFragment {
         syncWithPostService(new CompletionListener(){
             @Override
             public void OnComplete() {
+                Log.d("asd","Completed");
                 if (root != null)
                 Snackbar.make(root,"Posted Successfully !", BaseTransientBottomBar.LENGTH_LONG)
                 .setAction("REFRESH FEED", new View.OnClickListener() {
@@ -90,6 +79,7 @@ public class CommunityFragment extends mFragment {
 
             @Override
             public void OnError(String error) {
+                Log.d("asd","Error : " + error);
                 if (root != null)
                     Snackbar.make(root,error,BaseTransientBottomBar.LENGTH_SHORT).show();
             }
@@ -190,6 +180,15 @@ public class CommunityFragment extends mFragment {
 
         viewPager.setOffscreenPageLimit(1);
         viewPager.setAdapter(new FeedsPagerAdapter(this));
+    }
+
+    //SINGLETON
+    private static CommunityFragment instance;
+
+    public static CommunityFragment getInstance(){
+        if (instance == null)
+            instance = new CommunityFragment();
+        return instance;
     }
 }
 
@@ -308,7 +307,16 @@ class FeedsPagerAdapter extends PagerAdapter{
 
         feed.setAdapter(adapter);
         feed.setHasFixedSize(true);
-        feed.setLayoutManager(new LinearLayoutManager(activity));
+        feed.setLayoutManager(new LinearLayoutManager(activity){
+            @Override
+            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+                try {
+                    super.onLayoutChildren(recycler, state);
+                } catch (IndexOutOfBoundsException e) {
+                    Log.e("TAG", "meet a IOOBE in RecyclerView");
+                }
+            }
+        });
         refreshFeed.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -325,6 +333,5 @@ class FeedsPagerAdapter extends PagerAdapter{
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view == object;
     }
-
 }
 

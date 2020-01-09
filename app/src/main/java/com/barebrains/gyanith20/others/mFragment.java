@@ -11,18 +11,13 @@ import androidx.annotation.CallSuper;
 import androidx.fragment.app.Fragment;
 
 import com.barebrains.gyanith20.activities.MainActivity;
-import com.barebrains.gyanith20.components.BotNavView;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
-import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.services.PostUploadService;
 
-import java.util.ArrayList;
-
-import javax.crypto.interfaces.PBEKey;
-
-public class mFragment extends Fragment{
+public abstract class mFragment extends Fragment{
 
     private boolean isShown = false;
+
 
     @Override
     public void onStart() {
@@ -38,6 +33,7 @@ public class mFragment extends Fragment{
         else
             onShow();
         updateMark();
+        updateBinding();
     }
 
     @CallSuper
@@ -78,13 +74,14 @@ public class mFragment extends Fragment{
     private boolean isListenerAdded = false;
 
     //Should be with onCreate()
-    public void syncWithPostService(CompletionListener listener){
+    protected void syncWithPostService(CompletionListener listener){
         this.listener = listener;
         bindingIntent = new Intent(getContext(), PostUploadService.class);
         serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 postBinder = (PostUploadService.PostBinder)iBinder;
+                Log.d("asd","Post Binded");
             }
 
             @Override

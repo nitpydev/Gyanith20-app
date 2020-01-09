@@ -1,8 +1,6 @@
 package com.barebrains.gyanith20.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,17 +18,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.BotNavView;
 import com.barebrains.gyanith20.fragments.CommunityFragment;
 import com.barebrains.gyanith20.fragments.FavouritesFragment;
 import com.barebrains.gyanith20.fragments.HomeFragment;
 import com.barebrains.gyanith20.fragments.NotificationFragment;
 import com.barebrains.gyanith20.fragments.ScheduleFragment;
-import com.barebrains.gyanith20.R;
-import com.barebrains.gyanith20.interfaces.ResultListener;
-import com.barebrains.gyanith20.models.NotificationItem;
-import com.barebrains.gyanith20.statics.AppNotiManager;
-import com.barebrains.gyanith20.statics.PostManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -40,8 +34,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private FragmentManager fragmentManager;
     public Fragment activeFragment;
-
-    private Fragment[] fragments = new Fragment[5];
 
     public static BotNavView botNav;
 
@@ -62,6 +54,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         title = findViewById(R.id.title);
         botNav = findViewById(R.id.navigation);
         botNav.setOnNavigationItemSelectedListener(this);
+
+        for (int i = 0; i<botNav.getMenu().size(); i++){
+            Fragment fragment = fragmentManager.findFragmentByTag(Integer.toString(i));
+                if (fragment != null){
+                    activeFragment = fragment;
+                    break;
+                }
+        }
+
+
+        if (activeFragment == null)
         botNav.setSelectedItemId(R.id.navigation_home);
 
         findViewById(R.id.account).setOnClickListener(new View.OnClickListener() {
@@ -76,11 +79,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         try {
-            Fragment fragment = fragments[item.getOrder()];
+            Fragment fragment = fragmentManager.findFragmentByTag(((Integer)item.getOrder()).toString());
             if (fragment == null)
                 initFragment(item.getOrder());
             else
-                setActiveFragment(item.getOrder());
+                setActiveFragment(fragment);
             title.setText(item.getTitle());
             return true;
 
@@ -91,8 +94,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
 
-    private void setActiveFragment(Integer order) {
-        Fragment fragment = fragments[order];
+    private void setActiveFragment(Fragment fragment) {
+
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.hide(activeFragment);
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     private void initFragment(Integer order) throws Exception {
-        Fragment fragment = (fragments[order] = getNewFragment(order));
+        Fragment fragment = getNewFragment(order);
 
         FragmentTransaction ft = fragmentManager.beginTransaction()
                 .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -137,15 +140,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private Fragment getNewFragment(int order) throws Exception{
         switch (order){
             case 0:
-                return new HomeFragment();
+                return HomeFragment.getInstance();
             case 1:
-                return new ScheduleFragment();
+                return ScheduleFragment.getInstance();
             case 2:
-                return new FavouritesFragment();
+                return FavouritesFragment.getInstance();
             case 3:
-                return new NotificationFragment();
+                return NotificationFragment.getInstance();
             case 4:
-                return new CommunityFragment();
+                return CommunityFragment.getInstance();
             default:
                 throw new Exception("No fragment defined for id");
         }

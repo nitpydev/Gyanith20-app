@@ -31,6 +31,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class NotificationFragment extends mFragment {
+    //SINGLETON
+    private static NotificationFragment instance;
+
+    public static NotificationFragment getInstance(){
+        if (instance == null)
+            instance = new NotificationFragment();
+        return instance;
+    }
+
 
     public NotificationFragment() {
         // Required empty public constructor

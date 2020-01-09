@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 
 import com.barebrains.gyanith20.activities.AboutActivity;
 import com.barebrains.gyanith20.activities.EventCategoriesActivity;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.others.mFragment;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.glide.slider.library.SliderLayout;
@@ -27,27 +27,21 @@ import com.google.firebase.storage.StorageReference;
 import java.util.List;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends mFragment {
+
+
+
     private long delay1 = 0;
     private long delay2 = 0;
     private SliderLayout imgSlider;
     private boolean urlLoaded;
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
+    private HomeFragment() { }
 
-
-    public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
 
@@ -65,6 +59,7 @@ public class HomeFragment extends Fragment {
                 .error(R.drawable.gyanith_error);
 
         StorageReference slidesFolderRef = FirebaseStorage.getInstance().getReference().child("/HomeImageSlides");
+
         slidesFolderRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
@@ -104,15 +99,6 @@ public class HomeFragment extends Fragment {
                 startActivity(i);
             }
         });
-
-
-
-
-        Intent n = new Intent("gyanith.notify");
-        getContext().sendBroadcast(n);
-
-
-
 
         ObjectAnimator wa = ObjectAnimator.ofFloat(w, "translationX", -300f, 0f);
         wa.setInterpolator(new DecelerateInterpolator());
@@ -181,5 +167,15 @@ public class HomeFragment extends Fragment {
             startActivity(i);
         }
     };
+
+    //SINGLETON
+    private static HomeFragment instance;
+
+    public static HomeFragment getInstance(){
+        if (instance == null)
+            instance = new HomeFragment();
+        return instance;
+    }
+
 }
 

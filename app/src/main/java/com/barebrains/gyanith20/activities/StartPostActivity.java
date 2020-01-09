@@ -25,6 +25,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class StartPostActivity extends AppCompatActivity {
+
+
+    private static final int MAX_IMAGES = 5;//CHANGE HERE FOR MAX LIMIT OF IMAGES
+
+
     private static final int UPLOAD_POST_COMPLETED = 18;
     private static final int PERMISSIONS_REQUEST = 25;
     private static final int IMAGE_GALLERY_CODE = 12;
@@ -107,9 +112,11 @@ public class StartPostActivity extends AppCompatActivity {
 
         ClipData clipData = data.getClipData();
         if (clipData != null){//USER SELECTED MORE THAN ONE IMAGE
-            imgPaths = new String[clipData.getItemCount()];
+            int imgCount = (clipData.getItemCount() >= MAX_IMAGES)?MAX_IMAGES:clipData.getItemCount();
 
-            for (int i = 0; i < imgPaths.length;i++){
+            imgPaths = new String[imgCount];
+
+            for (int i = 0; i < imgCount;i++){
                 ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(clipData.getItemAt(i).getUri(), "r", null);
                 FileInputStream inputStream = new FileInputStream(parcelFileDescriptor.getFileDescriptor());
                 File file = new File(getCacheDir(),Util.generateUniqueId());
@@ -119,7 +126,7 @@ public class StartPostActivity extends AppCompatActivity {
                 imgPaths[i] = file.getAbsolutePath();
             }
         }
-        else //USER SELECTS MULTIPLE IMAGES
+        else //USER SELECTS ONLY ONE IMAGES
         {
             imgPaths = new String[1];
             ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(data.getData(), "r", null);
