@@ -8,16 +8,8 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_post_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/fab"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:tint="#FFFFFF"
-        app:backgroundTint="@color/colorAccent"
-        app:layout_behavior=".others.MoveUpwardBehavior"
         app:srcCompat="@drawable/ic_baseline_add_24px" />
 
     <com.facebook.shimmer.ShimmerFrameLayout

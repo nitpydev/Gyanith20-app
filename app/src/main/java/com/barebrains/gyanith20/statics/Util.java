@@ -143,7 +143,7 @@ public class Util {
         }
     }
 
-private static String amPm(int i){
+public static String amPm(int i){
         if (i == 0)
             return "AM";
         else

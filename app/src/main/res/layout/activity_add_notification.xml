@@ -6,16 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".activities.AddNotificationActivity">
 
-    <Button
+    <ImageView
         android:id="@+id/notBackBtn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="top|left"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:background="?attr/homeAsUpIndicator"
+        style="@style/backbtn"
         android:backgroundTint="@android:color/white"
-        android:foreground="?attr/selectableItemBackground"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,8 +32,6 @@
             android:fontFamily="@font/sofiaprolight"
             android:gravity="center_horizontal"
             android:text="Notifications Admin"
-            android:textColor="@android:color/white"
-            android:textColorHint="@color/whitealpha"
             android:textSize="20sp" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -88,21 +80,9 @@
 
         <Button
             android:id="@+id/sendNotiBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/txtBtn"
             android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="17dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/curve"
-            android:backgroundTint="#191fcd"
-            android:fontFamily="@font/splight"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:padding="20dp"
             android:text="Send Notification"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

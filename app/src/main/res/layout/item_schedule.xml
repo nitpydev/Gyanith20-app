@@ -10,12 +10,13 @@
         android:orientation="vertical">
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btn"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
             app:cardBackgroundColor="@color/cardbg"
             app:cardCornerRadius="5dp">
 
@@ -38,9 +39,9 @@
                     android:id="@+id/divider"
                     android:layout_width="2dp"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:background="?android:attr/listDivider" />
 
                 <LinearLayout
@@ -78,8 +79,8 @@
                     android:layout_width="13dp"
                     android:layout_height="13dp"
                     android:layout_gravity="top|right"
-                    android:layout_marginRight="15dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp"
                     android:background="@android:drawable/radiobutton_off_background"
                     android:backgroundTint="@android:color/holo_green_light"
                     android:visibility="invisible" />

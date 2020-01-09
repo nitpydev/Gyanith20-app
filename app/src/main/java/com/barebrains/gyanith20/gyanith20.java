@@ -5,6 +5,7 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,9 +40,11 @@ import java.util.ArrayList;
 
 public class gyanith20 extends MultiDexApplication {
     public static final String PROGRESS_CHANNEL = "progress";
+    public static SharedPreferences sp;
     @Override
     public void onCreate() {
         //APP BASICS INITIATIONS
+        sp = getSharedPreferences(getString(R.string.package_name),MODE_PRIVATE);
         setScreenOrientation();
         CreateProgressNotificationChannel();
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);

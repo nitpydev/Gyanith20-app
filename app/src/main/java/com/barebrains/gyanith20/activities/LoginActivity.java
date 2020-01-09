@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -46,7 +47,8 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText uid,pwd;
     TextView signup;
-    Button signinBtn, backBtn;
+    Button signinBtn;
+    ImageButton backBtn;
     ProgressBar loginprog;
     Context cnt;
 

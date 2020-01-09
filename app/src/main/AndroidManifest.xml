@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/l2"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.Noactionbar"
+        android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".activities.AddNotificationActivity" />
         <activity android:name=".activities.StartPostActivity" />
@@ -47,7 +47,7 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name" />
-        <activity android:name=".activities.EventCategoriesActivity" />
+        <activity android:name=".activities.EventsListActivity" />
         <activity android:name=".activities.EventDetailsActivity" />
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.SignUpActivity" />

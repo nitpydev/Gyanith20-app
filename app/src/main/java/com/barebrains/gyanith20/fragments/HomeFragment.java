@@ -12,7 +12,7 @@ import android.view.animation.DecelerateInterpolator;
 import androidx.cardview.widget.CardView;
 
 import com.barebrains.gyanith20.activities.AboutActivity;
-import com.barebrains.gyanith20.activities.EventCategoriesActivity;
+import com.barebrains.gyanith20.activities.EventsListActivity;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.others.mFragment;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -161,7 +161,7 @@ public class HomeFragment extends mFragment {
     private View.OnClickListener eventCategoryClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent i = new Intent(getContext(), EventCategoriesActivity.class);
+            Intent i = new Intent(getContext(), EventsListActivity.class);
             i.putExtra("category", view.getTag().toString());
             i.putExtra("type", getResources().getResourceEntryName(view.getId()));
             startActivity(i);

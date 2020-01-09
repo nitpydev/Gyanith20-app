@@ -21,6 +21,7 @@ import com.barebrains.gyanith20.adapters.eventCategoriesAdapter;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.eventsManager;
 import com.google.firebase.database.DatabaseReference;
 
@@ -36,7 +37,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class FavouritesFragment extends Fragment {
+public class FavouritesFragment extends mFragment {
 
 
     eventCategoriesAdapter adapter;

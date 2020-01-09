@@ -2,12 +2,17 @@
 <resources>
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#232C3D</color>
-    <color name="colorAccent">#112BAD</color>
+    <color name="colorAccent">#191fcd</color>
     <color name="colorSecondaryAccent">#F71976</color>
     <color name="colorBackDrop">#141414</color>
     <color name="colorSecondaryBackDrop">#49546B</color>
     <color name="colorBackdropAccent">#1F1F1F</color>
+    <color name="colorTransparent">#00000000</color>
+    <color name="colorSecondary">#ffffff</color>
+    <color name="colorInactive">#96ffffff</color>
+    <color name="colorPrimaryLight">#3a3a3a</color>
 
+    <color name="txtColor">#ffffff</color>
     <color name="grey">#e9e6e6</color>
     <color name="blackbg">#020203</color>
     <color name="topb">#1E1E2E</color>
@@ -17,7 +22,6 @@
     <color name="redd">#ff0111</color>
     <color name="cardbg">#373748</color>
     <color name="unselected">#64FFFFFF</color>
-    <color name="txtColor">#ffffff</color>
     <color name="profile_tabs">#3F51B5</color>
     <color name="tint">#474747</color>
 </resources>

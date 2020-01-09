@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -48,9 +49,7 @@ public class CommunityFragment extends mFragment {
 
     ShimmerFrameLayout initLoader;
     private View root;
-    private SwipeRefreshLayout hotRefresh;
-    private SwipeRefreshLayout trendRefresh;
-
+    private FeedsPagerAdapter adapter;
 
     private CommunityFragment() {
         markBadges(4);
@@ -68,11 +67,8 @@ public class CommunityFragment extends mFragment {
                 .setAction("REFRESH FEED", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (hotRefresh != null && trendRefresh != null)
-                        {
-                            hotRefresh.setRefreshing(true);
-                            trendRefresh.setRefreshing(false);
-                        }
+                      if (adapter!= null)
+                          adapter.refresh();
                     }
                 }).show();
             }
@@ -90,9 +86,6 @@ public class CommunityFragment extends mFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_community,container,false);
-
-        hotRefresh = root.findViewById(R.id.hot_refreshFeed);
-        trendRefresh = root.findViewById(R.id.trend_refreshFeed);
 
         initLoader = root.findViewById(R.id.empty_loader);
         final View addPostBtn = root.findViewById(R.id.add_post_btn);
@@ -179,7 +172,7 @@ public class CommunityFragment extends mFragment {
         });
 
         viewPager.setOffscreenPageLimit(1);
-        viewPager.setAdapter(new FeedsPagerAdapter(this));
+        viewPager.setAdapter((adapter = new FeedsPagerAdapter(this)));
     }
 
     //SINGLETON
@@ -202,6 +195,19 @@ class FeedsPagerAdapter extends PagerAdapter{
             .setPageSize(2)
             .build();
 
+
+    private FirebaseRecyclerPagingAdapter<Post, PostViewHolder> hotAdapter;
+    private FirebaseRecyclerPagingAdapter<Post, PostViewHolder> trendAdapter;
+
+    public void refresh(){
+        if (hotAdapter != null && trendAdapter != null) {
+            hotAdapter.refresh();
+            trendAdapter.refresh();
+        }
+    }
+
+
+
     FeedsPagerAdapter(CommunityFragment parent){
         this.activity = parent.getActivity();
         lifecycleOwner = parent.getViewLifecycleOwner();
@@ -216,12 +222,12 @@ class FeedsPagerAdapter extends PagerAdapter{
             case 0:
                 resId = R.id.hot_feed_page;
                 Query query = FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("time");
-                SetUpFeed(R.id.hot_feed,R.id.hot_refreshFeed,R.id.h_es,query);
+                hotAdapter = SetUpFeed(R.id.hot_feed,R.id.hot_refreshFeed,R.id.h_es,query);
                 break;
             case 1:
                 resId = R.id.trend_feed_page;
                 Query trendquery = FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("likes");
-                SetUpFeed(R.id.trend_feed,R.id.trend_refreshFeed,R.id.t_es,trendquery);
+                trendAdapter = SetUpFeed(R.id.trend_feed,R.id.trend_refreshFeed,R.id.t_es,trendquery);
                 break;
         }
         return activity.findViewById(resId);
@@ -229,7 +235,7 @@ class FeedsPagerAdapter extends PagerAdapter{
 
 
 
-    private void SetUpFeed(int feedId, int refreshFeedId,int es_id,Query query){
+    private FirebaseRecyclerPagingAdapter<Post, PostViewHolder> SetUpFeed(int feedId, int refreshFeedId,int es_id,Query query){
         final ProgressBar loadFeed = activity.findViewById(R.id.progressBar);
         RecyclerView feed = activity.findViewById(feedId);
         final View es = activity.findViewById(es_id);
@@ -323,6 +329,7 @@ class FeedsPagerAdapter extends PagerAdapter{
                 adapter.refresh();
             }
         });
+        return adapter;
     }
     @Override
     public int getCount() {

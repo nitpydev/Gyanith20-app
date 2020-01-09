@@ -36,7 +36,7 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        ((Button)findViewById(R.id.backabt)).setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.backabt)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -44,10 +44,10 @@ public class AboutActivity extends AppCompatActivity {
         });
         db= FirebaseDatabase.getInstance().getReference().child("misc");
         fb=FirebaseDatabase.getInstance().getReference().child("feedback");
-        final FloatingActionButton main=(FloatingActionButton)findViewById(R.id.mainbut);
-        final FloatingActionButton share=(FloatingActionButton)findViewById(R.id.sharebut);
-        final FloatingActionButton directions=(FloatingActionButton)findViewById(R.id.direcbut);
-        final FloatingActionButton feed=(FloatingActionButton)findViewById(R.id.feebut);
+        final FloatingActionButton main= findViewById(R.id.mainbut);
+        final FloatingActionButton share= findViewById(R.id.sharebut);
+        final FloatingActionButton directions= findViewById(R.id.direcbut);
+        final FloatingActionButton feed= findViewById(R.id.feebut);
         fontt=Typeface.createFromAsset(getAssets(),"fonts/sofiaprolight.otf");
         font=Typeface.createFromAsset(getAssets(),"fonts/pnreg.otf");
 
@@ -102,8 +102,8 @@ public class AboutActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                       String key=fb.push().getKey();
                       View v=getLayoutInflater().inflate(R.layout.feedlay,null);
-                      RatingBar r=(RatingBar)v.findViewById(R.id.rating);
-                      EditText f=(EditText)v.findViewById(R.id.feedin) ;
+                      RatingBar r= v.findViewById(R.id.rating);
+                      EditText f= v.findViewById(R.id.feedin);
                       fb.child(key).child("comment").setValue(f.getText().toString());
                       fb.child(key).child("rating").setValue(r.getNumStars());
                         Snackbar.make(findViewById(R.id.ll),"Thanks for giving your feedback",Snackbar.LENGTH_LONG).show();
@@ -194,21 +194,21 @@ public class AboutActivity extends AppCompatActivity {
 
         });
 
-        ((Button)findViewById(R.id.button3)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent w=new Intent(Intent.ACTION_VIEW,Uri.parse(furl));
                 startActivity(w);
             }
         });
-        ((Button)findViewById(R.id.button4)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent w=new Intent(Intent.ACTION_VIEW,Uri.parse(iurl));
                 startActivity(w);
             }
         });
-        ((Button)findViewById(R.id.button5)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button5).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent w=new Intent(Intent.ACTION_VIEW,Uri.parse(wurl));

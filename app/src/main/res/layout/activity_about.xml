@@ -7,103 +7,15 @@
     android:background="@drawable/abbg1"
     tools:context="activities.AboutActivity">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/sharebut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:clickable="true"
-        android:tint="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="?attr/actionModeShareDrawable" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/direcbut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:clickable="true"
-        android:tint="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/ic_baseline_near_me_24px" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/feebut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:clickable="true"
-        android:tint="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/ic_baseline_create_24px" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/mainbut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:clickable="true"
-        android:tint="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/ic_baseline_add_24px" />
-
-    <Button
-        android:id="@+id/backabt"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="10dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="?attr/homeAsUpIndicator"
-        android:backgroundTint="#FFFFFF"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:id="@+id/ll"
@@ -119,7 +31,6 @@
                 android:fontFamily="@font/sofiaprolight"
                 android:gravity="center"
                 android:text="NIT PUDUCHERRY"
-                android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
             <TextView
@@ -129,7 +40,6 @@
                 android:fontFamily="@font/sofiaprolight"
                 android:gravity="center"
                 android:text="Gyanith 20"
-                android:textColor="@android:color/white"
                 android:textSize="40sp" />
 
             <TextView
@@ -150,7 +60,6 @@
                 android:layout_margin="10dp"
                 android:fontFamily="@font/pnreg"
                 android:text="Gyanith "
-                android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
             <TextView
@@ -161,7 +70,6 @@
                 android:fontFamily="@font/sofiaprolight"
                 android:gravity="center"
                 android:text="Connect with us"
-                android:textColor="@android:color/white"
                 android:textSize="20sp" />
 
             <LinearLayout
@@ -172,29 +80,86 @@
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <Button
+                <ImageView
                     android:id="@+id/button3"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
                     android:background="@drawable/fbicon" />
 
-                <Button
+                <ImageView
                     android:id="@+id/button4"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_margin="10dp"
                     android:background="@drawable/insta" />
 
-                <Button
+                <ImageView
                     android:id="@+id/button5"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_margin="10dp"
                     android:background="@drawable/webicon"
                     android:backgroundTint="@android:color/white" />
             </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/sharebut"
+        style="@style/fab"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="?attr/actionModeShareDrawable" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/direcbut"
+        style="@style/fab"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/ic_baseline_near_me_24px" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/feebut"
+        style="@style/fab"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/ic_baseline_create_24px" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/mainbut"
+        style="@style/fab"
+        android:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/ic_baseline_add_24px" />
+
+    <ImageView
+        android:id="@+id/backabt"
+        style="@style/backbtn"
+        android:backgroundTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

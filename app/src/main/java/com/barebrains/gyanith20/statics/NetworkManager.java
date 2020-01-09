@@ -84,7 +84,8 @@ public class NetworkManager {
         listenersUnmapped.remove(listener);
     }
     public void removeListener(Integer code){
-        listeners.remove(code);
+        if (listeners.containsKey(code))
+            listeners.remove(code);
     }
 
     private void respondListeners(boolean isAvailable){
