@@ -17,12 +17,14 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.models.EventItem;
+import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -50,16 +52,11 @@ public class EventDetailsActivity extends AppCompatActivity {
     Button backBtn;
     String tab1,tab2,tab3;
     Context context;
+    String id="", tm, cost;
 
-    String id="",cost;
 
     AlertDialog.Builder a;
     AlertDialog vi;
-
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +80,10 @@ public class EventDetailsActivity extends AppCompatActivity {
         desc=findViewById(R.id.evedesc);
         dtab=findViewById(R.id.dtab);
         context =this;
+         cost = eventItem.cost;
+
+
+        if(eventItem.max_ptps == null){tm = "1";}else{tm = eventItem.max_ptps;}
 
         eveimage= findViewById(R.id.eveimv);
         favtb=findViewById(R.id.favButton);
@@ -108,13 +109,12 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         title.setText(eventItem.name);
 
-        tab1 = eventItem.des;
+        if(eventItem.des == null){tab1 = "";}else{tab1 = eventItem.des;}
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            desc.setText(Html.fromHtml(eventItem.des,Html.FROM_HTML_MODE_LEGACY));
+            desc.setText(Html.fromHtml(tab1,Html.FROM_HTML_MODE_LEGACY));
         else
-            desc.setText(Html.fromHtml(eventItem.des));
-        id =
-        cost = eventItem.cost;
+            desc.setText(Html.fromHtml(tab1));
+
         if(cost != null)
             desc.append("\nRegistration Cost : Rs." + cost + " per person");
 
@@ -174,9 +174,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                     {
                         desc.setText(Html.fromHtml(tab1));
                     }
+                    if(cost != null)
+                        desc.append("\nRegistration Cost : Rs." + cost + " per person");
 
-                    if(!cost.equals("null"))
-                    desc.append("\nRegistration Cost : Rs." + cost + " per person");
                 }
                 if(a==1){
                     desc.setText(tab2);
@@ -204,16 +204,6 @@ public class EventDetailsActivity extends AppCompatActivity {
 
 
 
-
-        reg = FirebaseDatabase.getInstance().getReference().child(catType).child(eventId);
-
-        reg.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                String tm="1";
-                try {
-                    tm = dataSnapshot.child("tm").getValue().toString();
-                }catch(Exception e){}
                 Button[] b = new Button[2];
                 LinearLayout linlay = new LinearLayout(context);
                 linlay.setOrientation(LinearLayout.VERTICAL);
@@ -227,19 +217,18 @@ public class EventDetailsActivity extends AppCompatActivity {
                     b[i].setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(GyanithUserManager.getCurrentUser() != null){
                             Intent intent = new Intent(context, RegisterActivity.class);
-                            try {
-                                id = dataSnapshot.child("id").getValue().toString();
-                                id = id.substring(3 * i1, 3 * (i1 + 1));
-                            }
-                            catch(Exception e){}
-                            intent.putExtra("id", id);
+                            intent.putExtra("id", eventId);
                             intent.putExtra("token", "");
                             if (eventId.equals("W7"))
                                 intent.putExtra("ex", eventId);
                             else
                                 intent.putExtra("ex", "");
-                            startActivity(intent);
+                            startActivity(intent);}
+                            else{
+                                Toast.makeText(context, "please login to register", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
                 }
@@ -247,17 +236,6 @@ public class EventDetailsActivity extends AppCompatActivity {
                 a.setTitle("Register");
                 a.setView(linlay);
                 vi=a.create();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        });
-
-
-
 
 
 
