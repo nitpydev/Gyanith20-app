@@ -24,7 +24,7 @@ public class ScheduleFragment extends Fragment {
     private PagerAdapter pagerAdapter;
     private static View gone;
 
-    public ScheduleFragment() {
+    private ScheduleFragment() {
         // Required empty public constructor
     }
 
@@ -117,6 +117,15 @@ public class ScheduleFragment extends Fragment {
     public static void gone(){
         ((ProgressBar)gone.findViewById(R.id.schload)).setVisibility(View.GONE);
         //((TextView)gone.findViewById(R.id.up)).setVisibility(View.GONE);
+    }
+
+    //SINGLETON
+    private static ScheduleFragment instance;
+
+    public static ScheduleFragment getInstance(){
+        if (instance == null)
+            instance = new ScheduleFragment();
+        return instance;
     }
 
 }

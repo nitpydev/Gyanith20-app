@@ -40,22 +40,7 @@ import java.util.Map;
 
 public class GyanithUserManager {
 
-    private static GyanithUserManager instance;
-
     private static GyanithUser loggedUser;
-
-    public static GyanithUserManager getInstance() {
-
-        if (instance == null)
-            instance = new GyanithUserManager();
-
-        if (instance.userStateListeners == null)
-            instance.userStateListeners = new HashMap<>();
-
-        if (instance.userStateListenersUnMapped == null)
-            instance.userStateListenersUnMapped = new ArrayList<>();
-        return instance;
-    }
 
     public static GyanithUser getCurrentUser() {
         return loggedUser;
@@ -252,7 +237,7 @@ public class GyanithUserManager {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            PostManager.getInstance().Initialize();
+                           // PostManager.Initialize();
                             return;
                         }
 
@@ -344,8 +329,8 @@ public class GyanithUserManager {
         return true;
     }
 
-    private Map<Integer, AuthStateListener> userStateListeners;
-    private ArrayList<AuthStateListener> userStateListenersUnMapped;
+    private static Map<Integer, AuthStateListener> userStateListeners = new HashMap<>();
+    private static ArrayList<AuthStateListener> userStateListenersUnMapped = new ArrayList<>();
 
     public static void addAuthStateListner(Integer code, AuthStateListener listener){
         listener.onChange();
@@ -353,15 +338,15 @@ public class GyanithUserManager {
             listener.NullUser();
         else
             listener.VerifiedUser();
-        getInstance().userStateListeners.put(code,listener);
+        userStateListeners.put(code,listener);
     }
 
     public static void removeAuthStateListener(Integer code){
-        getInstance().userStateListeners.remove(code);
+        userStateListeners.remove(code);
     }
 
     public static void removeAuthStateListener(AuthStateListener listener){
-        getInstance().userStateListenersUnMapped.remove(listener);
+        userStateListenersUnMapped.remove(listener);
     }
 
     public static void addAuthStateListener(AuthStateListener listener){
@@ -370,18 +355,18 @@ public class GyanithUserManager {
             listener.NullUser();
         else
             listener.VerifiedUser();
-        getInstance().userStateListenersUnMapped.add(listener);
+        userStateListenersUnMapped.add(listener);
     }
 
     private static void AuthStateChanged(){
-        for (AuthStateListener listener : getInstance().userStateListeners.values()) {
+        for (AuthStateListener listener : userStateListeners.values()) {
             listener.onChange();
             if (loggedUser == null)
                 listener.NullUser();
             else
                 listener.VerifiedUser();
         }
-        for (AuthStateListener listener : getInstance().userStateListenersUnMapped) {
+        for (AuthStateListener listener : userStateListenersUnMapped) {
             listener.onChange();
             if (loggedUser == null)
                 listener.NullUser();

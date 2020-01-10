@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -13,7 +13,7 @@
         <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="AppTheme.Noactionbar" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme.Noactionbar" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -21,6 +21,29 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/colorBackDrop</item>
         <item name="android:fontFamily">@font/poppinsr</item>
+    </style>
+
+    <style name="GlideSliderCardStyle" parent="Base.CardView">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="GlideSliderBackgroundStyle">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/glide_slider_background_color</item>
+    </style>
+
+    <style name="GlideSliderImageStyle">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_margin">14dp</item>
+    </style>
+
+    <style name="GlideSliderLoadingStyle" parent="Base.Widget.AppCompat.ProgressBar">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_centerInParent">true</item>
     </style>
 
 </resources>

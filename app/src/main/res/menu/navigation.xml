@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/nav_home_selector"
-        android:title="@string/title_home" />
+        android:icon="@drawable/ic_home"
+        android:title="@string/topbar_home"
+        android:orderInCategory="0"/>
 
     <item
         android:id="@+id/navigation_schedule"
-        android:icon="@drawable/nav_shedule_selector"
-        android:title="@string/title_dashboard" />
+        android:icon="@drawable/ic_shedule"
+        android:title="@string/topbar_schedule"
+        android:orderInCategory="1"/>
     <item
         android:id="@+id/navigation_favourites"
-        android:icon="@drawable/nav_fav_selector"
-        android:title="fav" />
-
+        android:icon="@drawable/ic_heart_filled"
+        android:title="@string/topbar_favourites"
+        android:orderInCategory="2"/>
 
     <item
         android:id="@+id/navigation_notifications"
-        android:icon="@drawable/nav_not_selector"
-        android:title="@string/title_notifications" />
+        android:icon="@drawable/ic_notification"
+        android:title="@string/topbar_notification"
+        android:orderInCategory="3"/>
 
     <item
         android:id="@+id/navigation_community"
-        android:icon="@drawable/nav_people_selector"
-        android:title="@string/title_notifications" />
+        android:icon="@drawable/ic_community"
+        android:title="@string/topbar_community"
+        android:orderInCategory="4"/>
 
 </menu>

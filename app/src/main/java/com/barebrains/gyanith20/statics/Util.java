@@ -10,8 +10,16 @@ import android.text.method.DateTimeKeyListener;
 import android.util.Log;
 import android.util.Pair;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.models.EventItem;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -29,6 +37,56 @@ import java.util.Date;
 import java.util.List;
 
 public class Util {
+
+    public static Transaction.Handler incrementer = new Transaction.Handler() {
+        @NonNull
+        @Override
+        public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+            Long p = mutableData.getValue(Long.class);
+            if (p == null) {
+                return Transaction.success(mutableData);
+            }
+            p++;
+
+            if (p < 0)
+                p = 0L;
+            // Set value and report transaction success
+            mutableData.setValue(p);
+            return Transaction.success(mutableData);
+        }
+
+        @Override
+        public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+        }
+    };
+
+    public static Transaction.Handler decrementer = new Transaction.Handler() {
+        @NonNull
+        @Override
+        public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+            Long p = mutableData.getValue(Long.class);
+            if (p == null) {
+                return Transaction.success(mutableData);
+            }
+            p--;
+            if (p < 0)
+                p = 0L;
+            // Set value and report transaction success
+            mutableData.setValue(p);
+            return Transaction.success(mutableData);
+        }
+
+        @Override
+        public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+        }
+    };
+
+    public static String generateUniqueId(){
+        return FirebaseDatabase.getInstance().getReference().push().getKey();
+    }
+
     public static String timeToDate(String time)
     {
         String date;

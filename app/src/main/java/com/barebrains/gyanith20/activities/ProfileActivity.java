@@ -46,6 +46,7 @@ import com.android.volley.toolbox.Volley;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.adapters.eventCategoriesAdapter;
 import com.barebrains.gyanith20.components.PostView;
+import com.barebrains.gyanith20.interfaces.AuthStateListener;
 import com.barebrains.gyanith20.interfaces.NetworkStateListener;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.EventItem;
@@ -61,9 +62,12 @@ import com.firebase.ui.database.paging.DatabasePagingOptions;
 import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
 import com.firebase.ui.database.paging.LoadingState;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.WriterException;
 
 import java.util.ArrayList;
@@ -89,6 +93,34 @@ public class ProfileActivity extends AppCompatActivity {
 
     boolean userInfoBackReserved,qrBackReserved;
 
+    //Variables for the workaround of infinite scroll issue with firebase recycler paging Adapter
+    private int userPostCount = 0;
+    private DatabaseReference postRef = FirebaseDatabase.getInstance().getReference().child("postCount");
+    private ValueEventListener valueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            userPostCount = dataSnapshot.getValue(Integer.class);
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        postRef.keepSynced(true);
+        postRef.addValueEventListener(valueEventListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        postRef.removeEventListener(valueEventListener);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +132,6 @@ public class ProfileActivity extends AppCompatActivity {
         ((ViewGroup) findViewById(R.id.profile_root)).getLayoutTransition()
                 .enableTransitionType(LayoutTransition.CHANGING);
 
-        PostManager.getInstance().setSnackbarParent((ViewGroup) findViewById(R.id.profile_root));
         userInfoPanel = findViewById(R.id.userinfo_panel);
         profileCard = findViewById(R.id.profile_card);
         qrCard = findViewById(R.id.qr_card);
@@ -119,6 +150,8 @@ public class ProfileActivity extends AppCompatActivity {
         SetupUIwithData(GyanithUserManager.getCurrentUser());
         ViewPager viewPager = findViewById(R.id.profile_viewpager);
         SetupViewPager(viewPager);
+
+        //Setting up tabs
         TabLayout tabLayout = findViewById(R.id.htab_tabs);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setText("WORKSHOPS");
@@ -175,7 +208,7 @@ public class ProfileActivity extends AppCompatActivity {
             private final PagedList.Config config = new PagedList.Config.Builder()
                     .setEnablePlaceholders(false)
                     .setPrefetchDistance(1)
-                    .setPageSize(3)
+                    .setPageSize(2)
                     .build();
 
             @Override
@@ -283,6 +316,9 @@ public class ProfileActivity extends AppCompatActivity {
                 Query query = FirebaseDatabase.getInstance().getReference().child("users")
                         .child(GyanithUserManager.getCurrentUser().gyanithId)
                         .child("posts").orderByChild("time");
+
+                query.keepSynced(true);
+
                 RecyclerView feed = findViewById(R.id.profile_feed);
                 final View loadFeed = findViewById(R.id.profile_feed_load);
                 final SwipeRefreshLayout refreshFeed = findViewById(R.id.profile_feed_refresh);
@@ -295,15 +331,8 @@ public class ProfileActivity extends AppCompatActivity {
                 final FirebaseRecyclerPagingAdapter<Post, PostViewHolder> adapter = new FirebaseRecyclerPagingAdapter<Post, PostViewHolder>(options) {
 
                     @Override
-                    public void init() {
-                        super.init();
-                    }
-
-                    @Override
                     protected void onBindViewHolder(@NonNull final PostViewHolder viewHolder, int position, @NonNull Post model) {
                         viewHolder.postView.SetPost(ProfileActivity.this,model);
-                        PostManager.getInstance().AddLikeStateChangedLister(model.postId
-                                ,viewHolder.postView.getLikeChangedListener());
                     }
 
                     @NonNull
@@ -315,7 +344,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                     @Override
                     public int getItemCount() {
-                        return (PostManager.userPostCount < super.getItemCount())?PostManager.userPostCount:super.getItemCount();
+                        return (userPostCount < super.getItemCount())?userPostCount:super.getItemCount();
                     }
 
                     @Override
@@ -323,9 +352,11 @@ public class ProfileActivity extends AppCompatActivity {
                         switch (state){
                             case LOADING_INITIAL:
                                 refreshFeed.setRefreshing(false);
+                                findViewById(R.id.up_es).setVisibility(View.GONE);
                                 break;
                             case LOADING_MORE:
                                 loadFeed.setVisibility(View.VISIBLE);
+                                findViewById(R.id.up_es).setVisibility(View.GONE);
                                 break;
                             case LOADED:
                                 refreshFeed.setRefreshing(false);
@@ -339,6 +370,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 break;
                             case FINISHED:
                                 loadFeed.setVisibility(View.GONE);
+                                findViewById(R.id.up_es).setVisibility(View.GONE);
                                 refreshFeed.setRefreshing(false);
                                 Toast.makeText(ProfileActivity.this, "Reached end of Posts", Toast.LENGTH_SHORT).show();
                                 break;
@@ -350,11 +382,12 @@ public class ProfileActivity extends AppCompatActivity {
                         super.onError(databaseError);
                         if (!NetworkManager.getInstance().isNetAvailable())
                             Toast.makeText(ProfileActivity.this, "Could'nt Refresh feed", Toast.LENGTH_SHORT).show();
+                        loadFeed.setVisibility(View.GONE);
+                        refreshFeed.setRefreshing(false);
+                        findViewById(R.id.up_es).setVisibility(View.VISIBLE);
                         Log.d("asd","dbError : " + databaseError.getCode() + " " + databaseError.getMessage());
                     }
                 };
-                PostManager.getInstance().setRefreshs(adapter);
-
                 feed.setAdapter(adapter);
                 feed.setHasFixedSize(true);
                 feed.setLayoutManager(new LinearLayoutManager(ProfileActivity.this));

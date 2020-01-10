@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':glideSlider'
 rootProject.name='Gyanith20'

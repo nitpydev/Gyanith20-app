@@ -42,7 +42,7 @@ public class FavouritesFragment extends Fragment {
     eventCategoriesAdapter adapter;
     SharedPreferences sp;
 
-    public FavouritesFragment() {
+    private FavouritesFragment() {
         // Required empty public constructor
     }
 
@@ -110,5 +110,14 @@ public class FavouritesFragment extends Fragment {
             }
         });
 
+    }
+
+    //SINGLETON
+    private static FavouritesFragment instance;
+
+    public static FavouritesFragment getInstance(){
+        if (instance == null)
+            instance = new FavouritesFragment();
+        return instance;
     }
 }

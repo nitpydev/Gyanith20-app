@@ -1,5 +1,7 @@
 package com.barebrains.gyanith20.models;
 
+import android.widget.ListView;
+
 import java.util.List;
 
 public class Post {
@@ -10,7 +12,6 @@ public class Post {
     public String caption;
     public List<String> imgIds;
     public long likes;
-    public long shares;
 
     public Post(String postId,String username,String gyanithId, long time, String caption, List<String> imgIds)
     {
@@ -21,7 +22,6 @@ public class Post {
         this.caption = caption;
         this.imgIds = imgIds;
         likes = 0;
-        shares = 0;
     }
 
     public Post(){}

@@ -11,15 +11,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:clickable="false"
+        android:longClickable="false"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="40dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="false"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:longClickable="false"
             app:cardBackgroundColor="@color/cardbg"
             app:cardCornerRadius="10dp"
             app:cardElevation="0dp">
@@ -28,12 +36,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
+                android:clickable="false"
+                android:longClickable="false"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
+                    android:clickable="false"
+                    android:longClickable="false"
                     android:orientation="horizontal">
 
                     <TextView
@@ -64,7 +76,9 @@
                     android:id="@+id/notificationText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clickable="false"
                     android:fontFamily="@font/pnreg"
+                    android:linksClickable="false"
                     android:text="Hi there, This is a sample notification from developers, but a little long to see how text flows multiple lines"
                     android:textColor="@android:color/white"
                     android:textSize="18sp" />
