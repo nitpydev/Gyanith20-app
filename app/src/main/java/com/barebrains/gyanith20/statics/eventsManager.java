@@ -168,7 +168,7 @@ public class eventsManager {
     }
 
     //Fetches reg events ids
-    private static EventItem[] getEventItemsFromCache(){
+    public static EventItem[] getEventItemsFromCache(){
         String response = sp.getString(allEventsKey,"");
         if (response.equals(""))
             return null;
