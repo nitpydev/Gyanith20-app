@@ -14,6 +14,8 @@
         <item name="android:fontFamily">@font/poppinsr</item>
         <item name="android:windowBackground">?colorPrimaryDark</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryLight</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+
 
     </style>
 
@@ -30,11 +32,11 @@
     </style>
 
 
-    <style name="textfieldstyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+    <style name="textfieldstyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
         <item name="boxStrokeColor">@color/colorAccent</item>
-        <item name="boxStrokeWidth">2dp</item>
-        <item name="hintTextColor">@color/colorAccent</item>
-    </style>
+        <item name="boxBackgroundMode">filled</item>
+        <item name="boxBackgroundColor">@color/colorBackDrop</item>
+    </style>s
 
     <style name="backbtn" parent="Widget.AppCompat.ImageButton">
         <item name="android:layout_width">40dp</item>

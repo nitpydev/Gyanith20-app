@@ -183,9 +183,7 @@ public class ScheduleFragment extends mFragment {
             TextView time = view.findViewById(R.id.time);
             TextView title = view.findViewById(R.id.title);
             TextView venue = view.findViewById(R.id.venue);
-            View btn = view.findViewById(R.id.btn);
             View live = view.findViewById(R.id.liveindicator);
-
             time.setText(formatTime(data.start_time));
             title.setText(data.title);
             venue.setText(data.venue);
@@ -195,16 +193,6 @@ public class ScheduleFragment extends mFragment {
             else
                 live.setVisibility(View.INVISIBLE);
 
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (data.id != null){
-                        Intent intent = new Intent(getContext(), EventDetailsActivity.class);
-                        intent.putExtra("EXTRA_ID",data.id);
-                        getContext().startActivity(intent);
-                    }
-                }
-            });
         }
 
         @Override
