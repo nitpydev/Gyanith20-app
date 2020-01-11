@@ -128,6 +128,13 @@ public class ProfileActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             getWindow().setStatusBarColor(getResources().getColor(android.R.color.white));
         }
+
+        if(GyanithUserManager.getCurrentUser() == null) {
+            GyanithUserManager.resolveUserState(getApplicationContext());
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_profile);
         ((ViewGroup) findViewById(R.id.profile_root)).getLayoutTransition()
                 .enableTransitionType(LayoutTransition.CHANGING);
@@ -155,8 +162,9 @@ public class ProfileActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.htab_tabs);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setText("WORKSHOPS");
-        tabLayout.getTabAt(1).setText("Technical Events");
-        tabLayout.getTabAt(2).setText("Community Posts");
+        tabLayout.getTabAt(1).setText("Technical");
+        tabLayout.getTabAt(2).setText("Community");
+
     }
 
     private void SetupUIwithData(GyanithUser user){

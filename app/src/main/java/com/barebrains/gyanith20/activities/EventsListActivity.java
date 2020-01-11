@@ -22,10 +22,9 @@ import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.eventsManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
-public class EventCategoriesActivity extends AppCompatActivity {
+public class EventsListActivity extends AppCompatActivity {
 
     ArrayList<EventItem> eventItems;
 
@@ -66,7 +65,7 @@ public class EventCategoriesActivity extends AppCompatActivity {
                 ,emptyState
                 ,progress
                 ,eventItems
-                ,EventCategoriesActivity.this);
+                , EventsListActivity.this);
         eventListView.setAdapter(adapter);
 
         NetworkManager.getInstance().addListener(8448,new NetworkStateListener(){
@@ -89,7 +88,7 @@ public class EventCategoriesActivity extends AppCompatActivity {
 
                     @Override
                     public void OnError(String error) {
-                        Toast.makeText(EventCategoriesActivity.this, error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EventsListActivity.this, error, Toast.LENGTH_SHORT).show();
                     }
                 });
             }

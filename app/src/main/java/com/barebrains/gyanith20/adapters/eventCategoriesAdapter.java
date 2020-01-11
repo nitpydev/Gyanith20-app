@@ -102,4 +102,6 @@ public class eventCategoriesAdapter extends ArrayAdapter{
         });
         return itemRoot;
     }
+
+
 }

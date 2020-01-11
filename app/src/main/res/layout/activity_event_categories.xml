@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackDrop"
-    tools:context="activities.EventCategoriesActivity">
+    tools:context=".activities.EventsListActivity">
 
     <ProgressBar
         android:id="@+id/catload"
@@ -17,14 +16,8 @@
 
     <TextView
         android:id="@+id/textView14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="250dp"
-        android:fontFamily="@font/pnbold"
+        style="@style/emptyState"
         android:text="Will be updated soon."
-        android:textColor="#96ffffff"
-        android:textSize="24sp"
         android:visibility="gone" />
 
     <LinearLayout
@@ -35,18 +28,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="?colorPrimary"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <Button
+            <ImageView
                 android:id="@+id/backbut"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="10dp"
-                android:background="?attr/homeAsUpIndicator"
-                android:backgroundTint="@android:color/white"
-                android:foreground="?attr/selectableItemBackground" />
+                style="@style/backbtn"
+                android:backgroundTint="@android:color/white" />
 
             <TextView
                 android:id="@+id/cattitle"
@@ -54,15 +43,13 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/splight"
                 android:text="TextView"
-                android:textColor="@android:color/white"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <ListView
             android:id="@+id/eveitlv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@null"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp" />
 

@@ -53,6 +53,7 @@ dependencies {
     implementation 'id.zelory:compressor:2.1.0'
     implementation 'com.android.support:multidex:1.0.3'
     implementation "com.github.firdausmaulan:GlideSlider:1.5.1"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

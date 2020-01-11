@@ -4,36 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/topb"
+    android:background="?android:windowBackground"
     tools:context="activities.EventDetailsActivity">
-
-    <Button
-        android:id="@+id/reg"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@drawable/curve"
-        android:backgroundTint="#191fcd"
-        android:fontFamily="@font/splight"
-        android:text="Register"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBackDrop">
+        android:background="@color/colorBackDrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
 
@@ -42,10 +29,10 @@
                 android:layout_height="272dp"
                 android:layout_weight="1">
 
-                <com.android.volley.toolbox.NetworkImageView
+                <ImageView
                     android:id="@+id/eveimv"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
+                    android:layout_height="match_parent"
                     android:background="@null"
                     android:scaleType="centerCrop" />
 
@@ -72,7 +59,7 @@
                     android:paddingRight="10dp"
                     android:paddingBottom="10.5dp">
 
-                    <ToggleButton
+                    <com.barebrains.gyanith20.components.AnimatedToggle
                         android:id="@+id/favButton"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
@@ -89,16 +76,10 @@
 
                 </FrameLayout>
 
-                <Button
+                <ImageButton
                     android:id="@+id/backbut2"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginRight="10dp"
-                    android:background="?attr/homeAsUpIndicator"
-                    android:backgroundTint="@android:color/white"
-                    android:foreground="?attr/selectableItemBackground" />
+                    style="@style/backbtn"
+                    android:backgroundTint="@android:color/white" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -123,11 +104,9 @@
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/dtab"
+                style="@style/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                app:tabSelectedTextColor="@android:color/white"
-                app:tabTextColor="@color/unselected">
+                android:layout_height="40dp">
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
@@ -156,9 +135,17 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/pnreg"
 
-                android:textColor="@android:color/white"
                 android:textSize="18sp" />
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/reg"
+        style="@style/txtBtn"
+        android:backgroundTint="#191fcd"
+        android:text="Register"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

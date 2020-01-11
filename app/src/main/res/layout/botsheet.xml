@@ -11,7 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="Total Price: Rs. 457" />
+        android:text="Total Price: Rs. 457"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/bot_body"

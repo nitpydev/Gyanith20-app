@@ -1,27 +1,84 @@
 <resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
-    </style>
-
     <style name="TextAppearance.App.TextInputLayout" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/whitealpha</item>
         <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="AppTheme.Noactionbar" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorBackdropAccent</item>
         <item name="colorPrimaryDark">@color/colorBackDrop</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/colorBackDrop</item>
+        <item name="android:textColor">@color/colorSecondary</item>
         <item name="android:fontFamily">@font/poppinsr</item>
+        <item name="android:windowBackground">?colorPrimaryDark</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryLight</item>
+
     </style>
+
+
+    <style name="fab" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:layout_margin">16dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="backgroundTint">@color/colorAccent</item>
+        <item name="tint">@color/colorSecondary</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="layout_behavior">.others.MoveUpwardBehavior</item>
+    </style>
+
+    <style name="backbtn" parent="Widget.AppCompat.ImageButton">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@color/colorTransparent</item>
+        <item name="android:src">?attr/actionModeCloseDrawable</item>
+        <item name="android:tint">@color/colorSecondary</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="txtBtn" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="cornerRadius">25dp</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="backgroundTint">@color/colorAccent</item>
+        <item name="android:fontFamily">@font/splight</item>
+        <item name="android:textColor">@color/colorSecondary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="emptyState" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/colorInactive</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/pnbold</item>
+        <item name="android:layout_marginTop">250dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+
+
+    <style name="tabs" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabTextColor">@drawable/botnavselector</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="tabIndicatorColor">@color/colorSecondaryAccent</item>
+        <item name="android:background">?colorPrimary</item>
+    </style>
+
+
+
+
 
     <style name="GlideSliderCardStyle" parent="Base.CardView">
         <item name="android:layout_height">match_parent</item>

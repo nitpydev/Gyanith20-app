@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import android.widget.ToggleButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.components.AnimatedToggle;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.bumptech.glide.Glide;
@@ -43,13 +45,13 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     TextView title,desc;
     ImageView eveimage;
-    ToggleButton favtb;
+    AnimatedToggle favtb;
     DatabaseReference reg;
     Intent intent;
     String catType, eventId;
     TabLayout dtab;
     SharedPreferences sp;
-    Button backBtn;
+    ImageButton backBtn;
     String tab1,tab2,tab3;
     Context context;
     String id="", tm, cost;
