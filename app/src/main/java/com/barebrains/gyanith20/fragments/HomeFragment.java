@@ -97,7 +97,7 @@ public class HomeFragment extends mFragment {
                     });
             }
         });
-    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("/homefragment_urlredirect");
+    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("homefragment_urlredirect");
     ref.addListenerForSingleValueEvent(new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
