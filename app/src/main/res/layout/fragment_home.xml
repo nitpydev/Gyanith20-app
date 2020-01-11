@@ -51,23 +51,28 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:gravity="center_horizontal"
                         android:orientation="horizontal">
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/trend"
-                            android:layout_width="69dp"
+                            style="@style/fab"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="20sp"
                             android:layout_weight="1"
                             android:clickable="true"
-                            app:backgroundTint="@color/design_default_color_secondary_variant"
+                            android:maxWidth="48dp"
+                            android:maxHeight="48dp"
+                            android:padding="30sp"
+                            app:backgroundTint="@color/colorAccent"
                             app:srcCompat="@drawable/fire" />
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/random"
-                            android:layout_width="71dp"
+                            style="@style/fab"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="20sp"
                             android:layout_marginTop="20sp"
@@ -75,12 +80,13 @@
                             android:layout_marginBottom="20sp"
                             android:layout_weight="1"
                             android:clickable="true"
-                            app:backgroundTint="@color/design_default_color_secondary_variant"
+                            app:backgroundTint="@color/colorAccent"
                             app:srcCompat="@drawable/dice" />
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/fab"
-                            android:layout_width="66dp"
+                            style="@style/fab"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="20sp"
                             android:layout_marginTop="20sp"
@@ -89,7 +95,7 @@
                             android:layout_weight="1"
                             android:clickable="true"
                             android:src="@drawable/dev"
-                            app:backgroundTint="@color/design_default_color_secondary_variant" />
+                            app:backgroundTint="@color/colorAccent" />
                     </LinearLayout>
                 </FrameLayout>
 
