@@ -63,8 +63,8 @@
                             android:layout_margin="20sp"
                             android:layout_weight="1"
                             android:clickable="true"
-                            android:maxWidth="48dp"
-                            android:maxHeight="48dp"
+                           app:fabCustomSize="70dp"
+                            app:maxImageSize="24dp"
                             android:padding="30sp"
                             app:backgroundTint="@color/colorAccent"
                             app:srcCompat="@drawable/fire" />
@@ -80,6 +80,8 @@
                             android:layout_marginBottom="20sp"
                             android:layout_weight="1"
                             android:clickable="true"
+                            app:fabCustomSize="70dp"
+                            app:maxImageSize="24dp"
                             app:backgroundTint="@color/colorAccent"
                             app:srcCompat="@drawable/dice" />
 
@@ -94,6 +96,8 @@
                             android:layout_marginBottom="20sp"
                             android:layout_weight="1"
                             android:clickable="true"
+                            app:fabCustomSize="70dp"
+                            app:maxImageSize="24dp"
                             android:src="@drawable/dev"
                             app:backgroundTint="@color/colorAccent" />
                     </LinearLayout>
