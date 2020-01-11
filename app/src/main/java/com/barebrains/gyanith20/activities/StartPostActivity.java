@@ -27,7 +27,7 @@ import java.io.IOException;
 public class StartPostActivity extends AppCompatActivity {
 
 
-    private static final int MAX_IMAGES = 5;//CHANGE HERE FOR MAX LIMIT OF IMAGES
+    private static final int MAX_IMAGES = 3;//CHANGE HERE FOR MAX LIMIT OF IMAGES
 
 
     private static final int UPLOAD_POST_COMPLETED = 18;

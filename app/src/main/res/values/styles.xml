@@ -85,31 +85,12 @@
         <item name="android:background">?colorPrimary</item>
     </style>
 
-
-
-
-
-    <style name="GlideSliderCardStyle" parent="Base.CardView">
+    <style name="eventDes" parent="Widget.MaterialComponents.TextView">
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_width">match_parent</item>
-    </style>
-
-    <style name="GlideSliderBackgroundStyle">
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:background">@color/glide_slider_background_color</item>
-    </style>
-
-    <style name="GlideSliderImageStyle">
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_margin">14dp</item>
-    </style>
-
-    <style name="GlideSliderLoadingStyle" parent="Base.Widget.AppCompat.ProgressBar">
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_centerInParent">true</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:fontFamily">@font/pnreg</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_gravity">center</item>
     </style>
-
 </resources>

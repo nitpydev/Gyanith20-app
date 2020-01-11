@@ -7,145 +7,146 @@
     android:background="?android:windowBackground"
     tools:context="activities.EventDetailsActivity">
 
-
-    <ScrollView
-        android:id="@+id/scrollView2"
+    <com.barebrains.gyanith20.components.Loader
+        android:id="@+id/detailsLoader"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBackDrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_marginEnd="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-
-            <FrameLayout
+            <ScrollView
+                android:id="@+id/scrollView2"
                 android:layout_width="match_parent"
-                android:layout_height="272dp"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/eveimv"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@null"
-                    android:scaleType="centerCrop" />
-
-                <ImageView
-                    android:id="@+id/fh"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:alpha="0"
-                    android:tint="#ff0111"
-                    app:srcCompat="@drawable/ic_baseline_favorite_24px" />
-
-
-                <FrameLayout
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_gravity="bottom|right"
-                    android:layout_marginRight="20dp"
-                    android:background="@mipmap/ic_launcher_round"
-                    android:backgroundTint="@color/cardbg"
-                    android:elevation="5dp"
-                    android:paddingLeft="9dp"
-                    android:paddingTop="10.5dp"
-                    android:paddingRight="10dp"
-                    android:paddingBottom="10.5dp">
-
-                    <com.barebrains.gyanith20.components.AnimatedToggle
-                        android:id="@+id/favButton"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center"
-                        android:background="@null"
-                        android:button="@drawable/toggle_button"
-                        android:checked="false"
-                        android:foregroundGravity="center"
-                        android:minWidth="0dp"
-                        android:minHeight="0dp"
-                        android:text=""
-                        android:textOff=""
-                        android:textOn="" />
-
-                </FrameLayout>
-
-                <ImageButton
-                    android:id="@+id/backbut2"
-                    style="@style/backbtn"
-                    android:backgroundTint="@android:color/white" />
+                android:layout_height="match_parent"
+                android:background="@color/colorBackDrop"
+                android:fillViewport="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/evedttitle"
+
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|center_horizontal"
-                        android:layout_marginBottom="25dp"
-                        android:fontFamily="@font/spregu"
-                        android:gravity="center"
-                        android:text="Loading..."
-                        android:textColor="@android:color/white"
-                        android:textSize="32sp" />
+                        android:layout_height="272dp">
 
+                        <ImageView
+                            android:id="@+id/eveimv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:scaleType="centerCrop" />
+
+                        <ImageView
+                            android:id="@+id/fh"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:alpha="0"
+                            android:tint="#ff0111"
+                            app:srcCompat="@drawable/ic_baseline_favorite_24px" />
+
+
+                        <FrameLayout
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_gravity="bottom|right"
+                            android:layout_marginRight="20dp"
+                            android:background="@mipmap/ic_launcher_round"
+                            android:backgroundTint="@color/cardbg"
+                            android:elevation="5dp"
+                            android:paddingLeft="9dp"
+                            android:paddingTop="10.5dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="10.5dp">
+
+                            <com.barebrains.gyanith20.components.AnimatedToggle
+                                android:id="@+id/favButton"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center"
+                                android:background="@null"
+                                android:button="@drawable/toggle_button"
+                                android:checked="false"
+                                android:foregroundGravity="center"
+                                android:minWidth="0dp"
+                                android:minHeight="0dp"
+                                android:text=""
+                                android:textOff=""
+                                android:textOn="" />
+
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/evedttitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom|center_horizontal"
+                                android:layout_marginBottom="25dp"
+                                android:fontFamily="@font/spregu"
+                                android:gravity="center"
+                                android:text="Loading..."
+                                android:textColor="@android:color/white"
+                                android:textSize="32sp" />
+
+                        </LinearLayout>
+
+                    </FrameLayout>
+
+
+                    <com.barebrains.gyanith20.components.ClickableViewPager
+                        android:id="@+id/event_details_viewpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/dtab"
+                            style="@style/tabs"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp" />
+                    </com.barebrains.gyanith20.components.ClickableViewPager>
                 </LinearLayout>
+            </ScrollView>
 
-            </FrameLayout>
+            <Button
+                android:id="@+id/reg"
+                style="@style/txtBtn"
+                android:backgroundTint="#191fcd"
+                android:text="Register"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/dtab"
-                style="@style/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="40dp">
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.barebrains.gyanith20.components.Loader>
 
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="About" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rules" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Contact" />
-            </com.google.android.material.tabs.TabLayout>
-
-            <TextView
-                android:id="@+id/evedesc"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="80dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/pnreg"
-
-                android:textSize="18sp" />
-        </LinearLayout>
-    </ScrollView>
-
-    <Button
-        android:id="@+id/reg"
-        style="@style/txtBtn"
-        android:backgroundTint="#191fcd"
-        android:text="Register"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
+    <ImageButton
+        android:id="@+id/backbut2"
+        style="@style/backbtn"
+        android:backgroundTint="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,10 +13,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
+import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.AboutActivity;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
-import com.barebrains.gyanith20.activities.EventsListActivity;
-import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.activities.EventsCategoryActivity;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.eventsManager;
@@ -200,7 +200,7 @@ public class HomeFragment extends mFragment {
     private View.OnClickListener eventCategoryClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent i = new Intent(getContext(), EventsListActivity.class);
+            Intent i = new Intent(getContext(), EventsCategoryActivity.class);
             i.putExtra("category", view.getTag().toString());
             i.putExtra("type", getResources().getResourceEntryName(view.getId()));
             startActivity(i);

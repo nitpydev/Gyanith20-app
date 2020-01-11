@@ -4,13 +4,14 @@ import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -19,46 +20,33 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.AnimatedToggle;
+import com.barebrains.gyanith20.components.ClickableViewPager;
+import com.barebrains.gyanith20.components.Loader;
+import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
+import com.barebrains.gyanith20.statics.EventsModel;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.barebrains.gyanith20.gyanith20.sp;
+
 public class EventDetailsActivity extends AppCompatActivity {
-
-    EventItem eventItem;
-
-    TextView title,desc;
-    ImageView eveimage;
-    AnimatedToggle favtb;
-    DatabaseReference reg;
-    Intent intent;
-    String catType, eventId;
-    TabLayout dtab;
-    SharedPreferences sp;
-    ImageButton backBtn;
-    String tab1,tab2,tab3;
-    Context context;
-    String id="", tm, cost;
-
-
-    AlertDialog.Builder a;
-    AlertDialog vi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,89 +55,74 @@ public class EventDetailsActivity extends AppCompatActivity {
             getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         }
         setContentView(R.layout.activity_event_details);
-        a=new AlertDialog.Builder(this);
 
 
-        sp= this.getSharedPreferences(getString(R.string.package_name),MODE_PRIVATE);
-
-        backBtn =findViewById(R.id.backbut2);
-        intent = getIntent();
-        String eiJSON = intent.getStringExtra("eventItem");
-        eventItem = (new Gson()).fromJson(eiJSON,EventItem.class);
-        catType = eventItem.type;
-        eventId = eventItem.id;
-        title=findViewById(R.id.evedttitle);
-        desc=findViewById(R.id.evedesc);
-        dtab=findViewById(R.id.dtab);
-        context =this;
-         cost = eventItem.cost;
-
-
-        if(eventItem.max_ptps == null){tm = "1";}else{tm = eventItem.max_ptps;}
-
-        eveimage= findViewById(R.id.eveimv);
-        favtb=findViewById(R.id.favButton);
-
-
-        backBtn.setOnClickListener(new View.OnClickListener() {
+        //VIEW BINDINGS
+        final Loader loader = findViewById(R.id.detailsLoader);
+        findViewById(R.id.backbut2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
+        EventsModel model = ViewModelProviders.of(this).get(EventsModel.class);
+
+        loader.loading();
+
+        model.getItem(getIntent().getStringExtra("EXTRA_ID")).observe(this, new Observer<Resource<EventItem>>() {
+            @Override
+            public void onChanged(Resource<EventItem> res) {
+
+                if (res.error != null || res.value == null || res.value.length == 0) {
+                    loader.error(res.error.getIndex());
+                    return;
+                }
+
+                fillTopUI(res.value[0]);
+                setUpViewPager(res.value[0]);
+
+                loader.loaded();
+            }
+        });
+
+
+
+
+
+
+
+    }
+
+    private void fillTopUI(final EventItem eventItem){
+        final ImageView f= findViewById(R.id.fh);
+        TextView title=findViewById(R.id.evedttitle);
+        ImageView eveimage= findViewById(R.id.eveimv);
+        AnimatedToggle favBtn =findViewById(R.id.favButton);
+
         Glide.with(this)
                 .load(eventItem.img1)
                 .placeholder(R.drawable.l2)
                 .error(R.drawable.gyanith_error)
                 .into(eveimage);
-
-        if(eventItem.id.equals("w"))
-        {
-            dtab.getTabAt(1).setText("Requisites");
-        }
-
         title.setText(eventItem.name);
-
-        if(eventItem.des == null){tab1 = "Will be updated soon";}else{tab1 = eventItem.des;}
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            desc.setText(Html.fromHtml(tab1,Html.FROM_HTML_MODE_LEGACY));
-        else
-            desc.setText(Html.fromHtml(tab1));
-
-        if(cost != null)
-            desc.append("\nRegistration Cost : Rs." + cost + " per person");
-
-        tab2 = eventItem.rules;
-        tab3 = eventItem.contact;
-
-        if(tab2.equals(""))
-            tab2 = "Will be updated soon";
-        if(tab3 == null)
-            tab3 = "Will be updated soon";
-
-
-
-        final ImageView f= findViewById(R.id.fh);
 
         Set<String> favIds = sp.getStringSet(getString(R.string.favSet), new HashSet<String>());
 
-        favtb.setChecked(favIds.contains(eventId));
+        favBtn.setChecked(favIds.contains(eventItem.id));
 
 
-        favtb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        favBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Set<String> favIds = sp.getStringSet(getString(R.string.favSet), new HashSet<String>());
-                    favIds.add(eventId);
-                    sp.edit().putStringSet(getString(R.string.favSet), favIds).apply();
-                }
-                else {
-                    Set<String> favIds = sp.getStringSet(getString(R.string.favSet), new HashSet<String>());
-                    favIds.remove(eventId);
-                    sp.edit().putStringSet(getString(R.string.favSet), favIds).apply();
-                }
+
+                Set<String> favIds = sp.getStringSet(getString(R.string.favSet), new HashSet<String>());
+                if (isChecked)
+                    favIds.add(eventItem.id);
+                else
+                    favIds.remove(eventItem.id);
+                sp.edit().putStringSet(getString(R.string.favSet), favIds).apply();
+
 
                 if(isChecked){
                     ObjectAnimator fa=ObjectAnimator.ofFloat(f,"alpha",1,0);
@@ -166,96 +139,103 @@ public class EventDetailsActivity extends AppCompatActivity {
             }
         });
 
+    }
 
+    private void setUpViewPager(EventItem eventItem){
 
-        dtab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int a=tab.getPosition();
-                if(a==0){
+        ViewPager viewPager = findViewById(R.id.event_details_viewpager);
+        TabLayout tabLayout =findViewById(R.id.dtab);
 
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                    {
-                        desc.setText(Html.fromHtml(tab1,Html.FROM_HTML_MODE_LEGACY));
-                    }
-                    else
-                    {
-                        desc.setText(Html.fromHtml(tab1));
-                    }
-                    if(cost != null)
-                        desc.append("\nRegistration Cost : Rs." + cost + " per person");
-
-                }
-                if(a==1){
-                    desc.setText(tab2);
-                }
-                if(a==2){
-                    desc.setText(tab3);
-                }
-
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-        if(eventId.charAt(0)=='N'|| eventId.charAt(0)=='P'|| eventId.charAt(0)=='G')
-            findViewById(R.id.reg).setVisibility(View.GONE);
-        if(eventId.equals("P1"))
-            findViewById(R.id.reg).setVisibility(View.GONE);
-
-
-
-                Button[] b = new Button[2];
-                LinearLayout linlay = new LinearLayout(context);
-                linlay.setOrientation(LinearLayout.VERTICAL);
-                Log.i("alert",tm);
-                for (int i = 0; i < tm.length(); i++) {
-                    b[i] = new Button(context);
-                    b[i].setBackgroundColor(Color.parseColor("#FFFFFF"));
-                    b[i].setText("Register for " + tm.charAt(i));
-                    linlay.addView(b[i]);
-                    final int i1 = i;
-                    b[i].setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if(GyanithUserManager.getCurrentUser() != null){
-                            Intent intent = new Intent(context, RegisterActivity.class);
-                            intent.putExtra("id", eventId);
-                            intent.putExtra("token", "");
-                            if (eventId.equals("W7"))
-                                intent.putExtra("ex", eventId);
-                            else
-                                intent.putExtra("ex", "");
-                            startActivity(intent);}
-                            else{
-                                Toast.makeText(context, "please login to register", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-
-                a.setTitle("Register");
-                a.setView(linlay);
-                vi=a.create();
-
-
+        viewPager.setAdapter(new pager(eventItem));
+        viewPager.setOffscreenPageLimit(2);
+        tabLayout.setupWithViewPager(viewPager);
 
         findViewById(R.id.reg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                vi.show();
+                Toast.makeText(EventDetailsActivity.this, "Registration is yet to open", Toast.LENGTH_SHORT).show();
             }
         });
 
-
-
     }
+
+    private class pager extends PagerAdapter {
+
+        private EventItem eventItem;
+
+        private String[] pageTitles = new String[]{"ABOUT", "RULES", "CONTACT"};
+
+        private pager(EventItem eventItem) {
+            this.eventItem = eventItem;
+        }
+
+        @NonNull
+        @Override
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+            Loader loader = new Loader(EventDetailsActivity.this);
+            loader.setErrorTexts(new String[]{"Will be Updated soon"});
+            TextView textView = new TextView(new ContextThemeWrapper(EventDetailsActivity.this, R.style.eventDes));
+            loader.addView(textView);
+            container.addView(loader);
+            switch (position) {
+                case 0:
+                    if (eventItem.des == null || eventItem.des.isEmpty()) {
+                        loader.error(0);
+                        break;
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                        textView.setText(Html.fromHtml(eventItem.des, Html.FROM_HTML_MODE_LEGACY));
+                    else
+                        textView.setText(Html.fromHtml(eventItem.des));
+                    if (eventItem.cost != null)
+                        textView.append("\nRegistration Cost : Rs." + eventItem.cost + " per person");
+                    loader.loaded();
+                    break;
+                case 1:
+                    if (eventItem.type.equals("w"))
+                        pageTitles[1] = "REQUISITES";
+
+                    if (eventItem.rules == null || eventItem.rules.isEmpty()) {
+                        loader.error();
+                        break;
+                    }
+                    textView.setText(eventItem.rules);
+                    loader.loaded();
+                    break;
+                case 2:
+                    if (eventItem.contact == null) {
+                        loader.error();
+                        break;
+                    }
+                    textView.setText(eventItem.contact);
+                    break;
+            }
+            return loader;
+        }
+
+        @Override
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Override
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+            return view == object;
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return pageTitles[position];
+        }
+    }
+
 }
+
+
+

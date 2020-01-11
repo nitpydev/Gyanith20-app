@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,8 +17,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
-import com.barebrains.gyanith20.components.LiveListAdapter;
-import com.barebrains.gyanith20.components.LiveListView;
+import com.barebrains.gyanith20.adapters.LiveListAdapter;
+import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.ScheduleItem;
 import com.barebrains.gyanith20.others.mFragment;
@@ -26,13 +27,11 @@ import com.barebrains.gyanith20.statics.Util;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class ScheduleFragment extends mFragment {
 
-    ScheduleModel viewModel;
+    private ScheduleModel viewModel;
     int res = R.layout.item_schedule;
 
     private ScheduleFragment() {
@@ -55,6 +54,7 @@ public class ScheduleFragment extends mFragment {
         ViewPager viewPager = root.findViewById(R.id.viewpager);
         viewPager.setAdapter(new pager());
         viewPager.setCurrentItem(0);
+        viewPager.setOffscreenPageLimit(4);
         mtabLayout.setupWithViewPager(viewPager);
         return root;
     }
@@ -63,27 +63,29 @@ public class ScheduleFragment extends mFragment {
 
         private String[] titles = new String[]{"LIVE","DAY 1","DAY 2","DAY 3","DAY 4"};
 
-
-        private Map<Integer,Object> viewsCache = new HashMap<>();
-
         @NonNull
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
 
-            if (viewsCache.containsKey(position))
-                return viewsCache.get(position);
-
-            LiveListView item = new LiveListView(getContext());
+            ListView item = new ListView(getContext());
             scheduleAdapter adapter = getSchduleAdapter(position);
-            item.setAdapter(getViewLifecycleOwner(),adapter);
-            container.addView(item);
-            viewsCache.put(position,item);
-            return item;
+            item.setAdapter(adapter);
+
+            adapter.setLoader(new Loader(getContext()));
+            if (position == 0)
+                adapter.getLoader().setErrorTexts(new String[]{"No Events Live !"});
+            else
+                adapter.getLoader().setErrorTexts(new String[]{"Will be Updated Soon"});
+
+            adapter.getLoader().addView(item);
+            container.addView(adapter.getLoader());
+            adapter.observe();
+            return adapter.getLoader();
         }
 
         @Override
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-            //NEVER DESTROY ITEM
+            container.removeView((View) object);
         }
 
         @Nullable
@@ -110,11 +112,6 @@ public class ScheduleFragment extends mFragment {
                     @Override
                     public LiveData<Resource<ScheduleItem>> getLiveData() {
                         return viewModel.getLiveSchedules(System.currentTimeMillis());
-                    }
-
-                    @Override
-                    public String getEmptyState() {
-                        return "No Events Live Now!";
                     }
                 };
             case 1://26 th February
@@ -164,13 +161,9 @@ public class ScheduleFragment extends mFragment {
 
     private abstract class scheduleAdapter extends LiveListAdapter<ScheduleItem> {
 
-        public scheduleAdapter(){
-            super(ScheduleFragment.this.getContext(),res);
-        }
-
-        @Override
-        public String getEmptyState() {
-            return "Will be Updated Soon";
+        scheduleAdapter(){
+            super(ScheduleFragment.this.getContext()
+                    ,ScheduleFragment.this.getViewLifecycleOwner(),res);
         }
 
         @Override

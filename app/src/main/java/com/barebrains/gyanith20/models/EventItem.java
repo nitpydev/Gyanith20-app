@@ -18,5 +18,9 @@ public class EventItem {
 
     public  EventItem(){}//PRIVATE CONSTRUCTOR
 
+    public void setMax_ptps(String max_ptps){
+        //TODO: CHECK IF THE BELOW LINE IS CALLED WHILE FIREBASE FILLS DATA
+        this.max_ptps = (max_ptps != null)?max_ptps:"1";
+    }
 }
 

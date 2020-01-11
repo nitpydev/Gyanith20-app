@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.barebrains.gyanith20.activities.AddNotificationActivity;
 import com.barebrains.gyanith20.activities.MainActivity;
 import com.barebrains.gyanith20.adapters.notificationAdapter;
+import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.NotificationItem;
 import com.barebrains.gyanith20.R;
@@ -41,22 +42,8 @@ public class NotificationFragment extends mFragment {
     }
 
 
-    public NotificationFragment() {
-        // Required empty public constructor
+    private NotificationFragment() {
         markBadges(3);
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d("asd","start");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("asd","stop");
     }
 
 
@@ -66,13 +53,9 @@ public class NotificationFragment extends mFragment {
         // Inflate the layout for this fragment
         final View root= inflater.inflate(R.layout.fragment_notifications, container, false);
         ListView notiListView = root.findViewById(R.id.notificationListView);
+        final Loader loader = root.findViewById(R.id.ad);
 
-        final View emptyState = root.findViewById(R.id.textView2);
-
-
-        emptyState.setVisibility(View.GONE);
-
-        root.findViewById(R.id.notload).setVisibility(View.VISIBLE);
+        loader.loading();
 
         final notificationAdapter madapter = new notificationAdapter(getContext(), new ArrayList<NotificationItem>(), R.layout.item_notification);
         notiListView.setAdapter(madapter);
@@ -80,23 +63,23 @@ public class NotificationFragment extends mFragment {
         AppNotiManager.addNotificationListener(789,new ResultListener<NotificationItem[]>(){
             @Override
             public void OnResult(NotificationItem[] notificationItems) {
-                if (notificationItems.length == 0)
-                    emptyState.setVisibility(View.VISIBLE);
-                else
-                    emptyState.setVisibility(View.GONE);
+                if (notificationItems.length == 0) {
+                    loader.error();
+                    return;
+                }
 
                 madapter.clear();
                 for (NotificationItem item : notificationItems){
                     madapter.add(item);
                 }
                 madapter.notifyDataSetChanged();
-                root.findViewById(R.id.notload).setVisibility(View.GONE);
+                loader.loaded();
             }
 
             @Override
             public void OnError(String error) {
-                root.findViewById(R.id.notload).setVisibility(View.GONE);
-                emptyState.setVisibility(View.VISIBLE);
+                loader.error();
+                if (error != null)
                 Toast.makeText(getContext(),error, Toast.LENGTH_SHORT).show();
             }
         });

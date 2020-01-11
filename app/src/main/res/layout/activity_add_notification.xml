@@ -41,7 +41,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginRight="40dp"
             android:textColorHint="#64ffffff"
-            app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
+            app:hintTextAppearance="@style/txtLayout">
 
             <EditText
                 android:id="@+id/noti_ttl"
@@ -63,7 +63,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginRight="40dp"
             android:textColorHint="#64ffffff"
-            app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
+            app:hintTextAppearance="@style/txtLayout">
 
             <EditText
                 android:id="@+id/noti_bdy"

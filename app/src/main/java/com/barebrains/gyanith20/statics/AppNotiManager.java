@@ -153,14 +153,14 @@ public class AppNotiManager {
                         if (!NetworkManager.getInstance().isNetAvailable()) {
                             for (ResultListener<NotificationItem[]> listener : listeners.values())
                                 listener.OnError("No Internet");
+                            return;
                         }
-                        else
-                        {
-                            for (ResultListener<NotificationItem[]> listener : listeners.values()) {
-                                notiItems = new NotificationItem[0];
-                                listener.OnResult(notiItems);
-                            }
+
+
+                        for (ResultListener<NotificationItem[]> listener : listeners.values()) {
+                            listener.OnError(null);
                         }
+
                     }
                 });
     }
