@@ -8,46 +8,55 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 
 import com.barebrains.gyanith20.activities.AboutActivity;
+import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.activities.EventsListActivity;
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.models.EventItem;
+import com.barebrains.gyanith20.others.mFragment;
+import com.barebrains.gyanith20.statics.eventsManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.glide.slider.library.SliderLayout;
 import com.glide.slider.library.slidertypes.DefaultSliderView;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
 
 import java.util.List;
+import java.util.Random;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends mFragment {
+
+
+
     private long delay1 = 0;
     private long delay2 = 0;
     private SliderLayout imgSlider;
     private boolean urlLoaded;
+    private String trendurl = "",devurl ="https://www.gyanith.org/Team%20Gyanith/Team%20Gyanith.html";
+    private FloatingActionButton random, trend, dev;
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
+    private HomeFragment() { }
 
-
-    public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
 
@@ -56,7 +65,9 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         imgSlider = root.findViewById(R.id.img_slider);
-
+        trend = root.findViewById(R.id.trend);
+        random = root.findViewById(R.id.random);
+        dev = root.findViewById(R.id.fab);
         imgSlider.addSlider((new  DefaultSliderView(getContext())).image(R.drawable.l2));
         urlLoaded = false;
         final RequestOptions requestOptions = (new RequestOptions())
@@ -65,6 +76,7 @@ public class HomeFragment extends Fragment {
                 .error(R.drawable.gyanith_error);
 
         StorageReference slidesFolderRef = FirebaseStorage.getInstance().getReference().child("/HomeImageSlides");
+
         slidesFolderRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
@@ -85,6 +97,24 @@ public class HomeFragment extends Fragment {
                     });
             }
         });
+    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("/homefragment_urlredirect");
+    ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            try{
+            trendurl = dataSnapshot.getValue().toString();}
+            catch (NullPointerException n){
+                trendurl = "https://www.youtube.com/channel/UCL8yfte7HZy_KGE-fckMsqQ";
+
+            }
+
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    });
         CardView w = root.findViewById(R.id.w);
         CardView te = root.findViewById(R.id.te);
         CardView nte = root.findViewById(R.id.ne);
@@ -92,6 +122,10 @@ public class HomeFragment extends Fragment {
         CardView gl = root.findViewById(R.id.gl);
         CardView au = root.findViewById(R.id.au);
 
+
+        trend.setOnClickListener(trendclk);
+        random.setOnClickListener(rndclk);
+        dev.setOnClickListener(devclk);
         w.setOnClickListener(eventCategoryClick);
         te.setOnClickListener(eventCategoryClick);
         nte.setOnClickListener(eventCategoryClick);
@@ -104,15 +138,6 @@ public class HomeFragment extends Fragment {
                 startActivity(i);
             }
         });
-
-
-
-
-        Intent n = new Intent("gyanith.notify");
-        getContext().sendBroadcast(n);
-
-
-
 
         ObjectAnimator wa = ObjectAnimator.ofFloat(w, "translationX", -300f, 0f);
         wa.setInterpolator(new DecelerateInterpolator());
@@ -181,5 +206,54 @@ public class HomeFragment extends Fragment {
             startActivity(i);
         }
     };
-}
 
+    //SINGLETON
+    private static HomeFragment instance;
+
+    public static HomeFragment getInstance(){
+        if (instance == null)
+            instance = new HomeFragment();
+        return instance;
+    }
+    private View.OnClickListener trendclk = new View.OnClickListener(){
+        @Override
+        public void  onClick(View view){
+            try{
+                Intent redirect = new Intent(Intent.ACTION_VIEW,Uri.parse(trendurl));
+                startActivity(redirect);}catch(Exception e){
+                Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+    private View.OnClickListener rndclk = new View.OnClickListener(){
+        @Override
+        public void  onClick(View view){
+            Gson gson = new Gson();
+            Random r = new Random();
+            try {
+                EventItem[] events = eventsManager.getEventItemsFromCache();
+                if (events != null) {
+                    int rnd = r.nextInt(events.length);
+                    Intent evt = new Intent(getContext(), EventDetailsActivity.class);
+                    evt.putExtra("eventItem", gson.toJson(events[rnd]));
+                    startActivity(evt);
+                } else {
+                    Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();
+                }
+            }catch(NullPointerException n){ Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    };
+
+    private View.OnClickListener devclk = new View.OnClickListener(){
+        @Override
+        public void  onClick(View view){
+            try{
+                Intent redirect = new Intent(Intent.ACTION_VIEW,Uri.parse(devurl));
+                startActivity(redirect);}catch(Exception e){
+                Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+}
