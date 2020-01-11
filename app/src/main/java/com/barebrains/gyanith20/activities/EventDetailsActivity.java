@@ -111,7 +111,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         title.setText(eventItem.name);
 
-        if(eventItem.des == null){tab1 = "";}else{tab1 = eventItem.des;}
+        if(eventItem.des == null){tab1 = "Will be updated soon";}else{tab1 = eventItem.des;}
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
             desc.setText(Html.fromHtml(tab1,Html.FROM_HTML_MODE_LEGACY));
         else
@@ -122,6 +122,12 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         tab2 = eventItem.rules;
         tab3 = eventItem.contact;
+
+        if(tab2.equals(""))
+            tab2 = "Will be updated soon";
+        if(tab3 == null)
+            tab3 = "Will be updated soon";
+
 
 
         final ImageView f= findViewById(R.id.fh);
