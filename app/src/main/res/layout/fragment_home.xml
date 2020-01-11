@@ -97,7 +97,7 @@
                             android:layout_weight="1"
                             android:clickable="true"
                             app:fabCustomSize="70dp"
-                            app:maxImageSize="24dp"
+                            app:maxImageSize="38dp"
                             android:src="@drawable/dev"
                             app:backgroundTint="@color/colorAccent" />
                     </LinearLayout>

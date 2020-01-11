@@ -91,7 +91,6 @@ public class LoginActivity extends AppCompatActivity {
                 isLoading(true);
                 String pas = pwd.getText().toString();
                 String username = uid.getText().toString();
-
                 if (pas.equals("") || username.equals("")){
                     isLoading(false);
                     Toast.makeText(getApplicationContext(), "Enter credentials!", Toast.LENGTH_LONG).show();

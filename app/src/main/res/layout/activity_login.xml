@@ -45,6 +45,7 @@
             android:layout_marginLeft="40dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="40dp"
+            style = "@style/textfieldstyle"
             android:textColorHint="#64ffffff"
             app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
@@ -68,6 +69,7 @@
             android:layout_marginLeft="40dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="40dp"
+            style = "@style/textfieldstyle"
             android:textColorHint="#64ffffff"
             app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout"
             app:passwordToggleEnabled="true"

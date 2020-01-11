@@ -6,6 +6,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -24,7 +25,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     EditText name,usrname,pwd,conpwd,clg,email,num;
     ProgressBar prog;
-    Button signup, back;
+    ImageButton back;
+    Button signup;
     Boolean checked = false;
     String gender;
     @Override

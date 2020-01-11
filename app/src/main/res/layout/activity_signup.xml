@@ -32,10 +32,12 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/backbutsignup"
                         style="@style/backbtn"
+                        android:layout_gravity="top|left"
                         android:backgroundTint="@android:color/white" />
+
 
                     <TextView
                         android:id="@+id/title"
@@ -57,6 +59,7 @@
                     android:layout_marginLeft="40dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="40dp"
+                    style = "@style/textfieldstyle"
                     android:textColorHint="#64ffffff"
                     app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
@@ -66,6 +69,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="Name"
+                        android:textColor="@android:color/white"
                         android:inputType="textPersonName"
                         android:maxLines="1"
                         android:singleLine="true"
@@ -76,6 +80,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style = "@style/textfieldstyle"
                     android:layout_marginLeft="40dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="40dp"
@@ -92,6 +97,7 @@
                         android:hint="Username"
                         android:inputType="textFilter"
                         android:maxLines="1"
+                        android:textColor="@android:color/white"
                         android:singleLine="true"
                         android:textColorHint="@color/whitealpha" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -99,6 +105,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style = "@style/textfieldstyle"
                     android:layout_marginLeft="40dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="40dp"
@@ -128,6 +135,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="40dp"
                     android:textColorHint="#64ffffff"
+                    style = "@style/textfieldstyle"
                     app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout"
                     app:passwordToggleEnabled="true"
                     app:passwordToggleTint="@color/colorAccent">
@@ -137,6 +145,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
+                        android:textColor="@android:color/white"
+
                         android:fontFamily="@font/sofiaprolight"
                         android:hint="Confirm Password"
                         android:inputType="textPassword"
@@ -151,6 +161,7 @@
                     android:layout_marginLeft="40dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="40dp"
+                    style = "@style/textfieldstyle"
                     android:textColorHint="#64ffffff"
                     app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
@@ -160,6 +171,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
+                        android:textColor="@android:color/white"
+
                         android:fontFamily="@font/sofiaprolight"
                         android:hint="Email"
                         android:inputType="textEmailAddress"
@@ -176,6 +189,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="40dp"
                     android:textColorHint="#64ffffff"
+                    style = "@style/textfieldstyle"
                     app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
 
@@ -188,6 +202,8 @@
                         android:hint="Phone Number"
                         android:inputType="phone"
                         android:maxLength="10"
+                        android:textColor="@android:color/white"
+
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColorHint="@color/whitealpha" />
@@ -199,6 +215,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="40dp"
+                    style = "@style/textfieldstyle"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="40dp"
                     android:textColorHint="#64ffffff"
@@ -212,6 +229,7 @@
                         android:ems="10"
                         android:fontFamily="@font/sofiaprolight"
                         android:hint="College"
+                        android:textColor="@android:color/white"
                         android:inputType="textPersonName"
                         android:maxLines="1"
                         android:singleLine="true"
