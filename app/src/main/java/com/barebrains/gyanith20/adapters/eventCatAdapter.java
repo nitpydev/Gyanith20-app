@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 
@@ -17,17 +18,15 @@ import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.bumptech.glide.Glide;
 
-public abstract class eventCatAdapter extends LiveListAdapter<EventItem>{
+public class eventCatAdapter extends LiveListAdapter<EventItem>{
 
-    private int pos;
-
-    public eventCatAdapter(@NonNull Context context, LifecycleOwner lifecycleOwner, int resource) {
+    public eventCatAdapter(@NonNull Context context,@Nullable LifecycleOwner lifecycleOwner,@NonNull int resource) {
         super(context, lifecycleOwner, resource);
     }
 
-    @NonNull
+    @Nullable
     @Override
-    public abstract LiveData<Resource<EventItem>> getLiveData();
+    public LiveData<Resource<EventItem>> getLiveData(){ return  null;};
 
 
     @NonNull

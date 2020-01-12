@@ -51,7 +51,7 @@ public class HomeFragment extends mFragment {
     private String trendurl = "",devurl ="https://www.gyanith.org/Team%20Gyanith/Team%20Gyanith.html";
     private FloatingActionButton random, trend, dev;
 
-    private HomeFragment() { }
+    public HomeFragment() { }
 
 
     @Override

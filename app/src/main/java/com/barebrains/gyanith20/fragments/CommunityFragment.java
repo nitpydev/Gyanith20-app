@@ -51,7 +51,7 @@ public class CommunityFragment extends mFragment {
     private View root;
     private FeedsPagerAdapter adapter;
 
-    private CommunityFragment() {
+    public CommunityFragment() {
         markBadges(4);
     }
 
@@ -61,7 +61,6 @@ public class CommunityFragment extends mFragment {
         syncWithPostService(new CompletionListener(){
             @Override
             public void OnComplete() {
-                Log.d("asd","Completed");
                 if (root != null)
                 Snackbar.make(root,"Posted Successfully !", BaseTransientBottomBar.LENGTH_LONG)
                 .setAction("REFRESH FEED", new View.OnClickListener() {
@@ -297,7 +296,7 @@ class FeedsPagerAdapter extends PagerAdapter{
                         loadFeed.setVisibility(View.GONE);
                         es.setVisibility(View.GONE);
                         refreshFeed.setRefreshing(false);
-                        Toast.makeText(activity, "Reached end of Posts", Toast.LENGTH_SHORT).show();
+                        initLoader.setVisibility(View.GONE);
                         break;
                 }
             }

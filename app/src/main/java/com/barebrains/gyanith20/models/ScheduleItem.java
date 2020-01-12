@@ -1,9 +1,5 @@
 package com.barebrains.gyanith20.models;
 
-import android.util.Log;
-
-import java.sql.Time;
-
 public class ScheduleItem {
 
     public String venue,title,id = null;

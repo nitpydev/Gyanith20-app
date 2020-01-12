@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.MainActivity;
 import com.barebrains.gyanith20.interfaces.NetworkStateListener;
 import com.barebrains.gyanith20.interfaces.Resource;
@@ -31,7 +32,7 @@ import java.util.Map;
 
 import static com.barebrains.gyanith20.gyanith20.sp;
 
-class DataRepository {
+public class DataRepository {
 
     //PUBLIC FUNCTIONS
     static MutableLiveData<Resource<ScheduleItem>> getAllScheduleItems(){
@@ -174,8 +175,32 @@ class DataRepository {
     }
 
 
-    /*//NOTIFICATION ITEMS FETCHING
+    //NOTIFICATION ITEMS FETCHING
     private static MutableLiveData<Resource<NotificationItem>> notiItems;
+
+
+    public static MutableLiveData<Resource<NotificationItem>> getNotiItems(){
+        if (notiItems == null)
+        {
+            notiItems = new MutableLiveData<>();
+            fetchNotificationItems(new ResultListener<NotificationItem[]>(){
+                @Override
+                public void OnResult(NotificationItem[] notificationItems) {
+                    if (notificationItems.length == 0)
+                        notiItems.setValue(new Resource<NotificationItem>(null,new LoaderException(0)));
+                    else
+                        notiItems.setValue(new Resource<>(notificationItems, null));
+                }
+
+                @Override
+                public void OnError(String error) {
+                    notiItems.setValue(new Resource<NotificationItem>(null,new LoaderException(0,error)));
+                }
+            });
+        }
+
+        return notiItems;
+    }
 
 
     public static void fetchNotificationItems(final ResultListener<NotificationItem[]> listener){
@@ -191,7 +216,7 @@ class DataRepository {
                         if (items.size() != 0)
                             notiItems.setValue(new Resource<NotificationItem>(items.toArray(new NotificationItem[0]),null));
                         else
-                            notiItems.setValue(new Resource<NotificationItem>());
+                            notiItems.setValue(new Resource<NotificationItem>(null,new LoaderException(0)));
 
 
                         if (MainActivity.botNav != null)
@@ -201,7 +226,7 @@ class DataRepository {
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         if (!NetworkManager.getInstance().isNetAvailable()) {
-                                listener.OnError("No Internet");
+                                listener.OnError("No Internet");//TODO: IMPLEMENT IN NETWORKMANAGER TO RETRY WHEN INTERNET IS AVAILABLE
                             return;
                         }
 
@@ -210,7 +235,4 @@ class DataRepository {
                     }
                 });
     }
-    
-     */
-
 }

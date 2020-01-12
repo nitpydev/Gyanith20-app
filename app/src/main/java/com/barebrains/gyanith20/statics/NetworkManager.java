@@ -1,5 +1,6 @@
 package com.barebrains.gyanith20.statics;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -9,10 +10,12 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.NetworkStateListener;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.others.NetworkChangeReceiver;
@@ -28,7 +31,7 @@ public class NetworkManager {
     private static NetworkManager instance;
 
     private Map<Integer, NetworkStateListener> listeners;
-    private ArrayList<NetworkStateListener> listenersUnmapped;
+    private ArrayList<CompletionListener> netAvaillisteners = new ArrayList<>();
 
     private ConnectivityManager cm;
 
@@ -41,13 +44,9 @@ public class NetworkManager {
             instance = new NetworkManager();
         if (instance.listeners == null)
             instance.listeners = new HashMap<>();
-        if (instance.listenersUnmapped == null)
-            instance.listenersUnmapped = new ArrayList<>();
 
         if (!instance.callbackRegistered && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
             instance.registerCallback();
-
-
         return instance;
     }
 
@@ -71,31 +70,36 @@ public class NetworkManager {
         VolleyManager.requestQueue.add(request);
     }
 
-    public void addListener(NetworkStateListener listener){
-        respondListener(listener,lastAvailability);
-        listenersUnmapped.add(listener);
+    public void completeOnNetAvailable(CompletionListener listener){
+        if (isNetAvailable())
+            listener.OnComplete();
+        else
+            netAvaillisteners.add(listener);
     }
+
     public void addListener(Integer code,NetworkStateListener listener){
         respondListener(listener,lastAvailability);
         listeners.put(code,listener);
     }
 
-    public void removeListener(NetworkStateListener listener){
-        listenersUnmapped.remove(listener);
-    }
     public void removeListener(Integer code){
         if (listeners.containsKey(code))
             listeners.remove(code);
     }
 
     private void respondListeners(boolean isAvailable){
-        for (NetworkStateListener listener : listenersUnmapped) {
-           respondListener(listener,isAvailable);
-        }
 
         for (NetworkStateListener listener : listeners.values()) {
             respondListener(listener,isAvailable);
         }
+
+        if (isAvailable) {
+            for (CompletionListener listener : netAvaillisteners) {
+                listener.OnComplete();
+                netAvaillisteners.remove(listener);
+            }
+        }
+
     }
     private void respondListener(NetworkStateListener listener, boolean isAvailable){
         listener.OnChange();

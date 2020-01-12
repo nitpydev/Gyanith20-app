@@ -34,7 +34,7 @@ public class ScheduleFragment extends mFragment {
     private ScheduleModel viewModel;
     int res = R.layout.item_schedule;
 
-    private ScheduleFragment() {
+    public ScheduleFragment() {
         // Required empty public constructor
     }
 
@@ -177,6 +177,7 @@ public class ScheduleFragment extends mFragment {
             TextView title = view.findViewById(R.id.title);
             TextView venue = view.findViewById(R.id.venue);
             View live = view.findViewById(R.id.liveindicator);
+            View btn = view.findViewById(R.id.btn);
             time.setText(formatTime(data.start_time));
             title.setText(data.title);
             venue.setText(data.venue);
@@ -186,6 +187,16 @@ public class ScheduleFragment extends mFragment {
             else
                 live.setVisibility(View.INVISIBLE);
 
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (data.id != null){
+                        Intent intent = new Intent(getContext(),EventDetailsActivity.class);
+                        intent.putExtra("EXTRA_ID",data.id);
+                        startActivity(intent);
+                    }
+                }
+            });
         }
 
         @Override

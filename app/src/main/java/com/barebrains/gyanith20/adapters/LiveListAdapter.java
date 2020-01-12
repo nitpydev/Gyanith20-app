@@ -27,6 +27,18 @@ public abstract class LiveListAdapter<T> extends ArrayAdapter {
     private Loader loader;
     private LifecycleOwner lifecycleOwner;
     private int pos = 0;
+    private LiveData<Resource<T>> liveData;
+
+    private Observer<Resource<T>> observer = new Observer<Resource<T>>() {
+        @Override
+        public void onChanged(Resource<T> res) {
+           if (!res.handleLoader(loader))
+               return;
+           clear();
+           addAll(res.value);
+           notifyDataSetChanged();
+        }
+    };
 
     //PUBLIC FUNCTIONS
 
@@ -61,18 +73,6 @@ public abstract class LiveListAdapter<T> extends ArrayAdapter {
     }
 
 
-    private void setError(int error){
-        if (loader == null)
-            return;
-        loader.error(error);
-    }
-
-    private void setLoaded(){
-        if (loader == null)
-            return;
-        loader.loaded();
-    }
-
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -86,21 +86,15 @@ public abstract class LiveListAdapter<T> extends ArrayAdapter {
     }
 
     public void observe() {
-        getLiveData().observe(lifecycleOwner, new Observer<Resource<T>>() {
-            @Override
-            public void onChanged(Resource<T> res) {
-                if (res.error != null) {
-                    setError(res.error.getIndex());
-                    return;
-                }
-
-                clear();
-                addAll(res.value);
-                notifyDataSetChanged();
-                setLoaded();
-            }
-        });
+        liveData = getLiveData();
+        liveData.observe(lifecycleOwner,observer);
     }
+
+    public void refresh(){
+        liveData.removeObserver(observer);
+        observe();
+    }
+
 
     private void animateItem(View itemView,int position){
         if (pos==position) {

@@ -7,38 +7,23 @@
     android:layout_marginBottom="50dp"
     tools:context="fragments.ScheduleFragment">
 
-    <FrameLayout
+    <com.barebrains.gyanith20.components.Loader
+        android:id="@+id/fav_loader"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:empty_error="Tap  ♥ button in events to add to favourites and get notified"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ProgressBar
-            android:id="@+id/favload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="150dp" />
-
-        <TextView
-            android:id="@+id/textView13"
-            style="@style/emptyState"
-            android:text="Tap  ♥ button in events to add to favourites and get notified" />
-
-        <LinearLayout
+        <ListView
+            android:id="@+id/favlv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:divider="@null">
 
-            <ListView
-                android:id="@+id/favlv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@null">
+        </ListView>
+    </com.barebrains.gyanith20.components.Loader>
 
-            </ListView>
-        </LinearLayout>
-
-    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

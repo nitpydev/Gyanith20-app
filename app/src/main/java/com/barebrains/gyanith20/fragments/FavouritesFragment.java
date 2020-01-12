@@ -14,14 +14,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
+import com.barebrains.gyanith20.adapters.LiveListAdapter;
+import com.barebrains.gyanith20.adapters.eventCatAdapter;
 import com.barebrains.gyanith20.adapters.eventCategoriesAdapter;
+import com.barebrains.gyanith20.components.Loader;
+import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.others.mFragment;
+import com.barebrains.gyanith20.statics.EventsModel;
 import com.barebrains.gyanith20.statics.eventsManager;
 import com.google.firebase.database.DatabaseReference;
 
@@ -36,33 +45,31 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.barebrains.gyanith20.gyanith20.sp;
+
 
 public class FavouritesFragment extends mFragment {
 
+    private EventsModel eventsModel;
+    private eventCatAdapter adapter;
 
-    eventCategoriesAdapter adapter;
-    SharedPreferences sp;
-
-    private FavouritesFragment() {
+    public FavouritesFragment() {
         // Required empty public constructor
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
+        eventsModel = ViewModelProviders.of(this).get(EventsModel.class);
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-     if(!hidden)
-        refreshFavs();
+    public void onShow() {
+        super.onShow();
+        if (adapter != null)
+        adapter.refresh();
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,44 +79,22 @@ public class FavouritesFragment extends mFragment {
         // Inflate the layout for this fragment
         final View root = inflater.inflate(R.layout.fragment_favourites, container, false);
 
-        View emptyState = root.findViewById(R.id.textView13);
-        View progress = root.findViewById(R.id.favload);
-
-        adapter = new eventCategoriesAdapter(R.layout.item_event_category
-        ,emptyState
-        ,progress
-        ,new ArrayList<EventItem>()
-        ,getContext());
-
+        Loader loader = root.findViewById(R.id.fav_loader);
         ListView favListView = root.findViewById(R.id.favlv);
 
+        adapter = new eventCatAdapter(getContext(),getViewLifecycleOwner(),R.layout.item_event_category){
+            @Nullable
+            @Override
+            public LiveData<Resource<EventItem>> getLiveData() {
+                sp = getContext().getSharedPreferences(getString(R.string.package_name), Context.MODE_PRIVATE);
+                Set<String> favIds = sp.getStringSet(getString(R.string.favSet),new HashSet<String>());
+                return eventsModel.getEventsofIds(new ArrayList<>(favIds));
+            }
+        };
+        adapter.setLoader(loader);
         favListView.setAdapter(adapter);
-
-        refreshFavs();
+        adapter.observe();
         return root;
-
-    }
-
-
-
-    private void refreshFavs(){
-        sp = getContext().getSharedPreferences(getString(R.string.package_name), Context.MODE_PRIVATE);
-        Set<String> favIds = sp.getStringSet(getString(R.string.favSet),new HashSet<String>());
-
-        eventsManager.getEventsbyId(favIds.toArray(new String[0]),new ResultListener<EventItem[]>(){
-            @Override
-            public void OnResult(EventItem[] eventItems) {
-                adapter.clear();
-                for (EventItem item : eventItems)
-                    adapter.add(item);
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void OnError(String error) {
-                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 
