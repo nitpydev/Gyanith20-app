@@ -29,6 +29,7 @@ import java.util.Map;
 
 import static com.barebrains.gyanith20.gyanith20.sp;
 
+@Deprecated
 public class eventsManager {
 
     private static EventItem[] eventItems;

@@ -71,10 +71,10 @@ public class NetworkManager {
     }
 
     public void completeOnNetAvailable(CompletionListener listener){
-        if (isNetAvailable())
-            listener.OnComplete();
-        else
+        Log.d("asd","Listener Added " + isNetAvailable());
+        if (!isNetAvailable()) {
             netAvaillisteners.add(listener);
+        }
     }
 
     public void addListener(Integer code,NetworkStateListener listener){

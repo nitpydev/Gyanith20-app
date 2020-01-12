@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.ArraySet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,7 @@ public class FavouritesFragment extends mFragment {
     public void onShow() {
         super.onShow();
         if (adapter != null)
-        adapter.refresh();
+            adapter.refresh();
     }
 
     @Override
@@ -93,7 +94,6 @@ public class FavouritesFragment extends mFragment {
         };
         adapter.setLoader(loader);
         favListView.setAdapter(adapter);
-        adapter.observe();
         return root;
 
     }

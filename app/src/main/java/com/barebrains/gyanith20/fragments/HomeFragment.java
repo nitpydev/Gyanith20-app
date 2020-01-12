@@ -12,13 +12,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.AboutActivity;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.activities.EventsCategoryActivity;
+import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
+import com.barebrains.gyanith20.models.NotificationItem;
 import com.barebrains.gyanith20.others.mFragment;
+import com.barebrains.gyanith20.statics.DataRepository;
 import com.barebrains.gyanith20.statics.eventsManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -72,6 +77,7 @@ public class HomeFragment extends mFragment {
         urlLoaded = false;
         final RequestOptions requestOptions = (new RequestOptions())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
                 .placeholder(R.drawable.l2)
                 .error(R.drawable.gyanith_error);
 
@@ -105,7 +111,6 @@ public class HomeFragment extends mFragment {
             trendurl = dataSnapshot.getValue().toString();}
             catch (NullPointerException n){
                 trendurl = "https://www.youtube.com/channel/UCL8yfte7HZy_KGE-fckMsqQ";
-
             }
 
         }
@@ -227,21 +232,24 @@ public class HomeFragment extends mFragment {
     };
     private View.OnClickListener rndclk = new View.OnClickListener(){
         @Override
-        public void  onClick(View view){
-            Gson gson = new Gson();
-            Random r = new Random();
-            try {
-                EventItem[] events = eventsManager.getEventItemsFromCache();
-                if (events != null) {
-                    int rnd = r.nextInt(events.length);
+        public void  onClick(View view) {
+            final Random r = new Random();
+            DataRepository.getAllEventItems().observe(getViewLifecycleOwner(), new Observer<Resource<EventItem>>() {
+                @Override
+                public void onChanged(Resource<EventItem> res) {
+                    if (res.error != null) {
+                        if (res.error.getMessage() != null)
+                            Toast.makeText(HomeFragment.this.getContext(), res.error.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    int rnd = r.nextInt(res.value.length);
                     Intent evt = new Intent(getContext(), EventDetailsActivity.class);
-                    evt.putExtra("eventItem", gson.toJson(events[rnd]));
+                    evt.putExtra("EXTRA_ID", res.value[rnd].id);
                     startActivity(evt);
-                } else {
-                    Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();
+
+                    DataRepository.getAllEventItems().removeObserver(this);
                 }
-            }catch(NullPointerException n){ Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();
-            }
+            });
 
         }
     };

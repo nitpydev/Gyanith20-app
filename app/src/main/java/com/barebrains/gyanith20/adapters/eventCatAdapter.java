@@ -2,6 +2,7 @@ package com.barebrains.gyanith20.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,7 +35,7 @@ public class eventCatAdapter extends LiveListAdapter<EventItem>{
     public void bindView(View view, final EventItem data) {
         ((TextView) view.findViewById(R.id.eveitname)).setText(data.name);
         ((TextView) view.findViewById(R.id.eveittime)).setText(data.timestamp);
-
+        View eve_cat_btn = view.findViewById(R.id.eve_cat_btn);
         String url = data.img2;
         ImageView imageView = view.findViewById(R.id.logo);
         Glide.with(getContext())
@@ -43,7 +44,7 @@ public class eventCatAdapter extends LiveListAdapter<EventItem>{
                 .error(R.drawable.gyanith_error)
                 .into(imageView);
 
-        view.setOnClickListener(new View.OnClickListener() {
+        eve_cat_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (data.id != null){

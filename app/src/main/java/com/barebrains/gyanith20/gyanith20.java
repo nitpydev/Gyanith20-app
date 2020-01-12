@@ -52,7 +52,6 @@ public class gyanith20 extends MultiDexApplication {
         //NETWORKING INITIATIONS
         VolleyManager.setRequestQueue(this);
         NetworkManager.initialize(this);
-        eventsManager.initialize(getApplicationContext());
         AppNotiManager.initNotifications();
         PostManager.StartListeningPostCount();
 

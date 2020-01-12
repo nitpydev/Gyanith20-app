@@ -10,6 +10,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.MainActivity;
+import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.NetworkStateListener;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.interfaces.ResultListener;
@@ -59,7 +60,7 @@ public class DataRepository {
         return scheduleItems;
     }
 
-    static MutableLiveData<Resource<EventItem>> getAllEventItems(){
+    public static MutableLiveData<Resource<EventItem>> getAllEventItems(){
         if (eventItems == null){
             eventItems = new MutableLiveData<>();
             fetchEventsData(new ResultListener<EventItem[]>(){
@@ -73,7 +74,7 @@ public class DataRepository {
 
                 @Override
                 public void OnError(String error) {
-                    eventItems.setValue(new Resource<EventItem>(null,new LoaderException(0)));
+                    eventItems.setValue(new Resource<EventItem>(null,new LoaderException(0,error)));
                 }
             });
         }
@@ -106,17 +107,19 @@ public class DataRepository {
             public void onErrorResponse(VolleyError error) {
                 //if error continue using cache
                 EventItem[] a = getEventItemsFromCache();
-                if (a != null)
+                if (a != null) {
                     listener.OnResult(a);
-                else
+                    Log.d("asd","using Cache");
+                    NetworkManager.getInstance().completeOnNetAvailable(new CompletionListener(){
+                        @Override
+                        public void OnComplete() {
+                            Log.d("asd","net Available");
+                            fetchEventsData(listener);
+                        }
+                    });
+                } else
                     listener.OnError("Network Error");
 
-                NetworkManager.getInstance().addListener(5,new NetworkStateListener(){
-                    @Override
-                    public void OnAvailable() {
-                        fetchEventsData(listener);
-                    }
-                });
             }
         });
         VolleyManager.requestQueue.add(request);
