@@ -1,307 +1,418 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/profile_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:background="?android:windowBackground"
-    android:orientation="vertical">
+    android:background="?colorPrimary"
+    android:fitsSystemWindows="true"
+    tools:context=".activities.ProfileActivity">
 
-    <LinearLayout
-        android:id="@+id/top_panel_profile"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/profile_card"
-            android:layout_width="0dp"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:cardBackgroundColor="?colorPrimaryVariant">
-
-            <ImageView
-                android:id="@+id/profile_back_btn"
-                style="@style/backbtn" />
+            android:fitsSystemWindows="true"
+            app:contentScrim="?colorPrimaryDark"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleTextAppearance="@style/TransparentText"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:toolbarId="@+id/toolbar">
 
             <LinearLayout
-                android:id="@+id/profile_btn"
-                android:layout_width="wrap_content"
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:background="@drawable/profile_bk"
+                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
+                <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="20dp"
+                    android:clickable="false">
+
+                    <com.barebrains.gyanith20.components.Loader
+                        android:id="@+id/qr_loader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:empty_error="@layout/loader_qr_error"
+                        app:isErrorText="false">
+
+                        <ImageView
+                            android:id="@+id/qr_img"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:padding="10dp"
+                            app:srcCompat="@drawable/ic_qr_error" />
+                    </com.barebrains.gyanith20.components.Loader>
+                </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
                 <TextView
-                    android:id="@+id/profile_username_txt"
+                    android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:gravity="center"
-                    android:text="USER_NAME"
-                    android:textColor="#FFFFFF" />
+                    android:text="\@username"
+                    android:textSize="28dp"
+                    android:textStyle="bold" />
 
-                <LinearLayout
-                    android:id="@+id/userinfo_panel"
+                <TextView
+                    android:id="@+id/profile_top_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingBottom="150dp"
-                    android:visibility="gone">
+                    android:text="developer@gmail.com"
+                    android:textSize="12dp"
+                    android:textStyle="bold" />
 
-                    <TextView
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginTop="20dp"
+                    android:background="?colorPrimary"
+                    android:gravity="center">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_alignParentTop="true"
+                        android:background="@drawable/profile_bk" />
+
+                    <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                        android:id="@+id/regd_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="name"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold" />
+                        android:layout_centerHorizontal="true"
+                        app:cardBackgroundColor="@color/colorAccent"
+                        app:cardCornerRadius="30dp">
 
-                    <TextView
-                        android:id="@+id/userinfo_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
-                        android:gravity="center"
-                        android:text="Pushpavel"
-                        android:textColor="@android:color/white"
-                        android:textStyle="italic" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="8dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="clg"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold" />
+                            <ImageView
+                                android:id="@+id/imageView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                app:srcCompat="@drawable/ic_tick" />
 
-                    <TextView
-                        android:id="@+id/userinfo_clg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
-                        android:gravity="center"
-                        android:text="National Institute of Technology Puducherry"
-                        android:textColor="@android:color/white"
-                        android:textStyle="italic" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginEnd="32dp"
+                                android:text="Registered Events \n and Workshops"
+                                android:textAlignment="center"
+                                android:textStyle="bold" />
+                        </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="phone no"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold" />
+                    </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
 
-                    <TextView
-                        android:id="@+id/userinfo_phoneno"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
-                        android:gravity="center"
-                        android:text="9481667495"
-                        android:textColor="@android:color/white"
-                        android:textStyle="italic" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="email"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/userinfo_email"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
-                        android:gravity="center"
-                        android:text="jpushpavel@gmail.com"
-                        android:textColor="@android:color/white"
-                        android:textStyle="italic" />
-
-                    <Button
-                        android:id="@+id/sign_out_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:padding="15dp"
-                        android:text="SIGN OUT" />
-
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:title="Your Info"
+                app:titleTextColor="?android:textColor"/>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/qr_card"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:cardBackgroundColor="@color/colorSecondary">
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-            <ProgressBar
-                android:id="@+id/qr_prog"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-            <ImageView
-                android:id="@+id/qrBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="32dp"
-                android:foreground="?android:attr/selectableItemBackground" />
-
-            <ImageView
-                android:id="@+id/qr_back_btn"
-                style="@style/backbtn"
-                android:tint="@color/colorBackdropAccent" />
-        </androidx.cardview.widget.CardView>
-    </LinearLayout>
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/htab_tabs"
-        style="@style/tabs">
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabItem3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="WORKSHOPS" />
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabItem4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Technical Events" />
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabItem5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/topbar_community" />
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/profile_viewpager"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_weight="2"
-        android:foregroundGravity="center">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".activities.ProfileActivity"
+        tools:showIn="@layout/activity_profile">
 
-        <RelativeLayout
-            android:id="@+id/reg_te"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible">
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical">
 
-            <ProgressBar
-                android:id="@+id/te_load"
-                style="?android:attr/progressBarStyle"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Account Info"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/icon1"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginBottom="0dp"
+                    app:srcCompat="@drawable/ic_name" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_toEndOf="@+id/icon1"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/user_info_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="developer" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorInactive" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/icon2"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginBottom="0dp"
+                    app:srcCompat="@drawable/ic_mobile" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_toEndOf="@+id/icon2"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Phone"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/user_info_mobile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+91 9786999785" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorInactive" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/icon3"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginBottom="0dp"
+                    app:srcCompat="@drawable/ic_email" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_toEndOf="@+id/icon3"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/user_info_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="superman@gyanith.com" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorInactive" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/icon4"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginBottom="0dp"
+                    app:srcCompat="@drawable/ic_clg" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_toEndOf="@+id/icon4"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="College"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/user_info_clg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="National Institue of Technology, Puducherry" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                android:id="@+id/signout_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center|center_horizontal"
-                android:layout_marginTop="200dp" />
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="100dp"
+                app:cardBackgroundColor="#CD1928"
+                app:cardCornerRadius="30dp">
 
-            <TextView
-                android:id="@+id/te_es"
-                style="@style/emptyState"
-                android:layout_centerInParent="true"
-                android:text="Your Registered Technical Events Show up here."
-                android:visibility="gone" />
-
-            <ListView
-                android:id="@+id/reg_te_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/reg_w"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible">
-
-            <ProgressBar
-                android:id="@+id/w_load"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
-
-            <TextView
-                android:id="@+id/w_es"
-                style="@style/emptyState"
-                android:layout_centerInParent="true"
-                android:text="Your Registered Workshops Show up here."
-                android:visibility="visible" />
-
-            <ListView
-                android:id="@+id/reg_w_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/profile_posts"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:visibility="visible">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/add_post_btn2"
-                style="@style/fab"
-                android:layout_gravity="bottom|right"
-                app:srcCompat="@drawable/ic_baseline_add_24px" />
-
-            <TextView
-                android:id="@+id/up_es"
-                style="@style/emptyState"
-                android:text="Your Posts Show Up Here"
-                android:visibility="visible" />
-
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/profile_feed_refresh"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/profile_feed"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        app:srcCompat="@drawable/ic_quit" />
 
-            <ProgressBar
-                android:id="@+id/profile_feed_load"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginBottom="0dp"
-                android:foregroundGravity="bottom|center_vertical"
-                android:indeterminate="true" />
-        </RelativeLayout>
-    </androidx.viewpager.widget.ViewPager>
-</LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:gravity="center"
+                        android:text="Sign Out"
+                        android:textAlignment="center"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

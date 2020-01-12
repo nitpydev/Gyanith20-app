@@ -1,27 +1,19 @@
 package com.barebrains.gyanith20;
 
 import android.app.Activity;
-import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.multidex.MultiDexApplication;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.barebrains.gyanith20.interfaces.ResultListener;
-import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.statics.AppNotiManager;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
@@ -29,14 +21,7 @@ import com.barebrains.gyanith20.statics.LikesSystem;
 import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.VolleyManager;
-import com.barebrains.gyanith20.statics.eventsManager;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-
-import java.util.ArrayList;
 
 public class gyanith20 extends MultiDexApplication {
     public static final String PROGRESS_CHANNEL = "progress";

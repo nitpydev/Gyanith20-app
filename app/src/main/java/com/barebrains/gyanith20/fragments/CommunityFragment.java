@@ -318,7 +318,7 @@ class FeedsPagerAdapter extends PagerAdapter{
                 try {
                     super.onLayoutChildren(recycler, state);
                 } catch (IndexOutOfBoundsException e) {
-                    Log.e("TAG", "meet a IOOBE in RecyclerView");
+
                 }
             }
         });

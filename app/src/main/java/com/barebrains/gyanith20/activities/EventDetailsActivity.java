@@ -1,23 +1,15 @@
 package com.barebrains.gyanith20.activities;
 
 import android.animation.ObjectAnimator;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,15 +23,12 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.AnimatedToggle;
-import com.barebrains.gyanith20.components.ClickableViewPager;
 import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.statics.EventsModel;
-import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -74,10 +63,8 @@ public class EventDetailsActivity extends AppCompatActivity {
             @Override
             public void onChanged(Resource<EventItem> res) {
 
-                if (res.error != null || res.value == null || res.value.length == 0) {
-                    loader.error(res.error.getIndex());
+                if (res.handleLoader(loader))
                     return;
-                }
 
                 fillTopUI(res.value[0]);
                 setUpViewPager(res.value[0]);
@@ -173,7 +160,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             Loader loader = new Loader(EventDetailsActivity.this);
-            loader.setErrorTexts(new String[]{"Will be Updated soon"});
+            loader.set_empty_error("Will be Updated soon");
             TextView textView = new TextView(new ContextThemeWrapper(EventDetailsActivity.this, R.style.eventDes));
             loader.addView(textView);
             container.addView(loader);

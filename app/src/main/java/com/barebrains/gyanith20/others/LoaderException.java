@@ -1,6 +1,7 @@
 package com.barebrains.gyanith20.others;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * pass this Exception through Resource for getting handled by loader
@@ -11,20 +12,20 @@ import androidx.annotation.NonNull;
 
 public class LoaderException extends Exception {
 
-    private int index;
+    private Integer index;
 
-    public LoaderException(@NonNull int index) {
+    public LoaderException(@Nullable Integer index) {
         super();
         this.index = index;
     }
 
-    public LoaderException(@NonNull int index,String message) {
+    public LoaderException(@Nullable Integer index,@Nullable String message) {
         super(message);
         this.index = index;
     }
 
-    @NonNull
-    public int getIndex(){
+    @Nullable
+    public Integer getIndex(){
         return index;
     }
 }

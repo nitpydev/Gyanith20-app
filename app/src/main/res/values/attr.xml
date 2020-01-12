@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="Loader">
-        <attr name="empty_error" format="string"/>
-        <attr name="i" format="string"/>
+        <attr name="loading_indicator" format="reference"/>
+        <attr name="isErrorText" format="boolean"/>
+        <attr name="empty_error" format="string|reference"/>
     </declare-styleable>
 </resources>

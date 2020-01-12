@@ -33,7 +33,7 @@ public abstract class LiveListAdapter<T> extends ArrayAdapter {
     private Observer<Resource<T>> observer = new Observer<Resource<T>>() {
         @Override
         public void onChanged(Resource<T> res) {
-           if (!res.handleLoader(loader))
+           if (res.handleLoader(loader))
                return;
            clear();
            addAll(res.value);

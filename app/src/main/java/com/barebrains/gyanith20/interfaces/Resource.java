@@ -18,17 +18,20 @@ public class Resource<T> {
 
     public boolean handleLoader(Loader loader){
         if (loader == null)
-            return true;
+            return false;
+
         if (error != null) {
-            loader.error(error.getIndex());
             if (error.getMessage() != null)
                 Toast.makeText(loader.getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-            return false;
-        }
 
+            if (error.getIndex() != null) {
+                loader.error(error.getIndex());
+                return true;
+            }
+        }
         if (value != null && value.length != 0) {
             loader.loaded();
         }
-        return true;
+        return false;
     }
 }

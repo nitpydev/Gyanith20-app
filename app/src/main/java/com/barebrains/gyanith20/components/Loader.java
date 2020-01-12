@@ -3,96 +3,113 @@ package com.barebrains.gyanith20.components;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.view.ContextThemeWrapper;
-import android.view.Gravity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.ContextThemeWrapper;
 
 import com.barebrains.gyanith20.R;
 
 public class Loader extends FrameLayout {
     public Loader(@NonNull Context context) {
         super(context);
-        if(!isInEditMode())
-        init(null);
     }
 
     public Loader(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        if(!isInEditMode())
-            init(context.obtainStyledAttributes(attrs,R.styleable.Loader,0,0));
+        if(!isInEditMode()) {
+            TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.Loader,0,0);
+            init(typedArray);
+        }
     }
 
     public Loader(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        if(!isInEditMode())
-            init(context.obtainStyledAttributes(attrs,R.styleable.Loader,defStyleAttr,0));
+        if(!isInEditMode()) {
+            TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.Loader,defStyleAttr,0);
+            init(typedArray);
+        }
     }
 
 
+    //ATTRIBUTES
+    private int loadingIndicatorResId = R.layout.loader_progressbar;
+    private boolean isTextError = true;
 
-    //INITIATIONS
-    private View progress;
-    private TextView emptyStateText;
-    private View content;
+    private String empty_error_string = "Will be Updated Soon";
+    private int empty_error_visual = 0;
 
-    private String[] errors = new String[]{"Will be Updated Soon"};
+    private View loadingIndicator = null;
+    private View errorHolder = null;
+    private View content = null;
+
 
     private void init(TypedArray attrs){
-        if (attrs == null)
-            return;
-        if (attrs.getIndexCount() == 0){
-            attrs.recycle();
-            return;
-        }
-        errors = new String[attrs.getIndexCount()];
-        for (int i = 0;i< errors.length;i++) {
-            errors[i] = attrs.getString(i);
+        loadingIndicatorResId = attrs.getResourceId(R.styleable.Loader_loading_indicator, R.layout.loader_progressbar);
+        isTextError = attrs.getBoolean(R.styleable.Loader_isErrorText, true);
+        if (isTextError) {
+            String s = attrs.getString(R.styleable.Loader_empty_error);
+            if (s != null)empty_error_string = s;
+        } else {
+            empty_error_visual = attrs.getResourceId(R.styleable.Loader_empty_error,0);//TODO:SET DEFAULT VALUE
         }
         attrs.recycle();
     }
 
-    public void setErrorTexts(String[] errors){
-        this.errors = errors;
+    public void set_empty_error(String error){
+        this.empty_error_string = error;
     }
+
 
     @Override
     public void onViewAdded(View child) {
-        if (progress == null) {
-            progress = new ProgressBar(getContext());
-            LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.gravity = Gravity.CENTER;
-            setLayoutParams(lp);
-            addView(progress,lp);
-            emptyStateText = new TextView(new ContextThemeWrapper(getContext(),R.style.emptyState));
-            addView(emptyStateText);
+        super.onViewAdded(child);
+        if(isInEditMode())
+            return;
+        if (loadingIndicator == null) {
+            loadingIndicator = LayoutInflater.from(getContext()).inflate( loadingIndicatorResId,this,false);
+
+            if (isTextError) {
+                errorHolder = new TextView(new ContextThemeWrapper(getContext(),R.style.emptyState));
+                addView(errorHolder);
+            }
+
             content = child;
+
             loading();
         }
     }
 
+    //PUBLIC FUNCITONS
+    public View getErrorHolder(){
+        return errorHolder;
+    }
+
     public void loading(){
-        if (progress == null)
-            return;
-        progress.setVisibility(VISIBLE);
-        emptyStateText.setVisibility(GONE);
+        loadingIndicator.setVisibility(VISIBLE);
         if (content != null)
             content.setVisibility(GONE);
+
+      if (isTextError)
+          errorHolder.setVisibility(GONE);
+      else
+          removeErrorVisual();
     }
 
     public void loaded(){
-        if (progress == null)
-            return;
-        progress.setVisibility(GONE);
-        emptyStateText.setVisibility(GONE);
+        loadingIndicator.setVisibility(GONE);
         if (content != null)
             content.setVisibility(VISIBLE);
+
+        if (isTextError)
+            errorHolder.setVisibility(GONE);
+        else
+            removeErrorVisual();
     }
 
     public void error(){
@@ -100,13 +117,33 @@ public class Loader extends FrameLayout {
     }
 
     public void error(int index){
-        if (progress == null)
-            return;
-        progress.setVisibility(GONE);
-        emptyStateText.setText(errors[index]);
-        emptyStateText.setVisibility(VISIBLE);
+        Log.d("asd","c 2");
+        loadingIndicator.setVisibility(GONE);
+        Log.d("asd","c 3");
         if (content != null)
-        content.setVisibility(GONE);
+            content.setVisibility(GONE);
+        Log.d("asd","c 4");
+        if (isTextError){
+            Log.d("asd","c 5");
+            ((TextView)errorHolder).setText(empty_error_string);
+            errorHolder.setVisibility(VISIBLE);
+        }
+        else
+            setErrorVisual();
+    }
+
+    private void setErrorVisual(){
+        if (errorHolder != null)
+            removeView(errorHolder);
+        Log.d("asd","c 6");
+        errorHolder = LayoutInflater.from(getContext()).inflate(empty_error_visual,null,false);
+    }
+
+    private void removeErrorVisual(){
+        if (errorHolder == null)
+            return;
+
+        removeView(errorHolder);
     }
 
 }

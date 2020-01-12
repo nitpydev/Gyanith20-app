@@ -15,10 +15,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.barebrains.gyanith20.components.PostView
-            android:id="@+id/specific_post"
+        <com.barebrains.gyanith20.components.Loader
+            android:id="@+id/postLoader"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:empty_error="404 : Could not find the post : (">
+
+            <com.barebrains.gyanith20.components.PostView
+                android:id="@+id/specific_post"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.barebrains.gyanith20.components.Loader>
     </androidx.slidingpanelayout.widget.SlidingPaneLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

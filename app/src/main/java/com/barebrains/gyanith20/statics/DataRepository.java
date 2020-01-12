@@ -52,7 +52,7 @@ public class DataRepository {
 
                 @Override
                 public void OnError(String error) {
-                    scheduleItems.setValue(new Resource<ScheduleItem>(null,new LoaderException(0)));
+                    scheduleItems.setValue(new Resource<ScheduleItem>(null,new LoaderException(0,error)));
                 }
             });
 
@@ -75,6 +75,11 @@ public class DataRepository {
                 @Override
                 public void OnError(String error) {
                     eventItems.setValue(new Resource<EventItem>(null,new LoaderException(0,error)));
+                }
+
+                @Override
+                public void OnComplete(EventItem[] items, String error) {
+                    eventItems.setValue(new Resource<>(items,new LoaderException(null,error)));
                 }
             });
         }
@@ -107,18 +112,18 @@ public class DataRepository {
             public void onErrorResponse(VolleyError error) {
                 //if error continue using cache
                 EventItem[] a = getEventItemsFromCache();
-                if (a != null) {
-                    listener.OnResult(a);
-                    Log.d("asd","using Cache");
-                    NetworkManager.getInstance().completeOnNetAvailable(new CompletionListener(){
+                if (a != null)
+                    listener.OnComplete(a,"No Internet");
+                else
+                    listener.OnError("No Internet");
+
+                if (!NetworkManager.getInstance().isNetAvailable())
+                    NetworkManager.getInstance().completeOnNetAvailable(new CompletionListener() {
                         @Override
                         public void OnComplete() {
-                            Log.d("asd","net Available");
                             fetchEventsData(listener);
                         }
                     });
-                } else
-                    listener.OnError("Network Error");
 
             }
         });
@@ -132,16 +137,6 @@ public class DataRepository {
             return null;
         Gson gson = new Gson();
         return gson.fromJson(response, EventItem[].class);
-    }
-
-    private static Map<String,EventItem> map(EventItem[] array){
-        if (array == null)
-            return null;
-        Map<String,EventItem> itemMap = new HashMap<>();
-        for (EventItem item : array)
-            itemMap.put(item.id,item);
-
-        return itemMap;
     }
 
 
@@ -164,15 +159,18 @@ public class DataRepository {
 
                             for (DataSnapshot snapshot : dataSnapshot.getChildren())
                                 items.add(snapshot.getValue(ScheduleItem.class));
-                            listener.OnResult(items.toArray(new ScheduleItem[0]));
+                            if (NetworkManager.getInstance().isNetAvailable())
+                                listener.OnResult(items.toArray(new ScheduleItem[0]));
+                            else
+                                listener.OnComplete(items.toArray(new ScheduleItem[0]),"No Internet");
                         }catch (DatabaseException e){
-                            Log.d("asd","error : " + e.getMessage());
+                            listener.OnError("Internal Error");
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        listener.OnError("NO DATA FOUND");
+                        listener.OnError(null);
                     }
                 });
     }

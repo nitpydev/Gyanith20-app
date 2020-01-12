@@ -73,9 +73,9 @@ public class ScheduleFragment extends mFragment {
 
             adapter.setLoader(new Loader(getContext()));
             if (position == 0)
-                adapter.getLoader().setErrorTexts(new String[]{"No Events Live !"});
+                adapter.getLoader().set_empty_error("No Events Live !");
             else
-                adapter.getLoader().setErrorTexts(new String[]{"Will be Updated Soon"});
+                adapter.getLoader().set_empty_error("Will be Updated Soon");
 
             adapter.getLoader().addView(item);
             container.addView(adapter.getLoader());

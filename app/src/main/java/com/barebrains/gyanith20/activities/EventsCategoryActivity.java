@@ -57,12 +57,6 @@ public class EventsCategoryActivity extends AppCompatActivity {
         Loader loader = findViewById(R.id.eve_cat_loader);
         TextView catTitleText = findViewById(R.id.cattitle);
 
-
-
-        if (!NetworkManager.getInstance().isNetAvailable())
-            Toast.makeText(this, "No Internet!", Toast.LENGTH_SHORT).show();
-
-
         findViewById(R.id.backbut).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

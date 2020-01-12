@@ -1,11 +1,13 @@
 package com.barebrains.gyanith20.activities;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,14 +29,9 @@ public class SplashActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_splash);
 
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         ImageView l=(ImageView)findViewById(R.id.imageView4);
-
-
-        //registerReceiver(new notreceiver(),new IntentFilter("BOOT_COMPLETED"));
-
-
-       /* ObjectAnimator a=ObjectAnimator.ofFloat(l,"alpha",0,1);
+/*
+        ObjectAnimator a=ObjectAnimator.ofFloat(l,"alpha",0,1);
         a.setDuration(500);
         a.setInterpolator(new AccelerateInterpolator());
         a.start();
@@ -45,7 +42,10 @@ public class SplashActivity extends AppCompatActivity {
         ObjectAnimator s1=ObjectAnimator.ofFloat(l,"scaleY",2,1);
         s1.setDuration(500);
         s1.setInterpolator(new AccelerateInterpolator());
-        s1.start();*/
+        s1.start();
+
+ */
+
 
         Timer t=new Timer();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);

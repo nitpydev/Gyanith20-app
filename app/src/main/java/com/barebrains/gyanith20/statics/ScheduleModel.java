@@ -34,7 +34,7 @@ public class ScheduleModel extends ViewModel {
                 if (items.size() != 0)
                     return new Resource<>(items.toArray(new ScheduleItem[0]),input.error);
                 else
-                    return new Resource<>(null, new LoaderException(0));            }
+                    return new Resource<>(null, new LoaderException(0,input.error.getMessage()));            }
         });
     }
 
@@ -56,7 +56,7 @@ public class ScheduleModel extends ViewModel {
                 if (items.size() != 0)
                     return new Resource<>(items.toArray(new ScheduleItem[0]),input.error);
                 else
-                    return new Resource<>(null, new LoaderException(0));
+                    return new Resource<>(null, new LoaderException(0,input.error.getMessage()));
             }
         });
     }

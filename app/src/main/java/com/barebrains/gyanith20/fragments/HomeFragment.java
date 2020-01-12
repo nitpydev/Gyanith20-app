@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.R;
@@ -21,10 +20,8 @@ import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.activities.EventsCategoryActivity;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
-import com.barebrains.gyanith20.models.NotificationItem;
 import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.DataRepository;
-import com.barebrains.gyanith20.statics.eventsManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.glide.slider.library.SliderLayout;
@@ -39,7 +36,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
-import com.google.gson.Gson;
 
 import java.util.List;
 import java.util.Random;
@@ -52,7 +48,6 @@ public class HomeFragment extends mFragment {
     private long delay1 = 0;
     private long delay2 = 0;
     private SliderLayout imgSlider;
-    private boolean urlLoaded;
     private String trendurl = "",devurl ="https://www.gyanith.org/Team%20Gyanith/Team%20Gyanith.html";
     private FloatingActionButton random, trend, dev;
 
@@ -73,34 +68,32 @@ public class HomeFragment extends mFragment {
         trend = root.findViewById(R.id.trend);
         random = root.findViewById(R.id.random);
         dev = root.findViewById(R.id.fab);
-        imgSlider.addSlider((new  DefaultSliderView(getContext())).image(R.drawable.l2));
-        urlLoaded = false;
         final RequestOptions requestOptions = (new RequestOptions())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
                 .placeholder(R.drawable.l2)
                 .error(R.drawable.gyanith_error);
-
+        //todo:Image is not cacheing
+        //TODO : PUT A LOADER ON TOP OF SLIDERLAYOUT AND IMPLEMENT ERROR CHECKING OF NO INTERNET
         StorageReference slidesFolderRef = FirebaseStorage.getInstance().getReference().child("/HomeImageSlides");
 
         slidesFolderRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
                 List<StorageReference> imgRefs = listResult.getItems();
-                for (final StorageReference imgRef : imgRefs)
+                for (final StorageReference imgRef : imgRefs) {
+                    final DefaultSliderView item = new DefaultSliderView(HomeFragment.this.getContext());
+                    item.setRequestOption(requestOptions);
                     imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            DefaultSliderView item = new DefaultSliderView(HomeFragment.this.getContext());
                             item.image(uri.toString())
-                                    .setRequestOption(requestOptions)
                                     .setProgressBarVisible(true);
-                            if (!urlLoaded)
-                                imgSlider.removeSliderAt(0);
                             imgSlider.addSlider(item);
-                            urlLoaded = true;
+
                         }
                     });
+                }
             }
         });
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("homefragment_urlredirect");

@@ -55,25 +55,15 @@ public class NetworkManager {
             instance = new NetworkManager();
         if (instance.cm == null)
             instance.cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        String url = "https://restcountries.eu/rest/v2/name/india?fields=name";
-        JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-               instance.lastAvailability = true;
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                instance.lastAvailability = false;
-            }
-        });
-        VolleyManager.requestQueue.add(request);
+        rectifyInternet();
     }
 
     public void completeOnNetAvailable(CompletionListener listener){
-        Log.d("asd","Listener Added " + isNetAvailable());
         if (!isNetAvailable()) {
             netAvaillisteners.add(listener);
+        }else {
+            rectifyInternet();
+            listener.OnComplete();
         }
     }
 
@@ -147,8 +137,27 @@ public class NetworkManager {
     boolean isNetworkAvailableOld(){
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
+
     }
 
 
+    //The value returned by this is the truth
+    private static void rectifyInternet()
+    {
+        String url = "https://restcountries.eu/rest/v2/name/usa?fields=name";
+        JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                instance.lastAvailability = true;
+                Log.d("asd","uabfa");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                instance.lastAvailability = false;
+            }
+        });
+        VolleyManager.requestQueue.add(request);
+    }
 
 }
