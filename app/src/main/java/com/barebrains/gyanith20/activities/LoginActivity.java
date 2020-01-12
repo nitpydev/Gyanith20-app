@@ -1,28 +1,15 @@
 package com.barebrains.gyanith20.activities;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,42 +17,36 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
-import com.barebrains.gyanith20.statics.PostManager;
-import com.google.zxing.WriterException;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import androidmads.library.qrgenearator.QRGContents;
-import androidmads.library.qrgenearator.QRGEncoder;
 
 public class LoginActivity extends AppCompatActivity {
 
-
+    Loader loader;
     EditText uid,pwd;
     TextView signup;
     Button signinBtn;
     ImageButton backBtn;
-    ProgressBar loginprog;
+    Loader sign_in_loader;
     Context cnt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        boolean resolved = GyanithUserManager.resolveUserState(LoginActivity.this);
+        boolean resolved = GyanithUserManager.resolveUserState(this);
         if (resolved)
             OnSignInSuccess();
 
         setContentView(R.layout.activity_login);
+        loader = findViewById(R.id.login_loader);
         backBtn =findViewById(R.id.backbutlogin);
-        loginprog=findViewById(R.id.loginprog);
+        sign_in_loader = findViewById(R.id.sign_in_loader);
         uid=findViewById(R.id.uid);
         pwd=findViewById(R.id.password);
         cnt = this;
-        signup = (TextView) findViewById(R.id.sign_up);
+        signup = findViewById(R.id.sign_up);
         pwd.setTransformationMethod(new PasswordTransformationMethod());
         signinBtn =findViewById(R.id.signinBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -75,8 +56,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        isLoading(false);
-
+        sign_in_loader.loaded();
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,11 +68,11 @@ public class LoginActivity extends AppCompatActivity {
         signinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isLoading(true);
+                sign_in_loader.loading();
                 String pas = pwd.getText().toString();
                 String username = uid.getText().toString();
                 if (pas.equals("") || username.equals("")){
-                    isLoading(false);
+                    sign_in_loader.loaded();
                     Toast.makeText(getApplicationContext(), "Enter credentials!", Toast.LENGTH_LONG).show();
                 }
                 else {
@@ -101,17 +81,16 @@ public class LoginActivity extends AppCompatActivity {
                                     @Override
                                     public void OnResult(GyanithUser gyanithUser) {
                                         OnSignInSuccess();
-                                        isLoading(false);
                                     }
 
                                 @Override
                                 public void OnError(String error) {
                                         if (error.equals("not verified"))
                                         {
-                                            //Should show verify to continue
+                                            //TODO:Should show verify to continue
                                         }
                                         Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
-                                        isLoading(false);
+                                        sign_in_loader.loaded();
                                 }
                             });
                 }
@@ -122,17 +101,6 @@ public class LoginActivity extends AppCompatActivity {
     private void OnSignInSuccess(){
         Intent intent = new Intent(this,ProfileActivity.class);
         startActivity(intent);
-    }
-
-    private void isLoading(boolean state){
-        if (state){
-            loginprog.setVisibility(View.VISIBLE);
-            signinBtn.setVisibility(View.GONE);
-        }
-        else {
-            loginprog.setVisibility(View.GONE);
-            signinBtn.setVisibility(View.VISIBLE);
-        }
     }
 
     private void signup_act()

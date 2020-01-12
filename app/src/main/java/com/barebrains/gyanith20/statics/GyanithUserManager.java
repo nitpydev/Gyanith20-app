@@ -56,7 +56,7 @@ public class GyanithUserManager {
             @Override
             public void OnResult(String token) {
 
-                GyanithSignInWithToken(context, token, new ResultListener<GyanithUser>() {
+                GyanithSignInWithToken(token, new ResultListener<GyanithUser>() {
                     @Override
                     public void OnResult(GyanithUser gyanithUser) {
                         loggedUser = gyanithUser;
@@ -87,7 +87,7 @@ public class GyanithUserManager {
         final GyanithUser user = RetriveGyanithUser(context);
         if (user == null)
             throw new IllegalStateException();
-        GyanithSignInWithToken(context, user.token, new ResultListener<GyanithUser>() {
+        GyanithSignInWithToken(user.token, new ResultListener<GyanithUser>() {
             @Override
             public void OnResult(GyanithUser gyanithUser) {
                 if (gyanithUser == null) {//Implies Token Expired
@@ -138,7 +138,7 @@ public class GyanithUserManager {
         VolleyManager.requestQueue.add(userTokenRequest);
     }
 
-    private static void GyanithSignInWithToken(final Context context, final String token, final ResultListener<GyanithUser> callback) {
+    private static void GyanithSignInWithToken(final String token, final ResultListener<GyanithUser> callback) {
 
         RequestQueue requestQueue = VolleyManager.requestQueue;
         JsonObjectRequest userInfoRequest = new JsonObjectRequest(Request.Method.GET,buildUserInfoRequestUrl(token), null

@@ -73,7 +73,7 @@ public class Loader extends FrameLayout {
             return;
         if (loadingIndicator == null) {
             loadingIndicator = LayoutInflater.from(getContext()).inflate( loadingIndicatorResId,this,false);
-
+            addView(loadingIndicator);
             if (isTextError) {
                 errorHolder = new TextView(new ContextThemeWrapper(getContext(),R.style.emptyState));
                 addView(errorHolder);
@@ -117,14 +117,10 @@ public class Loader extends FrameLayout {
     }
 
     public void error(int index){
-        Log.d("asd","c 2");
         loadingIndicator.setVisibility(GONE);
-        Log.d("asd","c 3");
         if (content != null)
             content.setVisibility(GONE);
-        Log.d("asd","c 4");
         if (isTextError){
-            Log.d("asd","c 5");
             ((TextView)errorHolder).setText(empty_error_string);
             errorHolder.setVisibility(VISIBLE);
         }
@@ -136,7 +132,8 @@ public class Loader extends FrameLayout {
         if (errorHolder != null)
             removeView(errorHolder);
         Log.d("asd","c 6");
-        errorHolder = LayoutInflater.from(getContext()).inflate(empty_error_visual,null,false);
+        errorHolder = LayoutInflater.from(getContext()).inflate(empty_error_visual,this,false);
+        addView(errorHolder);
     }
 
     private void removeErrorVisual(){

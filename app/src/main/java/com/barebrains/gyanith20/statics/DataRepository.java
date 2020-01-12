@@ -45,14 +45,25 @@ public class DataRepository {
                 public void OnResult(ScheduleItem[] items) {
 
                     if (items != null)
-                        scheduleItems.setValue(new Resource<>(items, null));
+                        scheduleItems.setValue(new Resource<>(items, new LoaderException(null,null)));
                     else
                         scheduleItems.setValue(new Resource<ScheduleItem>(null,new LoaderException(0)));
                 }
 
                 @Override
+                public void OnComplete(ScheduleItem[] items, String error) {
+                    if (items != null && items.length != 0)
+                        scheduleItems.setValue(new Resource<>(items,new LoaderException(null,error)));
+                    else
+                        scheduleItems.setValue(new Resource<ScheduleItem>(null,new LoaderException(0,error)));
+                }
+
+                @Override
                 public void OnError(String error) {
-                    scheduleItems.setValue(new Resource<ScheduleItem>(null,new LoaderException(0,error)));
+                    if (error != null)
+                        scheduleItems.setValue(new Resource<ScheduleItem>(null,new LoaderException(0,error)));
+                    else
+                        scheduleItems.setValue(new Resource<ScheduleItem>(null,new LoaderException(0,null)));
                 }
             });
 
@@ -69,7 +80,7 @@ public class DataRepository {
                     if (items == null || items.length == 0)
                         eventItems.setValue(new Resource<EventItem>(null,new LoaderException(0)));
                     else
-                        eventItems.setValue(new Resource<>(items,null));
+                        eventItems.setValue(new Resource<>(items,new LoaderException(null,null)));
                 }
 
                 @Override
@@ -149,6 +160,7 @@ public class DataRepository {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Log.d("asd","called 3");
                         if (!dataSnapshot.hasChildren()) {
                             listener.OnError("NO DATA FOUND");
                             return;
@@ -156,7 +168,7 @@ public class DataRepository {
 
                         try {
                             ArrayList<ScheduleItem> items = new ArrayList<>();
-
+                            Log.d("asd","called 2");
                             for (DataSnapshot snapshot : dataSnapshot.getChildren())
                                 items.add(snapshot.getValue(ScheduleItem.class));
                             if (NetworkManager.getInstance().isNetAvailable())
@@ -170,6 +182,7 @@ public class DataRepository {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.d("asd","called 1");
                         listener.OnError(null);
                     }
                 });

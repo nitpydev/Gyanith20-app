@@ -1,10 +1,10 @@
 package com.barebrains.gyanith20.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -80,6 +80,14 @@ public class ProfileActivity extends AppCompatActivity {
         phone.setText(user.phoneNo);
         clg.setText(user.clg);
 
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, Profile2Activity.class);
+                startActivity(intent);
+            }
+        });
+
         signOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,25 +96,36 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        qrLoader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this,QrActivity.class);
+                startActivity(intent);
+            }
+        });
+
         NetworkManager.getInstance().addListener(-5,new NetworkStateListener(){
             @Override
-            public void OnAvailable() {
-                Log.d("asd","avaiable");
-                showQR(user.gyanithId);
-                qrLoader.loaded();
-            }
-
-            @Override
-            public void OnDisconnected() {
-                Toast.makeText(ProfileActivity.this, "No Internet", Toast.LENGTH_SHORT).show();
-                Log.d("asd","c 1");
-                qrLoader.error();
+            public void OnChange() {
+                ProfileActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshQr(user.gyanithId);
+                    }
+                });
             }
         });
     }
 
 
-    private void showQR(String value){
+    private void refreshQr(String value){
+
+        if (!NetworkManager.getInstance().isNetAvailable()) {
+            Toast.makeText(ProfileActivity.this, "No Internet", Toast.LENGTH_SHORT).show();
+            qrLoader.error();
+            return;
+        }
+
         WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
         Display display = manager.getDefaultDisplay();
         Point point = new Point();
@@ -119,10 +138,16 @@ public class ProfileActivity extends AppCompatActivity {
         try {
             Bitmap bitmap = qrgEncoder.encodeAsBitmap();
             qrImg.setImageBitmap(bitmap);
+            qrLoader.loaded();
         } catch (WriterException e) {
             qrLoader.error();
         }
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        NetworkManager.getInstance().removeListener(-5);
+    }
 }

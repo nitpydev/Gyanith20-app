@@ -227,14 +227,19 @@ public class HomeFragment extends mFragment {
         @Override
         public void  onClick(View view) {
             final Random r = new Random();
+            DataRepository.getAllEventItems().removeObservers(getViewLifecycleOwner());
             DataRepository.getAllEventItems().observe(getViewLifecycleOwner(), new Observer<Resource<EventItem>>() {
                 @Override
                 public void onChanged(Resource<EventItem> res) {
+
                     if (res.error != null) {
                         if (res.error.getMessage() != null)
                             Toast.makeText(HomeFragment.this.getContext(), res.error.getMessage(), Toast.LENGTH_SHORT).show();
-                        return;
+
+                        if (res.error.getIndex() != null)
+                            return;
                     }
+
                     int rnd = r.nextInt(res.value.length);
                     Intent evt = new Intent(getContext(), EventDetailsActivity.class);
                     evt.putExtra("EXTRA_ID", res.value[rnd].id);
@@ -246,6 +251,12 @@ public class HomeFragment extends mFragment {
 
         }
     };
+
+    @Override
+    public void onHide() {
+        super.onHide();
+        DataRepository.getAllEventItems().removeObservers(getViewLifecycleOwner());
+    }
 
     private View.OnClickListener devclk = new View.OnClickListener(){
         @Override

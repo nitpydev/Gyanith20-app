@@ -23,7 +23,7 @@ public class EventsModel extends ViewModel {
         return Transformations.map(getAllEventItems(), new Function<Resource<EventItem>, Resource<EventItem>>() {
             @Override
             public Resource<EventItem> apply(Resource<EventItem> input) {
-               if (input.error != null)
+               if (input.value == null)
                    return input;
 
                for (EventItem item : input.value) {
@@ -40,7 +40,7 @@ public class EventsModel extends ViewModel {
         return Transformations.map(getAllEventItems(), new Function<Resource<EventItem>,Resource<EventItem>>() {
             @Override
             public Resource<EventItem> apply(Resource<EventItem> input) {
-                if (input.error != null)
+                if (input.value == null)
                     return input;
 
                 ArrayList<EventItem> items = new ArrayList<>();
@@ -63,7 +63,8 @@ public class EventsModel extends ViewModel {
         return Transformations.map(getAllEventItems(), new Function<Resource<EventItem>,Resource<EventItem>>() {
             @Override
             public Resource<EventItem> apply(Resource<EventItem> input) {
-                if (input.error != null)
+
+                if (input.value == null)
                     return input;
 
                 ArrayList<EventItem> items = new ArrayList<>();
@@ -74,11 +75,10 @@ public class EventsModel extends ViewModel {
                 }
 
                 EventItem[] result = items.toArray(new EventItem[0]);
-
                 if (result.length == 0)
                     return new Resource<>(null,new LoaderException(0));
                 else
-                    return new Resource<>(result,null);
+                    return new Resource<>(result,new LoaderException(null,input.error.getMessage()));
             }
         });
     }

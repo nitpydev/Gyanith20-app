@@ -12,9 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.NetworkStateListener;
 import com.barebrains.gyanith20.models.EventItem;
@@ -26,7 +28,9 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
+//TODO: THIS CLASS SHOULD USE LIVEDATA TO RESPOND TO OBSERVERS THIS OLD APPROACH PRONE TO ERRORS LIKE NOT RUNNING ON UI THREAD AND PROBLEM WHEN NOT REMOVED OBSERVER
 public class NetworkManager {
     private static NetworkManager instance;
 
@@ -144,10 +148,10 @@ public class NetworkManager {
     //The value returned by this is the truth
     private static void rectifyInternet()
     {
-        String url = "https://restcountries.eu/rest/v2/name/usa?fields=name";
-        JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+        String url = "http://numbersapi.com/" + (new Random()).nextInt(1000) + "/math";
+        StringRequest request = new StringRequest(Request.Method.GET,url, new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(String response) {
                 instance.lastAvailability = true;
                 Log.d("asd","uabfa");
             }

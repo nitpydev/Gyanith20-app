@@ -34,7 +34,7 @@ public class ScheduleModel extends ViewModel {
                 if (items.size() != 0)
                     return new Resource<>(items.toArray(new ScheduleItem[0]),input.error);
                 else
-                    return new Resource<>(null, new LoaderException(0,input.error.getMessage()));            }
+                    return new Resource<>(null, new LoaderException(0,(input.error != null)?input.error.getMessage():null));            }
         });
     }
 
@@ -49,7 +49,6 @@ public class ScheduleModel extends ViewModel {
 
                 for (ScheduleItem item : input.value) {
                     if (item.start_time >= dayStart && item.end_time <= dayEnd) {
-
                         items.add(item);
                     }
                 }

@@ -39,7 +39,6 @@ public class gyanith20 extends MultiDexApplication {
         NetworkManager.initialize(this);
         AppNotiManager.initNotifications();
         PostManager.StartListeningPostCount();
-
         //USER SYSTEM INITIATIONS
         HandleUserManagement();
         LikesSystem.Initialize();
