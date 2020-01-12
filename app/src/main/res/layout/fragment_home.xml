@@ -30,18 +30,26 @@
                     app:cardBackgroundColor="@android:color/transparent"
                     app:cardCornerRadius="5dp">
 
-                    <com.glide.slider.library.SliderLayout
-                        android:id="@+id/img_slider"
+                    <com.barebrains.gyanith20.components.Loader
+                        android:id="@+id/slideloader"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginEnd="0dp">
+                        app:empty_error="404 : Could not load the images : (">
+                        <com.glide.slider.library.SliderLayout
+                            android:id="@+id/img_slider"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginEnd="0dp">
 
-                        <Space
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </com.glide.slider.library.SliderLayout>
+                            <Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </com.glide.slider.library.SliderLayout>
+
+                    </com.barebrains.gyanith20.components.Loader>
+
                 </androidx.cardview.widget.CardView>
 
                 <FrameLayout

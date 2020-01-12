@@ -2,6 +2,7 @@ package com.barebrains.gyanith20.fragments;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.AboutActivity;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.activities.EventsCategoryActivity;
+import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.others.mFragment;
@@ -26,6 +28,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.glide.slider.library.SliderLayout;
 import com.glide.slider.library.slidertypes.DefaultSliderView;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -50,6 +53,8 @@ public class HomeFragment extends mFragment {
     private SliderLayout imgSlider;
     private String trendurl = "",devurl ="https://www.gyanith.org/Team%20Gyanith/Team%20Gyanith.html";
     private FloatingActionButton random, trend, dev;
+    private  Loader loader ;
+
 
     public HomeFragment() { }
 
@@ -63,23 +68,37 @@ public class HomeFragment extends mFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        SharedPreferences sp;
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         imgSlider = root.findViewById(R.id.img_slider);
+        loader = root.findViewById(R.id.slideloader);
         trend = root.findViewById(R.id.trend);
         random = root.findViewById(R.id.random);
         dev = root.findViewById(R.id.fab);
         final RequestOptions requestOptions = (new RequestOptions())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .centerCrop()
                 .placeholder(R.drawable.l2)
                 .error(R.drawable.gyanith_error);
         //todo:Image is not cacheing
         //TODO : PUT A LOADER ON TOP OF SLIDERLAYOUT AND IMPLEMENT ERROR CHECKING OF NO INTERNET
+        loader.loading();
         StorageReference slidesFolderRef = FirebaseStorage.getInstance().getReference().child("/HomeImageSlides");
+        slidesFolderRef.listAll().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                final DefaultSliderView item = new DefaultSliderView(HomeFragment.this.getContext());
+                item.setRequestOption(requestOptions);
+                item.image("");
+                imgSlider.addSlider(item);
+            }
+        });
+
 
         slidesFolderRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
+
                 List<StorageReference> imgRefs = listResult.getItems();
                 for (final StorageReference imgRef : imgRefs) {
                     final DefaultSliderView item = new DefaultSliderView(HomeFragment.this.getContext());
@@ -87,10 +106,12 @@ public class HomeFragment extends mFragment {
                     imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
+                            if(uri == null)
+                                    loader.error(0);
                             item.image(uri.toString())
                                     .setProgressBarVisible(true);
                             imgSlider.addSlider(item);
-
+                        loader.loaded();
                         }
                     });
                 }
