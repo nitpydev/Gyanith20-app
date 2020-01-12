@@ -84,15 +84,6 @@ public class HomeFragment extends mFragment {
         //TODO : PUT A LOADER ON TOP OF SLIDERLAYOUT AND IMPLEMENT ERROR CHECKING OF NO INTERNET
         loader.loading();
         StorageReference slidesFolderRef = FirebaseStorage.getInstance().getReference().child("/HomeImageSlides");
-        slidesFolderRef.listAll().addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                final DefaultSliderView item = new DefaultSliderView(HomeFragment.this.getContext());
-                item.setRequestOption(requestOptions);
-                item.image("");
-                imgSlider.addSlider(item);
-            }
-        });
 
 
         slidesFolderRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
@@ -108,6 +99,7 @@ public class HomeFragment extends mFragment {
                         public void onSuccess(Uri uri) {
                             if(uri == null)
                                     loader.error(0);
+                            else
                             item.image(uri.toString())
                                     .setProgressBarVisible(true);
                             imgSlider.addSlider(item);

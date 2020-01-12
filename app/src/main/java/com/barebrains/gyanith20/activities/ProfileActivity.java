@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.Loader;
@@ -96,11 +98,13 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        qrLoader.setOnClickListener(new View.OnClickListener() {
+        qrImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(ProfileActivity.this,qrImg, "profile");
                 Intent intent = new Intent(ProfileActivity.this,QrActivity.class);
-                startActivity(intent);
+                intent.putExtra("value",user.gyanithId);
+                startActivity(intent, options.toBundle());
             }
         });
 

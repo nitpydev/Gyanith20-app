@@ -57,6 +57,7 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:padding="10dp"
+                            android:transitionName="profile"
                             app:srcCompat="@drawable/ic_qr_error" />
                     </com.barebrains.gyanith20.components.Loader>
                 </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
