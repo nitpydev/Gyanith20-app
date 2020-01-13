@@ -24,7 +24,8 @@
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleTextAppearance="@style/TransparentText"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@+id/toolbar">
+            app:toolbarId="@+id/toolbar"
+            app:collapsedTitleTextAppearance="@color/whitealpha">
 
 
             <LinearLayout
