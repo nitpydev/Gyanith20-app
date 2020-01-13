@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
@@ -44,6 +45,9 @@ public class EventDetailsActivity extends AppCompatActivity {
             getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         }
         setContentView(R.layout.activity_event_details);
+
+
+
 
 
         //VIEW BINDINGS
@@ -86,14 +90,14 @@ public class EventDetailsActivity extends AppCompatActivity {
         TextView title=findViewById(R.id.evedttitle);
         ImageView eveimage= findViewById(R.id.eveimv);
         AnimatedToggle favBtn =findViewById(R.id.favButton);
-
+        Toolbar toolbar_title = findViewById(R.id.tool);
         Glide.with(this)
                 .load(eventItem.img1)
                 .placeholder(R.drawable.l2)
                 .error(R.drawable.gyanith_error)
                 .into(eveimage);
         title.setText(eventItem.name);
-
+        toolbar_title.setTitle(eventItem.name);
         Set<String> favIds = sp.getStringSet(getString(R.string.favSet), new HashSet<String>());
 
         favBtn.setChecked(favIds.contains(eventItem.id));
