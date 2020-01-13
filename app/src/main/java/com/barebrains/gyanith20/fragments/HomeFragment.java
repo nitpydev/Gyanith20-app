@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.AboutActivity;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.activities.EventsCategoryActivity;
+import com.barebrains.gyanith20.components.ImageSlider;
 import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
@@ -47,13 +49,12 @@ import java.util.Random;
 public class HomeFragment extends mFragment {
 
 
-
     private long delay1 = 0;
     private long delay2 = 0;
-    private SliderLayout imgSlider;
+    private ImageSlider imgSlider;
     private String trendurl = "",devurl ="https://www.gyanith.org/Team%20Gyanith/Team%20Gyanith.html";
     private FloatingActionButton random, trend, dev;
-    private  Loader loader ;
+    //private  Loader loader ;
 
 
     public HomeFragment() { }
@@ -68,47 +69,22 @@ public class HomeFragment extends mFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        SharedPreferences sp;
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         imgSlider = root.findViewById(R.id.img_slider);
-        loader = root.findViewById(R.id.slideloader);
         trend = root.findViewById(R.id.trend);
         random = root.findViewById(R.id.random);
         dev = root.findViewById(R.id.fab);
-        final RequestOptions requestOptions = (new RequestOptions())
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .centerCrop()
-                .placeholder(R.drawable.l2)
-                .error(R.drawable.gyanith_error);
-        //todo:Image is not cacheing
-        //TODO : PUT A LOADER ON TOP OF SLIDERLAYOUT AND IMPLEMENT ERROR CHECKING OF NO INTERNET
-        loader.loading();
         StorageReference slidesFolderRef = FirebaseStorage.getInstance().getReference().child("/HomeImageSlides");
-
-
         slidesFolderRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
 
                 List<StorageReference> imgRefs = listResult.getItems();
-                for (final StorageReference imgRef : imgRefs) {
-                    final DefaultSliderView item = new DefaultSliderView(HomeFragment.this.getContext());
-                    item.setRequestOption(requestOptions);
-                    imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            if(uri == null)
-                                    loader.error(0);
-                            else
-                            item.image(uri.toString())
-                                    .setProgressBarVisible(true);
-                            imgSlider.addSlider(item);
-                        loader.loaded();
-                        }
-                    });
-                }
+                imgSlider.load(imgRefs).start();
+                imgSlider.autoScroll(true);
             }
         });
+
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("homefragment_urlredirect");
     ref.addListenerForSingleValueEvent(new ValueEventListener() {
         @Override
@@ -126,13 +102,13 @@ public class HomeFragment extends mFragment {
 
         }
     });
+
         CardView w = root.findViewById(R.id.w);
         CardView te = root.findViewById(R.id.te);
         CardView nte = root.findViewById(R.id.ne);
         CardView ps = root.findViewById(R.id.ps);
         CardView gl = root.findViewById(R.id.gl);
         CardView au = root.findViewById(R.id.au);
-
 
         trend.setOnClickListener(trendclk);
         random.setOnClickListener(rndclk);
@@ -207,6 +183,8 @@ public class HomeFragment extends mFragment {
 
         return root;
     }
+
+
 
     private View.OnClickListener eventCategoryClick = new View.OnClickListener() {
         @Override

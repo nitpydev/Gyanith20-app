@@ -3,59 +3,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="50dp"
     android:fillViewport="true">
-
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="50dp"
         android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="475dp"
+            android:clickable="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:clickable="false"
                 android:orientation="vertical">
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_margin="15dp"
-                    android:layout_weight="0.7"
+                    android:layout_weight="2"
+                    android:clickable="false"
                     app:cardBackgroundColor="@android:color/transparent"
                     app:cardCornerRadius="5dp">
 
-                    <com.barebrains.gyanith20.components.Loader
-                        android:id="@+id/slideloader"
+                    <com.barebrains.gyanith20.components.ImageSlider
+                        android:id="@+id/img_slider"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:empty_error="404 : Could not load the images : (">
-                        <com.glide.slider.library.SliderLayout
-                            android:id="@+id/img_slider"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="0dp"
-                            android:layout_marginTop="0dp"
-                            android:layout_marginEnd="0dp">
-
-                            <Space
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-                        </com.glide.slider.library.SliderLayout>
-
-                    </com.barebrains.gyanith20.components.Loader>
+                        android:clickable="true" />
 
                 </androidx.cardview.widget.CardView>
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2">
+                    android:layout_height="0dp"
+                    android:layout_weight="0.7">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -71,10 +59,10 @@
                             android:layout_margin="20sp"
                             android:layout_weight="1"
                             android:clickable="true"
-                           app:fabCustomSize="70dp"
-                            app:maxImageSize="24dp"
                             android:padding="30sp"
                             app:backgroundTint="@color/colorAccent"
+                            app:fabCustomSize="70dp"
+                            app:maxImageSize="24dp"
                             app:srcCompat="@drawable/fire" />
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -88,9 +76,9 @@
                             android:layout_marginBottom="20sp"
                             android:layout_weight="1"
                             android:clickable="true"
+                            app:backgroundTint="@color/colorAccent"
                             app:fabCustomSize="70dp"
                             app:maxImageSize="24dp"
-                            app:backgroundTint="@color/colorAccent"
                             app:srcCompat="@drawable/dice" />
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -104,10 +92,10 @@
                             android:layout_marginBottom="20sp"
                             android:layout_weight="1"
                             android:clickable="true"
-                            app:fabCustomSize="70dp"
-                            app:maxImageSize="38dp"
                             android:src="@drawable/dev"
-                            app:backgroundTint="@color/colorAccent" />
+                            app:backgroundTint="@color/colorAccent"
+                            app:fabCustomSize="70dp"
+                            app:maxImageSize="38dp" />
                     </LinearLayout>
                 </FrameLayout>
 
@@ -117,24 +105,20 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginBottom="60dp"
-            android:layout_weight="1"
+            android:layout_height="475dp"
             android:gravity="center_horizontal"
             android:isScrollContainer="false">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/w"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="fill_horizontal|fill_vertical"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="7.5dp"
@@ -149,7 +133,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/wgrad"
                         android:gravity="center_vertical"
                         android:orientation="vertical"
@@ -159,18 +143,18 @@
                         <ImageView
                             android:id="@+id/imageView14"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
                             android:layout_gravity="center"
-                            android:layout_weight="1.5"
+                            android:layout_weight="3"
                             android:tint="@android:color/white"
                             app:srcCompat="@drawable/ic_cogwheels" />
 
                         <TextView
                             android:id="@+id/textView20"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="0dp"
                             android:layout_gravity="center"
-                            android:layout_weight="3"
+                            android:layout_weight="1.5"
                             android:fontFamily="@font/poppinsr"
                             android:gravity="center"
                             android:text="@string/workshop"
@@ -183,7 +167,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/ne"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="fill_horizontal|fill_vertical"
 
                     android:layout_marginLeft="15dp"
@@ -197,7 +181,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/ntegrad"
                         android:gravity="center_vertical"
                         android:orientation="vertical"
@@ -206,19 +190,19 @@
 
                         <ImageView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
                             android:layout_gravity="center"
-                            android:layout_weight="1.5"
+                            android:layout_weight="3"
                             android:tint="@android:color/white"
                             app:srcCompat="@drawable/ic_maze" />
 
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
-                            android:layout_weight="3"
+                            android:layout_weight="1.5"
                             android:ellipsize="marquee"
                             android:fontFamily="@font/poppinsr"
                             android:gravity="center"
@@ -234,7 +218,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/ps"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="fill_horizontal|fill_vertical"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="7.5dp"
@@ -247,7 +231,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/psgrad"
                         android:gravity="center_vertical"
                         android:orientation="vertical"
@@ -256,17 +240,17 @@
 
                         <ImageView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
                             android:layout_gravity="center"
-                            android:layout_weight="1.5"
+                            android:layout_weight="3"
                             android:tint="@android:color/white"
                             app:srcCompat="@drawable/ic_famous" />
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="0dp"
                             android:layout_gravity="center"
-                            android:layout_weight="3"
+                            android:layout_weight="1.5"
                             android:fontFamily="@font/poppinsr"
                             android:gravity="center"
                             android:text="@string/pro_shows"
@@ -280,14 +264,14 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/te"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="fill_horizontal|fill_vertical"
                     android:layout_marginLeft="7.5dp"
                     android:layout_marginTop="7.5dp"
@@ -300,7 +284,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/tegrad"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -309,17 +293,17 @@
 
                         <ImageView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
                             android:layout_gravity="center"
-                            android:layout_weight="1.5"
+                            android:layout_weight="3"
                             android:tint="@android:color/white"
                             app:srcCompat="@drawable/ic_browser" />
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="0dp"
                             android:layout_gravity="center"
-                            android:layout_weight="3"
+                            android:layout_weight="1.5"
                             android:fontFamily="@font/poppinsr"
                             android:gravity="center"
                             android:text="@string/tech_Events"
@@ -332,7 +316,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/gl"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="fill_horizontal|fill_vertical"
                     android:layout_marginLeft="7.5dp"
                     android:layout_marginTop="7.5dp"
@@ -345,7 +329,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/glgrad"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -354,17 +338,17 @@
 
                         <ImageView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
                             android:layout_gravity="center"
-                            android:layout_weight="1.5"
+                            android:layout_weight="3"
                             android:tint="@android:color/white"
                             app:srcCompat="@drawable/ic_mic" />
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="0dp"
                             android:layout_gravity="center"
-                            android:layout_weight="3"
+                            android:layout_weight="1.5"
                             android:fontFamily="@font/poppinsr"
                             android:gravity="center"
                             android:text="@string/guest_lectures"
@@ -377,7 +361,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/au"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="fill_horizontal|fill_vertical"
                     android:layout_marginLeft="7.5dp"
                     android:layout_marginTop="7.5dp"
@@ -390,7 +374,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/abtgrad"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -399,17 +383,17 @@
 
                         <ImageView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
                             android:layout_gravity="center"
-                            android:layout_weight="1.5"
+                            android:layout_weight="3"
                             android:tint="@android:color/white"
                             app:srcCompat="@drawable/ic_about_us" />
 
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="0dp"
                             android:layout_gravity="center"
-                            android:layout_weight="3"
+                            android:layout_weight="1.5"
                             android:fontFamily="@font/poppinsr"
                             android:gravity="center"
                             android:text="@string/about_us"

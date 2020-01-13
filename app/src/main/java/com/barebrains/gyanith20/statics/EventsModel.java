@@ -82,4 +82,29 @@ public class EventsModel extends ViewModel {
             }
         });
     }
+
+    public LiveData<Resource<EventItem>> getEventsofIdsandType(final String type,final ArrayList<String> ids){
+        return Transformations.map(getAllEventItems(), new Function<Resource<EventItem>,Resource<EventItem>>() {
+            @Override
+            public Resource<EventItem> apply(Resource<EventItem> input) {
+
+                if (input.value == null)
+                    return input;
+
+                ArrayList<EventItem> items = new ArrayList<>();
+                for (EventItem item : input.value) {
+                    if (ids.contains(item.id) && item.type.equals(type)) {
+                        items.add(item);
+                    }
+                }
+
+                EventItem[] result = items.toArray(new EventItem[0]);
+                if (result.length == 0)
+                    return new Resource<>(null,new LoaderException(0));
+                else
+                    return new Resource<>(result,new LoaderException(null,input.error.getMessage()));
+            }
+        });
+    }
+
 }

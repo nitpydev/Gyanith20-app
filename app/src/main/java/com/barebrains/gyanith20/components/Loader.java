@@ -42,7 +42,7 @@ public class Loader extends FrameLayout {
     private boolean isTextError = true;
 
     private String empty_error_string = "Will be Updated Soon";
-    private int empty_error_visual = 0;
+    private int empty_error_visual = R.layout.loader_empty_error_visual;
 
     private View loadingIndicator = null;
     private View errorHolder = null;
@@ -56,9 +56,17 @@ public class Loader extends FrameLayout {
             String s = attrs.getString(R.styleable.Loader_empty_error);
             if (s != null)empty_error_string = s;
         } else {
-            empty_error_visual = attrs.getResourceId(R.styleable.Loader_empty_error,0);//TODO:SET DEFAULT VALUE
+            empty_error_visual = attrs.getResourceId(R.styleable.Loader_empty_error,R.layout.loader_empty_error_visual);
         }
         attrs.recycle();
+    }
+
+    public void setIsTextError(boolean isTextError){
+        this.isTextError = isTextError;
+    }
+
+    public void setEmpty_error_visual(int error_visual){
+        empty_error_visual = error_visual;
     }
 
     public void set_empty_error(String error){
