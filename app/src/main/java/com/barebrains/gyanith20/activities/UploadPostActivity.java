@@ -12,21 +12,17 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.components.ImageSlider;
 import com.barebrains.gyanith20.services.PostUploadService;
 import com.barebrains.gyanith20.statics.Anim;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.glide.slider.library.SliderLayout;
-import com.glide.slider.library.slidertypes.BaseSliderView;
-import com.glide.slider.library.slidertypes.DefaultSliderView;
-
-import java.io.File;
 
 
-public class UploadPostActivity extends AppCompatActivity implements BaseSliderView.OnSliderClickListener {
+public class UploadPostActivity extends AppCompatActivity {
 
 
-    SliderLayout sliderPanel;
+    ImageSlider imgSlider;
     View tapPanel;
     EditText captionsText;
     TextView captionPrompt;
@@ -42,7 +38,7 @@ public class UploadPostActivity extends AppCompatActivity implements BaseSliderV
         setContentView(R.layout.activity_upload_post);
 
         tapPanel = findViewById(R.id.upd_post_tap_panel);
-        sliderPanel = findViewById(R.id.uploadpost_viewpager);
+        imgSlider = findViewById(R.id.upd_img_slider);
         captionsText = findViewById(R.id.post_captions);
         captionPrompt = findViewById(R.id.caption_prompt);
         captionsText.addTextChangedListener(new TextWatcher() {
@@ -81,12 +77,14 @@ public class UploadPostActivity extends AppCompatActivity implements BaseSliderV
             finish();
 
         for (String path : imgPaths){
-            DefaultSliderView item = new DefaultSliderView(this);
-            item.image(new File(path))
+          //  DefaultSliderView item = new DefaultSliderView(this);
+         /*   item.image(new File(path))
                     .setRequestOption(requestOptions)
                     .setProgressBarVisible(true)
                     .setOnSliderClickListener(this);
-            sliderPanel.addSlider(item);
+            imgSlider.addSlider(item);
+
+          */
         }
 
         findViewById(R.id.post_btn).setOnClickListener(new View.OnClickListener() {
@@ -111,20 +109,22 @@ public class UploadPostActivity extends AppCompatActivity implements BaseSliderV
 
     private void captionStateToggle(){
         if (tapPanel.getVisibility() == View.VISIBLE) {
-            Anim.crossfade(tapPanel, sliderPanel,0f,350);
+            Anim.crossfade(tapPanel, imgSlider,0f,350);
             Anim.zoom(tapPanel,1f, 0.7f,450);
             hideSoftKeyboard();
 
         } else {
-            Anim.crossfade(sliderPanel,tapPanel,0.3f,350);
+            Anim.crossfade(imgSlider,tapPanel,0.3f,350);
             Anim.zoom(tapPanel,0.7f,1f,400);
         }
     }
 
-    @Override
+   /* @Override
     public void onSliderClick(BaseSliderView slider) {
         captionStateToggle();
     }
+
+    */
 
     public void hideSoftKeyboard() {
 

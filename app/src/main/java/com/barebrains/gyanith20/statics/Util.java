@@ -288,34 +288,15 @@ public static String amPm(int i){
     public static GyanithUser jsonToGyanithUser(String s,String token){
         Gson gson = new Gson();
         GyanithUserJsonResponse json = gson.fromJson(s,GyanithUserJsonResponse.class);
-
-        //Dummy till server updates
-        json.regEventIds = new String[]{"5","4","6","23","21","22","20"};
-
         return new GyanithUser(json.gyid
         ,json.name
         ,json.usr
         ,json.email
         ,json.phno
         ,json.clg
-        ,json.regEventIds
+        ,json.reg
         ,token);
     }
-
-    public static ArrayList<EventItem> jsonToEventItem(ArrayList<eventItemJson> jsons){
-        ArrayList<EventItem> EventItems = new ArrayList<>(jsons.size());
-        for (int i = 0; i < jsons.size();i++){
-            eventItemJson itemJson = jsons.get(i);
-
-           // EventItem item = new EventItem(itemJson.name,itemJson.timestamp,itemJson.id);
-            //item.setType(itemJson.type);
-            //item.setIconImgUrl(itemJson.img2);
-            //EventItems.add(item);
-        }
-
-        return EventItems;
-    }
-
 }
 
 class GyanithUserJsonResponse{
@@ -327,24 +308,7 @@ class GyanithUserJsonResponse{
     public String email;
     public String phno;
     public String gender;
-    public String[] regEventIds;
+    public ArrayList<String> reg;
 
     public GyanithUserJsonResponse(){}
-}
-
-
-class eventItemJson{
-    public String id;
-    public String name;
-    public String des;
-    public String rules;
-    public String contact;
-    public String img1;
-    public String img2;
-    public String cost;
-    public String max_ptps;
-    public String type;
-    public String timestamp;
-
-    public eventItemJson(){}
 }

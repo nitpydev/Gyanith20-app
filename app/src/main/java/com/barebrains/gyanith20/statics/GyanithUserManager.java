@@ -121,6 +121,8 @@ public class GyanithUserManager {
                                 result.OnResult(response.getString("token"));
                             else if (response.has("error"))
                                 result.OnError(response.getString("error"));
+                            else
+                                result.OnError("Internal Error");
 
                         } catch (JSONException e) {
                             result.OnError("Internal Error");
@@ -150,7 +152,7 @@ public class GyanithUserManager {
 
                     if (response.has("usr"))
                         callback.OnResult(Util.jsonToGyanithUser(response.toString(), token));
-                    else if (response.has("error"))
+                    else if (response.has("reg"))//TODO:CHECK HERE
                         callback.OnError(response.getString("error"));
                     else
                         callback.OnError("Internal Error");

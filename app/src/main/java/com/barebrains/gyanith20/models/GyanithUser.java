@@ -12,9 +12,9 @@ public class GyanithUser {
     public String phoneNo;
     public String clg;
     public String token;
-    public String[] regEventIds;
+    public ArrayList<String> regEventIds;
 
-    public GyanithUser(String gyanithId, String name, String userName, String email, String phoneNo, String clg,String[] regEventIds, String token){
+    public GyanithUser(String gyanithId, String name, String userName, String email, String phoneNo, String clg,ArrayList<String> regEventIds, String token){
         this.gyanithId = gyanithId;
         this.name = name;
         this.userName = userName;

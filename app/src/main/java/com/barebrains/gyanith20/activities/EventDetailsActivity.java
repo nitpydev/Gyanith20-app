@@ -95,6 +95,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 .load(eventItem.img1)
                 .placeholder(R.drawable.l2)
                 .error(R.drawable.gyanith_error)
+                .centerCrop()
                 .into(eveimage);
         title.setText(eventItem.name);
         toolbar_title.setTitle(eventItem.name);
