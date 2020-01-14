@@ -90,11 +90,13 @@
                             android:layout_marginTop="20sp"
                             android:layout_marginRight="20sp"
                             android:layout_marginBottom="20sp"
-                            android:layout_weight="1"
                             android:clickable="true"
                             app:backgroundTint="@color/colorAccent"
                             app:fabCustomSize="70dp"
-                            app:maxImageSize="38dp" />
+                            app:maxImageSize="38dp"
+                            app:srcCompat = "@drawable/ic_tick2"
+
+                            />
                     </LinearLayout>
                 </FrameLayout>
 
