@@ -24,11 +24,14 @@
         <item name="android:layout_margin">16dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/colorAccent</item>
         <item name="backgroundTint">@color/colorAccent</item>
         <item name="tint">@color/colorSecondary</item>
+        <item name="srcCompat">@drawable/ic_baseline_add_24px</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="layout_behavior">.others.MoveUpwardBehavior</item>
+        <item name="android:layout_gravity">bottom|end</item>
     </style>
 
 

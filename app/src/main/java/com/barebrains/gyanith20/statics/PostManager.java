@@ -64,15 +64,15 @@ public class  PostManager{
         postRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists())
-                    callback.OnResult(dataSnapshot.getValue(Post.class));
+                if (NetworkManager.getInstance().isNetAvailable())
+                callback.OnResult(dataSnapshot.getValue(Post.class));
                 else
-                    callback.OnResult(null);
+                    callback.OnComplete(dataSnapshot.getValue(Post.class),"No Internet");
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                callback.OnError(null);
             }
         });
     }

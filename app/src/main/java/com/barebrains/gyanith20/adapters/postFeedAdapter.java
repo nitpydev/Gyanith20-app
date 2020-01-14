@@ -86,7 +86,6 @@ public class postFeedAdapter extends FirebaseRecyclerPagingAdapter<Post, PostVie
 
     @Override
     protected void onBindViewHolder(@NonNull final PostViewHolder viewHolder, int position, @NonNull Post model) {
-
         viewHolder.SetPost(model);
     }
 

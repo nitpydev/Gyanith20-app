@@ -15,6 +15,7 @@ import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.Util;
 import com.google.android.gms.common.util.IOUtils;
 
@@ -37,6 +38,12 @@ public class StartPostActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!NetworkManager.getInstance().isNetAvailable()) {
+            Toast.makeText(this, "No Internet", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         startPosting();
     }
 

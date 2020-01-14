@@ -36,7 +36,6 @@
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="-15dp"
             app:srcCompat="@drawable/l2" />
 
         <com.barebrains.gyanith20.components.Loader

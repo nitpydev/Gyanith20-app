@@ -2,6 +2,7 @@ package com.barebrains.gyanith20.components;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -12,6 +13,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -24,6 +26,8 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.interfaces.CompletionListener;
+import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -123,12 +127,22 @@ public class ImageSlider extends Loader {
 
     private class recyclerAdapter extends RecyclerView.Adapter<viewHolder>{
 
+
         @NonNull
         @Override
-        public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            FrameLayout itemView = new FrameLayout(getContext());
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(((RecyclerView) parent).getLayoutManager().getWidth(),MATCH_PARENT);
+        public viewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
+            final FrameLayout itemView = new FrameLayout(getContext());
+            final int width = recyclerView.getLayoutManager().getWidth();
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams((width == 0)?MATCH_PARENT:width,MATCH_PARENT);
             itemView.setLayoutParams(layoutParams);
+
+            recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    itemView.getLayoutParams().width = recyclerView.getWidth();
+                }
+            });
+
             return new viewHolder(itemView);
         }
 

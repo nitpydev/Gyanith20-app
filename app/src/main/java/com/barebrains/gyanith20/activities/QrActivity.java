@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -39,6 +40,14 @@ public class QrActivity extends AppCompatActivity {
         loader = findViewById(R.id.qr_act_loader);
         qrImg = findViewById(R.id.qr_img_act);
         loader.loading();
+
+        (findViewById(R.id.qr_act_back_btn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         NetworkManager.getInstance().addListener(-5,new NetworkStateListener(){
             @Override
             public void OnAvailable() {
@@ -63,6 +72,12 @@ public class QrActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        NetworkManager.getInstance().removeListener(-5);
     }
 
     private void showQR(String value){

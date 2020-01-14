@@ -24,31 +24,27 @@
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleTextAppearance="@style/TransparentText"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@+id/toolbar"
-            app:collapsedTitleTextAppearance="@color/whitealpha">
+            app:toolbarId="@+id/toolbar">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_centerInParent="true"
                 android:gravity="center_horizontal"
                 >
-
                 <com.barebrains.gyanith20.components.Loader
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="match_parent"
                     android:id="@+id/detailsLoader">
-
-                    <ImageView
-                        android:id="@+id/eveimv"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:scaleType="fitCenter" />
+                <ImageView
+                    android:id="@+id/eveimv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:scaleType="centerCrop" />
                 </com.barebrains.gyanith20.components.Loader>
-
 
                 <ImageView
                     android:id="@+id/fh"
@@ -78,7 +74,7 @@
                         android:layout_height="30dp"
                         android:layout_gravity="center"
                         android:background="@null"
-                        android:button="@drawable/like_selector"
+                        android:button="@drawable/toggle_button"
                         android:checked="false"
                         android:foregroundGravity="center"
                         android:minWidth="0dp"
@@ -110,6 +106,10 @@
 
             </LinearLayout>
 
+
+
+
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/tool"
                 android:layout_width="match_parent"
@@ -133,7 +133,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent">
-    <androidx.viewpager.widget.ViewPager
+    <com.barebrains.gyanith20.components.ClickableViewPager
         android:id="@+id/event_details_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -143,7 +143,7 @@
             style="@style/tabs"
             android:layout_width="match_parent"
             android:layout_height="40dp" />
-    </androidx.viewpager.widget.ViewPager>
+    </com.barebrains.gyanith20.components.ClickableViewPager>
 
 
 </LinearLayout>

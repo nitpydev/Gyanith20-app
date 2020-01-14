@@ -6,26 +6,45 @@
     android:layout_height="match_parent"
     tools:context=".activities.SpecificPostActivity">
 
-    <androidx.slidingpanelayout.widget.SlidingPaneLayout
-        android:id="@+id/refresh_post"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="50dp"
+        android:background="?colorPrimary"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/specific_post_back_btn"
+            style="@style/backbtn"
+            android:backgroundTint="@android:color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/splight"
+            android:text="Gyanith Community"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_post"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
         <com.barebrains.gyanith20.components.Loader
             android:id="@+id/postLoader"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:empty_error="404 : Could not find the post : (">
-
-            <com.barebrains.gyanith20.components.PostView
-                android:id="@+id/specific_post"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </com.barebrains.gyanith20.components.Loader>
-    </androidx.slidingpanelayout.widget.SlidingPaneLayout>
+            android:layout_height="wrap_content"
+            app:empty_error="404 : Could not find the post : ("
+            app:loading_indicator="@layout/loader_post_shimmer" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
