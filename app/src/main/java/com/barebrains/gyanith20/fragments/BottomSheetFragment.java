@@ -8,11 +8,16 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.activities.LoginActivity;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class BottomSheetFragment extends BottomSheetDialogFragment {
+
+    private static int EMAIL_REQUEST_ID = 11;
 
     private String title,body;
 
@@ -33,7 +38,7 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         //Set the custom view
         View botRoot = LayoutInflater.from(getContext()).inflate(R.layout.botsheet, null);
         ((TextView)botRoot.findViewById(R.id.bot_title)).setText(title);
-        ((TextView)botRoot.findViewById(R.id.bot_body)).setText(title);
+        ((TextView)botRoot.findViewById(R.id.bot_body)).setText(body);
         View btn = botRoot.findViewById(R.id.bot_btn);
         if (action) {
             btn.setVisibility(View.VISIBLE);
@@ -43,15 +48,24 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
                     try{
                         Intent email = new Intent(Intent.ACTION_MAIN);
                         email.addCategory(Intent.CATEGORY_APP_EMAIL);
-                        startActivity(email);}catch (ActivityNotFoundException n){ Toast.makeText(getContext(),"Error opening Default Email app, sorry",Toast.LENGTH_SHORT).show();}}
+                        startActivityForResult(email,EMAIL_REQUEST_ID);}catch (ActivityNotFoundException n){ Toast.makeText(getContext(),"Error opening Default Email app, sorry",Toast.LENGTH_SHORT).show();}}
             });
         }
         dialog.setContentView(botRoot);
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == EMAIL_REQUEST_ID)
+        {
+            listener.OnComplete();
+        }
+    }
+
+    @Override
     public void onDestroyView() {
-        listener.OnComplete();
+        if (!action)
+            listener.OnComplete();
         super.onDestroyView();
     }
 }

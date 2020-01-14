@@ -2,10 +2,8 @@ package com.barebrains.gyanith20.fragments;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +19,11 @@ import com.barebrains.gyanith20.activities.AboutActivity;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.activities.EventsCategoryActivity;
 import com.barebrains.gyanith20.components.ImageSlider;
-import com.barebrains.gyanith20.components.Loader;
-import com.barebrains.gyanith20.interfaces.Resource;
+import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.DataRepository;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.glide.slider.library.SliderLayout;
-import com.glide.slider.library.slidertypes.DefaultSliderView;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -74,13 +67,13 @@ public class HomeFragment extends mFragment {
         trend = root.findViewById(R.id.trend);
         random = root.findViewById(R.id.random);
         dev = root.findViewById(R.id.fab);
+        //TODO: CACHING WORKS ONLY WHEN INTERNET IS AVAILABLE AS GLIDE NEEDS THE URL FOR CACHEING IF WE INSTEAD USE FIREBASE DATABASE FOR FETCHING IDS IT CAN CACHE IN NO INTERNET CIRCUMSTANCES
         StorageReference slidesFolderRef = FirebaseStorage.getInstance().getReference().child("/HomeImageSlides");
         slidesFolderRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
-
                 List<StorageReference> imgRefs = listResult.getItems();
-                imgSlider.load(imgRefs).start();
+                imgSlider.load(imgRefs.toArray(new  StorageReference[0])).apply((new RequestOptions()).centerCrop()).start();
                 imgSlider.autoScroll(true);
             }
         });
@@ -219,9 +212,9 @@ public class HomeFragment extends mFragment {
         public void  onClick(View view) {
             final Random r = new Random();
             DataRepository.getAllEventItems().removeObservers(getViewLifecycleOwner());
-            DataRepository.getAllEventItems().observe(getViewLifecycleOwner(), new Observer<Resource<EventItem>>() {
+            DataRepository.getAllEventItems().observe(getViewLifecycleOwner(), new Observer<ArrayResource<EventItem>>() {
                 @Override
-                public void onChanged(Resource<EventItem> res) {
+                public void onChanged(ArrayResource<EventItem> res) {
 
                     if (res.error != null) {
                         if (res.error.getMessage() != null)

@@ -18,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.Loader;
+import com.barebrains.gyanith20.fragments.BottomSheetFragment;
+import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
@@ -29,20 +31,19 @@ public class LoginActivity extends AppCompatActivity {
     TextView signup;
     Button signinBtn;
     ImageButton backBtn;
-    Loader sign_in_loader;
     Context cnt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        boolean resolved = GyanithUserManager.resolveUserState(this);
-        if (resolved)
-            OnSignInSuccess();
-
         setContentView(R.layout.activity_login);
         loader = findViewById(R.id.login_loader);
+
+        loader.loading();
+        resolveIntent(getIntent());
+
+
         backBtn =findViewById(R.id.backbutlogin);
-        sign_in_loader = findViewById(R.id.sign_in_loader);
         uid=findViewById(R.id.uid);
         pwd=findViewById(R.id.password);
         cnt = this;
@@ -56,8 +57,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        sign_in_loader.loaded();
-
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,11 +67,11 @@ public class LoginActivity extends AppCompatActivity {
         signinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sign_in_loader.loading();
+                loader.loading();
                 String pas = pwd.getText().toString();
                 String username = uid.getText().toString();
                 if (pas.equals("") || username.equals("")){
-                    sign_in_loader.loaded();
+                    loader.loaded();
                     Toast.makeText(getApplicationContext(), "Enter credentials!", Toast.LENGTH_LONG).show();
                 }
                 else {
@@ -87,10 +86,17 @@ public class LoginActivity extends AppCompatActivity {
                                 public void OnError(String error) {
                                         if (error.equals("not verified"))
                                         {
-                                            //TODO:Should show verify to continue
+                                            loader.loaded();
+                                            BottomSheetFragment fragment = new BottomSheetFragment("Verify mail",getString(R.string.msg),true,new CompletionListener(){
+                                                @Override
+                                                public void OnComplete() {
+                                                    signinBtn.performClick();
+                                                }
+                                            });
+                                            fragment.show(getSupportFragmentManager(), "TAG");
                                         }
                                         Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
-                                        sign_in_loader.loaded();
+                                        loader.loaded();
                                 }
                             });
                 }
@@ -100,6 +106,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void OnSignInSuccess(){
         Intent intent = new Intent(this,ProfileActivity.class);
+        finish();
         startActivity(intent);
     }
 
@@ -107,5 +114,24 @@ public class LoginActivity extends AppCompatActivity {
     {
         Intent signupint = new Intent(cnt,SignUpActivity.class);
         startActivity(signupint);
+    }
+
+    private void resolveIntent(Intent intent){
+        boolean resolved = GyanithUserManager.resolveUserState(this);
+        if (resolved)
+            OnSignInSuccess();
+
+        if (intent != null)
+            return;
+
+        String username = intent.getStringExtra("usrname");
+        String pwd = intent.getStringExtra("pwd");
+        if (username == null || pwd == null || username.isEmpty() || pwd.isEmpty())
+            return;
+
+        uid.setText(username);
+        this.pwd.setText(pwd);
+
+        signinBtn.performClick();
     }
 }

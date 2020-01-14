@@ -1,13 +1,11 @@
 package com.barebrains.gyanith20.statics;
 
-import android.util.Log;
-
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.barebrains.gyanith20.interfaces.Resource;
+import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.ScheduleItem;
 import com.barebrains.gyanith20.others.LoaderException;
 
@@ -18,10 +16,10 @@ import static com.barebrains.gyanith20.statics.DataRepository.getAllScheduleItem
 public class ScheduleModel extends ViewModel {
 
 
-    public LiveData<Resource<ScheduleItem>> getLiveSchedules(final Long curTime){
-        return Transformations.map(getAllScheduleItems(), new Function<Resource<ScheduleItem>, Resource<ScheduleItem>>() {
+    public LiveData<ArrayResource<ScheduleItem>> getLiveSchedules(final Long curTime){
+        return Transformations.map(getAllScheduleItems(), new Function<ArrayResource<ScheduleItem>, ArrayResource<ScheduleItem>>() {
             @Override
-            public Resource<ScheduleItem> apply(Resource<ScheduleItem> input) {
+            public ArrayResource<ScheduleItem> apply(ArrayResource<ScheduleItem> input) {
                 if (input.value == null)
                     return input;
                 ArrayList<ScheduleItem> items = new ArrayList<>();
@@ -32,16 +30,16 @@ public class ScheduleModel extends ViewModel {
                     }
                 }
                 if (items.size() != 0)
-                    return new Resource<>(items.toArray(new ScheduleItem[0]),input.error);
+                    return new ArrayResource<>(items.toArray(new ScheduleItem[0]),input.error);
                 else
-                    return new Resource<>(null, new LoaderException(0,(input.error != null)?input.error.getMessage():null));            }
+                    return new ArrayResource<>(null, new LoaderException(0,(input.error != null)?input.error.getMessage():null));            }
         });
     }
 
-    public LiveData<Resource<ScheduleItem>> getSchedulesOfDay(final Long dayStart, final Long dayEnd){
-        return Transformations.map(getAllScheduleItems(), new Function<Resource<ScheduleItem>, Resource<ScheduleItem>>() {
+    public LiveData<ArrayResource<ScheduleItem>> getSchedulesOfDay(final Long dayStart, final Long dayEnd){
+        return Transformations.map(getAllScheduleItems(), new Function<ArrayResource<ScheduleItem>, ArrayResource<ScheduleItem>>() {
             @Override
-            public Resource<ScheduleItem> apply(Resource<ScheduleItem> input) {
+            public ArrayResource<ScheduleItem> apply(ArrayResource<ScheduleItem> input) {
                 if (input.value == null)
                     return input;
 
@@ -53,9 +51,9 @@ public class ScheduleModel extends ViewModel {
                     }
                 }
                 if (items.size() != 0)
-                    return new Resource<>(items.toArray(new ScheduleItem[0]),input.error);
+                    return new ArrayResource<>(items.toArray(new ScheduleItem[0]),input.error);
                 else
-                    return new Resource<>(null, new LoaderException(0,input.error.getMessage()));
+                    return new ArrayResource<>(null, new LoaderException(0,input.error.getMessage()));
             }
         });
     }

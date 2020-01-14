@@ -19,7 +19,7 @@ import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.adapters.LiveListAdapter;
 import com.barebrains.gyanith20.components.Loader;
-import com.barebrains.gyanith20.interfaces.Resource;
+import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.ScheduleItem;
 import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.ScheduleModel;
@@ -110,35 +110,35 @@ public class ScheduleFragment extends mFragment {
             case 0:
                 return new scheduleAdapter() {
                     @Override
-                    public LiveData<Resource<ScheduleItem>> getLiveData() {
+                    public LiveData<ArrayResource<ScheduleItem>> getLiveData() {
                         return viewModel.getLiveSchedules(System.currentTimeMillis());
                     }
                 };
             case 1://26 th February
                 return new scheduleAdapter() {
                     @Override
-                    public LiveData<Resource<ScheduleItem>> getLiveData() {
+                    public LiveData<ArrayResource<ScheduleItem>> getLiveData() {
                         return viewModel.getSchedulesOfDay(1582655400000L,1582741800000L);
                     }
                 };
             case 2://27 th February
                 return new scheduleAdapter() {
                     @Override
-                    public LiveData<Resource<ScheduleItem>> getLiveData() {
+                    public LiveData<ArrayResource<ScheduleItem>> getLiveData() {
                         return viewModel.getSchedulesOfDay(1582741800000L,1582828200000L);
                     }
                 };
             case 3://28 th February
                 return new scheduleAdapter() {
                     @Override
-                    public LiveData<Resource<ScheduleItem>> getLiveData() {
+                    public LiveData<ArrayResource<ScheduleItem>> getLiveData() {
                         return viewModel.getSchedulesOfDay(1582828200000L,1582914600000L);
                     }
                 };
             case 4://29 th February
                 return new scheduleAdapter() {
                     @Override
-                    public LiveData<Resource<ScheduleItem>> getLiveData() {
+                    public LiveData<ArrayResource<ScheduleItem>> getLiveData() {
                         return viewModel.getSchedulesOfDay(1582914600000L,1583001000000L);
                     }
                 };
@@ -167,7 +167,7 @@ public class ScheduleFragment extends mFragment {
         }
 
         @Override
-        public abstract LiveData<Resource<ScheduleItem>> getLiveData();
+        public abstract LiveData<ArrayResource<ScheduleItem>> getLiveData();
 
 
 

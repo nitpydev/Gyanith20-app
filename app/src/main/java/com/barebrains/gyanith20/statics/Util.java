@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -37,6 +38,14 @@ import java.util.Date;
 import java.util.List;
 
 public class Util {
+
+    public static StorageReference[] getStorageRefs(List<String> ids,StorageReference parent){
+        StorageReference[] storageReferences = new StorageReference[ids.size()];
+        for (int i=0;i<ids.size();i++)
+            storageReferences[i] = parent.child(ids.get(i));
+
+        return storageReferences;
+    }
 
     public static Transaction.Handler incrementer = new Transaction.Handler() {
         @NonNull

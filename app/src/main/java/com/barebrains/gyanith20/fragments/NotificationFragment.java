@@ -15,7 +15,7 @@ import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.AddNotificationActivity;
 import com.barebrains.gyanith20.adapters.LiveListAdapter;
 import com.barebrains.gyanith20.components.Loader;
-import com.barebrains.gyanith20.interfaces.Resource;
+import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.NotificationItem;
 import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.AppNotiManager;
@@ -50,7 +50,7 @@ public class NotificationFragment extends mFragment {
         LiveListAdapter<NotificationItem> adapter = new LiveListAdapter<NotificationItem>(getContext(),getViewLifecycleOwner(),R.layout.item_notification) {
             @NonNull
             @Override
-            public LiveData<Resource<NotificationItem>> getLiveData() {
+            public LiveData<ArrayResource<NotificationItem>> getLiveData() {
                 return DataRepository.getNotiItems();
             }
 

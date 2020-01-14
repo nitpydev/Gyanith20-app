@@ -2,7 +2,6 @@ package com.barebrains.gyanith20.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,7 +14,7 @@ import androidx.lifecycle.LiveData;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
-import com.barebrains.gyanith20.interfaces.Resource;
+import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.bumptech.glide.Glide;
 
@@ -27,7 +26,7 @@ public class eventCatAdapter extends LiveListAdapter<EventItem>{
 
     @Nullable
     @Override
-    public LiveData<Resource<EventItem>> getLiveData(){ return  null;};
+    public LiveData<ArrayResource<EventItem>> getLiveData(){ return  null;};
 
 
     @NonNull

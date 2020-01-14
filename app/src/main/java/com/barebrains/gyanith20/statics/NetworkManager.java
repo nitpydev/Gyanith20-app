@@ -153,7 +153,6 @@ public class NetworkManager {
             @Override
             public void onResponse(String response) {
                 instance.lastAvailability = true;
-                Log.d("asd","uabfa");
             }
         }, new Response.ErrorListener() {
             @Override

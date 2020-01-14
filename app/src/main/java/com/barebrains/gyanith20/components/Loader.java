@@ -82,6 +82,7 @@ public class Loader extends FrameLayout {
         if (loadingIndicator == null) {
             loadingIndicator = LayoutInflater.from(getContext()).inflate( loadingIndicatorResId,this,false);
             addView(loadingIndicator);
+
             if (isTextError) {
                 errorHolder = new TextView(new ContextThemeWrapper(getContext(),R.style.emptyState));
                 addView(errorHolder);
