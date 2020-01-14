@@ -7,44 +7,39 @@
     android:background="?colorPrimary"
     android:fitsSystemWindows="true"
     tools:context=".activities.EventDetailsActivity">
+<com.barebrains.gyanith20.components.Loader
+    android:id="@+id/details_loader"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/toolbarlayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?colorPrimaryDark"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
-            app:expandedTitleTextAppearance="@style/TransparentText"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@+id/toolbar">
-
-
-            <LinearLayout
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/toolbarlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_centerInParent="true"
-                android:gravity="center_horizontal"
-                >
-                <com.barebrains.gyanith20.components.Loader
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/detailsLoader">
+                android:fitsSystemWindows="true"
+                app:contentScrim="?colorPrimaryDark"
+                app:expandedTitleMarginEnd="64dp"
+                app:expandedTitleMarginStart="48dp"
+                app:expandedTitleTextAppearance="@style/TransparentText"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:toolbarId="@+id/toolbar">
+
+
                 <ImageView
                     android:id="@+id/eveimv"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="200dp"
                     android:background="@null"
                     android:scaleType="centerCrop" />
-                </com.barebrains.gyanith20.components.Loader>
 
                 <ImageView
                     android:id="@+id/fh"
@@ -87,42 +82,45 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                    <TextView
-                        android:id="@+id/evedttitle"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="bottom|center_horizontal"
-                        android:layout_marginBottom="25dp"
-                        android:fontFamily="@font/spregu"
-                        android:gravity="center"
-                        android:text="Loading..."
-                        android:textColor="@android:color/white"
-                        android:textSize="32sp" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/evedttitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:layout_marginBottom="25dp"
+                            android:fontFamily="@font/spregu"
+                            android:gravity="center"
+                            android:text="ASaSUDiashdasduasidhia shaihs dh"
+                            android:textColor="@android:color/white"
+                            android:textSize="32sp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
 
-
-
-
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/tool"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:title="Event"
-                app:titleTextColor="@android:color/white"/>
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/tool"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:title="Event"
+                    app:titleTextColor="@android:color/white" />
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
-<androidx.core.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -133,17 +131,15 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent">
-    <com.barebrains.gyanith20.components.ClickableViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/event_details_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/dtab"
-            style="@style/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="40dp" />
-    </com.barebrains.gyanith20.components.ClickableViewPager>
+            style="@style/tabs" />
+    </androidx.viewpager.widget.ViewPager>
 
 
 </LinearLayout>
@@ -163,7 +159,8 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content" />
     </LinearLayout>
-
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</com.barebrains.gyanith20.components.Loader>
     <ImageButton
         android:id="@+id/backbut2"
         style="@style/backbtn"

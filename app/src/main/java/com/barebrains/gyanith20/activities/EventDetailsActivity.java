@@ -1,6 +1,7 @@
 package com.barebrains.gyanith20.activities;
 
 import android.animation.ObjectAnimator;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -51,7 +52,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
 
         //VIEW BINDINGS
-        final Loader loader = findViewById(R.id.detailsLoader);
+        final Loader loader = findViewById(R.id.details_loader);
         findViewById(R.id.backbut2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,9 +89,9 @@ public class EventDetailsActivity extends AppCompatActivity {
     private void fillTopUI(final EventItem eventItem){
         final ImageView f= findViewById(R.id.fh);
         TextView title=findViewById(R.id.evedttitle);
-        ImageView eveimage= findViewById(R.id.eveimv);
+        ImageView eveimage = findViewById(R.id.eveimv);
         AnimatedToggle favBtn =findViewById(R.id.favButton);
-        Toolbar toolbar_title = findViewById(R.id.tool);
+        Toolbar toolbar = findViewById(R.id.tool);
         Glide.with(this)
                 .load(eventItem.img1)
                 .placeholder(R.drawable.l2)
@@ -98,7 +99,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 .centerCrop()
                 .into(eveimage);
         title.setText(eventItem.name);
-        toolbar_title.setTitle(eventItem.name);
+        toolbar.setTitle(eventItem.name);
         Set<String> favIds = sp.getStringSet(getString(R.string.favSet), new HashSet<String>());
 
         favBtn.setChecked(favIds.contains(eventItem.id));

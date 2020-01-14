@@ -80,7 +80,6 @@ public abstract class mFragment extends Fragment{
     //BINDING TO POST_UPLOAD_SERVICE FUNCTIONALITY
 
     private CompletionListener listener;
-    private Intent bindingIntent;
     private ServiceConnection serviceConnection;
     private PostUploadService.PostBinder postBinder;
     private boolean isListenerAdded = false;
@@ -88,7 +87,7 @@ public abstract class mFragment extends Fragment{
     //Should be with onCreate()
     protected void syncWithPostService(CompletionListener listener){
         this.listener = listener;
-        bindingIntent = new Intent(getContext(), PostUploadService.class);
+        Intent bindingIntent = new Intent(getContext(), PostUploadService.class);
         serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {

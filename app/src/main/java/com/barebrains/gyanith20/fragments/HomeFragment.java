@@ -22,8 +22,11 @@ import com.barebrains.gyanith20.activities.Profile2Activity;
 import com.barebrains.gyanith20.components.ImageSlider;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.EventItem;
+import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.DataRepository;
+import com.barebrains.gyanith20.statics.GyanithUserManager;
+import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.Util;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -259,10 +262,15 @@ public class HomeFragment extends mFragment {
     private View.OnClickListener devclk = new View.OnClickListener(){
         @Override
         public void  onClick(View view){
-                Intent redirect = new Intent(getContext(),Profile2Activity.class);
-                startActivity(redirect);
-
-            
+            if (GyanithUserManager.getCurrentUser().getValue() != null) {
+                if (GyanithUserManager.getCurrentUser().getValue().value != null) {
+                    Intent redirect = new Intent(getContext(), Profile2Activity.class);
+                    startActivity(redirect);
+                }
+                else {
+                    Toast.makeText(HomeFragment.this.getContext(), "You are not Signed In!", Toast.LENGTH_SHORT).show();
+                }
+            }else Toast.makeText(HomeFragment.this.getContext(), "Try Again", Toast.LENGTH_SHORT).show();
         }
     };
 }

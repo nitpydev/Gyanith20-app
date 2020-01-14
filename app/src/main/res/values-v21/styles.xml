@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorBackdropAccent</item>
+        <item name="colorPrimaryDark">@color/colorBackDrop</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorSecondary</item>
+        <item name="android:fontFamily">@font/poppinsr</item>
+        <item name="android:windowBackground">?colorPrimaryDark</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryLight</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:textColorSecondary">@color/colorSecondary</item>
+    </style>
+</resources>

@@ -67,12 +67,6 @@ public class ProfileActivity extends AppCompatActivity {
         clg = findViewById(R.id.user_info_clg);
         signOutBtn = findViewById(R.id.signout_btn);
 
-        findViewById(R.id.profile_back_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
         qrLoader.loading();
         loader.loading();
 
@@ -118,7 +112,6 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onChanged(Boolean internet) {
                         if (!internet) {
-                            Log.d("asd","errors");
                             qrLoader.error();
                         } else {
                             refreshQr(res.value.gyanithId);
