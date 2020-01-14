@@ -7,12 +7,20 @@
     android:background="@color/colorSecondary"
     tools:context=".activities.QrActivity" >
 
+    <ImageButton
+        android:id="@+id/qr_act_back_btn"
+        style="@style/backbtn"
+        android:tint="@android:color/background_dark"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.barebrains.gyanith20.components.Loader
         android:id="@+id/qr_act_loader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleX="1"
         android:scaleY="1"
+        app:empty_error="@layout/loader_qr_error"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

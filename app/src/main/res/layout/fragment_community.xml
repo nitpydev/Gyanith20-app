@@ -8,9 +8,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_post_btn"
-        style="@style/fab"
-        android:layout_gravity="bottom|end"
-        app:srcCompat="@drawable/ic_baseline_add_24px" />
+        style="@style/fab" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/feedViewPager"

@@ -1,9 +1,6 @@
 package com.barebrains.gyanith20.others;
 
-import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -15,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.AnimatedToggle;
 import com.barebrains.gyanith20.components.ImageSlider;
-import com.barebrains.gyanith20.components.Loader;
-import com.barebrains.gyanith20.components.PostView;
 import com.barebrains.gyanith20.interfaces.AuthStateListener;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.ResultListener;
@@ -28,9 +23,6 @@ import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.Util;
 import com.google.firebase.storage.FirebaseStorage;
-import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
-
-import java.util.zip.Inflater;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -136,7 +128,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
             @Override
             public void onClick(View view) {
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("body/plain");
+                sharingIntent.setType("text/plain");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Gyanith Community Post");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, buildDeepLink(post.postId));
                 view.getContext().startActivity(Intent.createChooser(sharingIntent, "Share via"));

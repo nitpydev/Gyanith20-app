@@ -74,7 +74,7 @@
                         android:layout_height="30dp"
                         android:layout_gravity="center"
                         android:background="@null"
-                        android:button="@drawable/toggle_button"
+                        android:button="@drawable/like_selector"
                         android:checked="false"
                         android:foregroundGravity="center"
                         android:minWidth="0dp"
@@ -133,17 +133,17 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent">
-    <com.barebrains.gyanith20.components.ClickableViewPager
+
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/event_details_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/dtab"
-            style="@style/tabs"
             android:layout_width="match_parent"
             android:layout_height="40dp" />
-    </com.barebrains.gyanith20.components.ClickableViewPager>
+    </androidx.viewpager.widget.ViewPager>
 
 
 </LinearLayout>

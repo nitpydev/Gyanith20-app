@@ -70,8 +70,7 @@
                                 <ImageView
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
-                                    android:tint="@color/tint"
-                                    app:srcCompat="@drawable/about" />
+                                    android:tint="@color/tint" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -217,8 +216,7 @@
                                 <ImageView
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
-                                    android:tint="@color/tint"
-                                    app:srcCompat="@drawable/about" />
+                                    android:tint="@color/tint" />
 
                                 <TextView
                                     android:layout_width="wrap_content"

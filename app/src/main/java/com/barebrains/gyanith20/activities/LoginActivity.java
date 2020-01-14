@@ -15,14 +15,17 @@ import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.fragments.BottomSheetFragment;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
+import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
+import com.barebrains.gyanith20.statics.NetworkManager;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -31,25 +34,26 @@ public class LoginActivity extends AppCompatActivity {
     TextView signup;
     Button signinBtn;
     ImageButton backBtn;
-    Context cnt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         loader = findViewById(R.id.login_loader);
 
+        loader.setNeverErrorFlag(true);
         loader.loading();
-        resolveIntent(getIntent());
-
+        handleAuthState();
 
         backBtn =findViewById(R.id.backbutlogin);
         uid=findViewById(R.id.uid);
         pwd=findViewById(R.id.password);
-        cnt = this;
         signup = findViewById(R.id.sign_up);
-        pwd.setTransformationMethod(new PasswordTransformationMethod());
         signinBtn =findViewById(R.id.signinBtn);
+
+        pwd.setTransformationMethod(new PasswordTransformationMethod());
+
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,64 +78,44 @@ public class LoginActivity extends AppCompatActivity {
                     loader.loaded();
                     Toast.makeText(getApplicationContext(), "Enter credentials!", Toast.LENGTH_LONG).show();
                 }
-                else {
-                    GyanithUserManager.SignInUser(LoginActivity.this
-                            , username, pas, new ResultListener<GyanithUser>() {
-                                    @Override
-                                    public void OnResult(GyanithUser gyanithUser) {
-                                        OnSignInSuccess();
-                                    }
+                else
+                    GyanithUserManager.SignInUser(username,pas);
 
-                                @Override
-                                public void OnError(String error) {
-                                        if (error.equals("not verified"))
-                                        {
-                                            loader.loaded();
-                                            BottomSheetFragment fragment = new BottomSheetFragment("Verify mail",getString(R.string.msg),true,new CompletionListener(){
-                                                @Override
-                                                public void OnComplete() {
-                                                    signinBtn.performClick();
-                                                }
-                                            });
-                                            fragment.show(getSupportFragmentManager(), "TAG");
-                                        }
-                                        Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
-                                        loader.loaded();
-                                }
-                            });
-                }
             }
         });
     }
-
-    private void OnSignInSuccess(){
-        Intent intent = new Intent(this,ProfileActivity.class);
-        finish();
-        startActivity(intent);
-    }
-
     private void signup_act()
     {
-        Intent signupint = new Intent(cnt,SignUpActivity.class);
+        Intent signupint = new Intent(this,SignUpActivity.class);
         startActivity(signupint);
     }
 
-    private void resolveIntent(Intent intent){
-        boolean resolved = GyanithUserManager.resolveUserState(this);
-        if (resolved)
-            OnSignInSuccess();
+    private void handleAuthState(){
+        GyanithUserManager.getCurrentUser().observe(this, new Observer<Resource<GyanithUser>>() {
+            @Override
+            public void onChanged(Resource<GyanithUser> res) {
+                loader.loaded();
+                if (res.error.getMessage() != null)
+                    Toast.makeText(LoginActivity.this, res.error.getMessage(), Toast.LENGTH_SHORT).show();
 
-        if (intent != null)
-            return;
+                if (res.error.getIndex() != null && res.error.getIndex() == 1)
+                {
+                    BottomSheetFragment fragment = new BottomSheetFragment("Verify mail",getString(R.string.msg),true,new CompletionListener(){
+                        @Override
+                        public void OnComplete() {
+                            signinBtn.performClick();
+                        }
+                    });
+                    fragment.show(getSupportFragmentManager(), "TAG");
+                }
 
-        String username = intent.getStringExtra("usrname");
-        String pwd = intent.getStringExtra("pwd");
-        if (username == null || pwd == null || username.isEmpty() || pwd.isEmpty())
-            return;
-
-        uid.setText(username);
-        this.pwd.setText(pwd);
-
-        signinBtn.performClick();
+                if (res.value != null)
+                {
+                    Intent intent = new Intent(LoginActivity.this,ProfileActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
     }
 }

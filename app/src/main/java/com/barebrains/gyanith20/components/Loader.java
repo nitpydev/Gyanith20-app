@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.ContextThemeWrapper;
@@ -42,11 +43,19 @@ public class Loader extends FrameLayout {
     private boolean isTextError = true;
 
     private String empty_error_string = "Will be Updated Soon";
+    private String no_net_error_string = "Oops ! Could'nt Connect to the Internet";
+
     private int empty_error_visual = R.layout.loader_empty_error_visual;
+    private int no_net_error_visual;//TODO : NEED TO SET DEFAULT VALUE
 
     private View loadingIndicator = null;
     private View errorHolder = null;
     private View content = null;
+
+    //Conditions
+    private boolean neverErrorFlag = false;
+
+    private LoaderListener loaderListener;
 
 
     private void init(TypedArray attrs){
@@ -54,9 +63,12 @@ public class Loader extends FrameLayout {
         isTextError = attrs.getBoolean(R.styleable.Loader_isErrorText, true);
         if (isTextError) {
             String s = attrs.getString(R.styleable.Loader_empty_error);
-            if (s != null)empty_error_string = s;
+            if (s != null && !s.isEmpty())empty_error_string = s;
+            String n = attrs.getString(R.styleable.Loader_no_net_error);
+            if (n != null && !n.isEmpty())no_net_error_string = n;
         } else {
             empty_error_visual = attrs.getResourceId(R.styleable.Loader_empty_error,R.layout.loader_empty_error_visual);
+
         }
         attrs.recycle();
     }
@@ -69,8 +81,19 @@ public class Loader extends FrameLayout {
         empty_error_visual = error_visual;
     }
 
+
     public void set_empty_error(String error){
         this.empty_error_string = error;
+    }
+
+    public  void set_no_net_error_string(String error){this.no_net_error_string = error;}
+
+    public void set_loading_indicator_res_id(@LayoutRes int id){
+        loadingIndicatorResId = id;
+    }
+
+    public void setNeverErrorFlag(boolean value){
+        neverErrorFlag = value;
     }
 
 
@@ -99,7 +122,13 @@ public class Loader extends FrameLayout {
         return errorHolder;
     }
 
+    public void setLoaderListener(LoaderListener loaderListener){
+        this.loaderListener = loaderListener;
+    }
+
     public void loading(){
+        if (loaderListener != null)
+            loaderListener.onLoading();
         loadingIndicator.setVisibility(VISIBLE);
         if (content != null)
             content.setVisibility(GONE);
@@ -111,6 +140,8 @@ public class Loader extends FrameLayout {
     }
 
     public void loaded(){
+        if (loaderListener != null)
+            loaderListener.onLoaded();
         loadingIndicator.setVisibility(GONE);
         if (content != null)
             content.setVisibility(VISIBLE);
@@ -126,11 +157,29 @@ public class Loader extends FrameLayout {
     }
 
     public void error(int index){
+        if (neverErrorFlag){
+            loaded();
+            return;
+        }
+
+        if (loaderListener != null)
+            loaderListener.onError();
+
         loadingIndicator.setVisibility(GONE);
         if (content != null)
             content.setVisibility(GONE);
         if (isTextError){
-            ((TextView)errorHolder).setText(empty_error_string);
+
+            TextView view = (TextView)errorHolder;
+
+            switch (index){
+                case 1:
+                    view.setText(no_net_error_string);
+                    break;
+                default:
+                    view.setText(empty_error_string);
+            }
+
             errorHolder.setVisibility(VISIBLE);
         }
         else
@@ -152,4 +201,11 @@ public class Loader extends FrameLayout {
         removeView(errorHolder);
     }
 
+
+
+    public static class LoaderListener{
+        protected void onLoaded(){}
+        protected void onLoading(){}
+        protected void onError(){}
+    }
 }

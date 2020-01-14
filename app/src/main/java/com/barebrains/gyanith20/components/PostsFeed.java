@@ -33,7 +33,6 @@ public class PostsFeed extends SwipeRefreshLayout {
         init();
     }
 
-    private int postCount = 0;
     private Loader loader;
     private RecyclerView recyclerView;
     private View bottomRefresh;
@@ -48,6 +47,9 @@ public class PostsFeed extends SwipeRefreshLayout {
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(MATCH_PARENT,WRAP_CONTENT);
         this.addView(loader);
+
+        loader.set_loading_indicator_res_id(R.layout.loader_post_shimmer);
+
         loader.addView(linearLayout,layoutParams);
         linearLayout.addView(recyclerView,layoutParams);
         layoutParams.setMargins(15,15,15,15);
