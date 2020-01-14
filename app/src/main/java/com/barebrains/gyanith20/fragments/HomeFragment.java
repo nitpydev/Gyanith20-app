@@ -23,6 +23,7 @@ import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.DataRepository;
+import com.barebrains.gyanith20.statics.Util;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,6 +36,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -45,8 +47,9 @@ public class HomeFragment extends mFragment {
     private long delay1 = 0;
     private long delay2 = 0;
     private ImageSlider imgSlider;
-    private String trendurl = "",devurl ="https://www.gyanith.org/Team%20Gyanith/Team%20Gyanith.html";
+    private String trendurl = "",devurl ="https://www.gyanith.org/Team%20Gyanith/Team%20Gyanith.html",urlimg;
     private FloatingActionButton random, trend, dev;
+    private  DatabaseReference urlref,imgurl;
     //private  Loader loader ;
 
 
@@ -67,19 +70,29 @@ public class HomeFragment extends mFragment {
         trend = root.findViewById(R.id.trend);
         random = root.findViewById(R.id.random);
         dev = root.findViewById(R.id.fab);
-        //TODO: CACHING WORKS ONLY WHEN INTERNET IS AVAILABLE AS GLIDE NEEDS THE URL FOR CACHEING IF WE INSTEAD USE FIREBASE DATABASE FOR FETCHING IDS IT CAN CACHE IN NO INTERNET CIRCUMSTANCES
-        StorageReference slidesFolderRef = FirebaseStorage.getInstance().getReference().child("/HomeImageSlides");
-        slidesFolderRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
-            @Override
-            public void onSuccess(ListResult listResult) {
-                List<StorageReference> imgRefs = listResult.getItems();
-                imgSlider.load(imgRefs.toArray(new  StorageReference[0])).apply((new RequestOptions()).centerCrop()).start();
-                imgSlider.autoScroll(true);
-            }
-        });
+        imgurl = FirebaseDatabase.getInstance().getReference().child("ImageUrls");
+        final StorageReference slidesFolderRef = FirebaseStorage.getInstance().getReference().child("/HomeImageSlides");
 
-    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("homefragment_urlredirect");
-    ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        imgurl.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    List<String> imgnames = new ArrayList<>();
+                    for(DataSnapshot data : dataSnapshot.getChildren())
+                    {
+                        if(data.getValue() != null)
+                        imgnames.add(data.getValue().toString());
+                    }
+                    imgSlider.load(Util.getStorageRefs(imgnames,slidesFolderRef)).apply((new RequestOptions()).centerCrop()).start();
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+    urlref = FirebaseDatabase.getInstance().getReference().child("homefragment_urlredirect");
+    urlref.addListenerForSingleValueEvent(new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             try{
