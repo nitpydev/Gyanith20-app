@@ -111,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (res.value != null)
                 {
+                    loader.loading();
                     Intent intent = new Intent(LoginActivity.this,ProfileActivity.class);
                     startActivity(intent);
                     finish();

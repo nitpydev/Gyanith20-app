@@ -82,7 +82,7 @@ public class GyanithUserManager {
     //Use this sign in only if all the traces of a user is removed
     public static void SignInUser(String username, String password) throws IllegalStateException
     {
-        if (loggedUser.getValue() != null)
+        if (loggedUser.getValue() != null && loggedUser.getValue().value != null)
             throw new IllegalStateException("SignInUser : Already user Signed in /IMPOSSIBLE");
 
         GetGyanithUserToken(username, password, new ResultListener<String>() {
@@ -104,6 +104,7 @@ public class GyanithUserManager {
     public static void SignInReturningUser() throws IllegalStateException {
         final GyanithUser user = RetriveGyanithUser();
         if (user == null) {
+            loggedUser.postValue(new Resource<GyanithUser>(null,new LoaderException(null)));
             return;//NO SAVED USER FOUND
         }
         GyanithSignInWithToken(user.token);
@@ -141,8 +142,6 @@ public class GyanithUserManager {
     }
 
     private static void GyanithSignInWithToken(final String token) {
-
-        RequestQueue requestQueue = VolleyManager.requestQueue;
         JsonObjectRequest userInfoRequest = new JsonObjectRequest(Request.Method.GET,buildUserInfoRequestUrl(token), null
                 ,new Response.Listener<JSONObject>(){
 
@@ -153,11 +152,16 @@ public class GyanithUserManager {
                     SaveGyanithUser(user);
                     loggedUser.postValue(new Resource<>(user,new LoaderException(null,null)));
                     StartNewUserSession(user.gyanithId);
+                    Log.d("asd","User Signed In");
                 } else if (response.has("reg"))//TODO:CHECK HERE
                 {//TOKEN EXPIRED
                     SignOutUser("User Session Expired");
-                } else
+                    Log.d("asd","User Session Expired");
+                } else {
                     loggedUser.postValue(new Resource<GyanithUser>(null,new LoaderException(null,"Internal Error")));
+                    Log.d("asd","Server Error");
+
+                }
             }
         },new Response.ErrorListener(){
 
@@ -167,7 +171,7 @@ public class GyanithUserManager {
                 loggedUser.postValue(new Resource<>(user,new LoaderException(null,null)));
             }
         });
-        requestQueue.add(userInfoRequest);
+        VolleyManager.requestQueue.add(userInfoRequest);
     }
 
     public static void GyanithUserSignUp(final SignUpDetails details, final CompletionListener listener){
@@ -286,7 +290,7 @@ public class GyanithUserManager {
                     ref.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists() && dataSnapshot.getValue() != firebaseUserSessionToken)
+                            if (dataSnapshot.exists() && !dataSnapshot.getValue(String.class).equals(firebaseUserSessionToken))
                                 SignOutUser("Another Device Logged with this Account");//TODO:CHANGE THIS MESSAGE
                         }
 
@@ -324,6 +328,7 @@ public class GyanithUserManager {
         AuthStateChanged();
         sp.edit().remove(GYANITH_USER_SP_KEY).apply();
         FirebaseAuth.getInstance().signOut();
+        //TODO:REMOVE LIKED_POSTS
         loggedUser.postValue(new Resource<GyanithUser>(null,new LoaderException(null,toast)));
     }
 

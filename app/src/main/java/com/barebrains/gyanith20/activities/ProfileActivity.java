@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -86,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
                     finish();
                     return;
                 }
-
+                loader.loaded();
                 FillUIWithData(res.value);
 
                 qrLoader.setLoaderListener(new Loader.LoaderListener(){
@@ -117,6 +118,7 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onChanged(Boolean internet) {
                         if (!internet) {
+                            Log.d("asd","errors");
                             qrLoader.error();
                         } else {
                             refreshQr(res.value.gyanithId);

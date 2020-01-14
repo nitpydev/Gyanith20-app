@@ -42,7 +42,7 @@ public class gyanith20 extends MultiDexApplication {
         PostManager.StartListeningPostCount();
         //USER SYSTEM INITIATIONS
         GyanithUserManager.SignInReturningUser();
-        LikesSystem.Initialize();
+        LikesSystem.fetchLikedPosts();
 
         super.onCreate();
     }

@@ -76,7 +76,7 @@ public class Profile2Activity extends AppCompatActivity {
                     finish();
                     return;
                 }
-
+                loader.loaded();
                 setUpViewPagerAdapter(res.value);
             }
         });

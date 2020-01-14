@@ -47,6 +47,7 @@ public class NetworkManager {
     public static MutableLiveData<Boolean> internet = new MutableLiveData<>();
 
     public static void init(final Context context){
+        setInternet(false);
             IntentFilter filter = new IntentFilter();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 registerNetworkCallbacks(context);
@@ -93,7 +94,6 @@ public class NetworkManager {
 
 
     public static void setInternet(boolean state){
-        Log.d("asd","internet : " + state);
         if (internet.getValue() == null || internet.getValue() != state )
             internet.postValue(state);
     }
