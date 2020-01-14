@@ -18,6 +18,7 @@ import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.AboutActivity;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.activities.EventsCategoryActivity;
+import com.barebrains.gyanith20.activities.Profile2Activity;
 import com.barebrains.gyanith20.components.ImageSlider;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.EventItem;
@@ -258,11 +259,10 @@ public class HomeFragment extends mFragment {
     private View.OnClickListener devclk = new View.OnClickListener(){
         @Override
         public void  onClick(View view){
-            try{
-                Intent redirect = new Intent(Intent.ACTION_VIEW,Uri.parse(devurl));
-                startActivity(redirect);}catch(Exception e){
-                Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
-            }
+                Intent redirect = new Intent(getContext(),Profile2Activity.class);
+                startActivity(redirect);
+
+            
         }
     };
 }
