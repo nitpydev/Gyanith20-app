@@ -1,45 +1,41 @@
 package com.barebrains.gyanith20.statics;
 
-import android.util.Log;
-
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.barebrains.gyanith20.R;
-import com.barebrains.gyanith20.interfaces.Resource;
+import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.others.LoaderException;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import static com.barebrains.gyanith20.statics.DataRepository.getAllEventItems;
 
 public class EventsModel extends ViewModel {
 
-    public LiveData<Resource<EventItem>> getItem(final String id){
-        return Transformations.map(getAllEventItems(), new Function<Resource<EventItem>, Resource<EventItem>>() {
+    public LiveData<ArrayResource<EventItem>> getItem(final String id){
+        return Transformations.map(getAllEventItems(), new Function<ArrayResource<EventItem>, ArrayResource<EventItem>>() {
             @Override
-            public Resource<EventItem> apply(Resource<EventItem> input) {
+            public ArrayResource<EventItem> apply(ArrayResource<EventItem> input) {
                if (input.value == null)
                    return input;
 
                for (EventItem item : input.value) {
                    if (item.id.equals(id))
-                       return new Resource<>(new EventItem[]{item},null);
+                       return new ArrayResource<>(new EventItem[]{item},null);
                }
 
-               return new Resource<>(null, new LoaderException(0));
+               return new ArrayResource<>(null, new LoaderException(0));
             }
         });
     }
 
-    public LiveData<Resource<EventItem>> getEventsOfType(final String type){
-        return Transformations.map(getAllEventItems(), new Function<Resource<EventItem>,Resource<EventItem>>() {
+    public LiveData<ArrayResource<EventItem>> getEventsOfType(final String type){
+        return Transformations.map(getAllEventItems(), new Function<ArrayResource<EventItem>, ArrayResource<EventItem>>() {
             @Override
-            public Resource<EventItem> apply(Resource<EventItem> input) {
+            public ArrayResource<EventItem> apply(ArrayResource<EventItem> input) {
                 if (input.value == null)
                     return input;
 
@@ -52,41 +48,47 @@ public class EventsModel extends ViewModel {
                 EventItem[] result = items.toArray(new EventItem[0]);
 
                 if (result.length == 0)
-                    return new Resource<>(null,new LoaderException(0));
+                    return new ArrayResource<>(null,new LoaderException(0));
                 else
-                    return new Resource<>(result,null);
+                    return new ArrayResource<>(result,null);
             }
         });
     }
 
-    public LiveData<Resource<EventItem>> getEventsofIds(final ArrayList<String> ids){
-        return Transformations.map(getAllEventItems(), new Function<Resource<EventItem>,Resource<EventItem>>() {
+    public LiveData<ArrayResource<EventItem>> getEventsofIds(final ArrayList<String> ids){
+        return Transformations.map(getAllEventItems(), new Function<ArrayResource<EventItem>, ArrayResource<EventItem>>() {
             @Override
-            public Resource<EventItem> apply(Resource<EventItem> input) {
+            public ArrayResource<EventItem> apply(ArrayResource<EventItem> input) {
 
                 if (input.value == null)
                     return input;
+                EventItem[] items = new EventItem[ids.size()];
 
-                ArrayList<EventItem> items = new ArrayList<>();
                 for (EventItem item : input.value) {
                     if (ids.contains(item.id)) {
-                        items.add(item);
+                        items[ids.indexOf(item.id)] = item;
                     }
                 }
 
-                EventItem[] result = items.toArray(new EventItem[0]);
-                if (result.length == 0)
-                    return new Resource<>(null,new LoaderException(0));
+                ArrayList<EventItem> result = new ArrayList<>();
+               for (EventItem item : items)
+                   if (item != null)
+                       result.add(item);
+
+                   items = result.toArray(new EventItem[0]);
+
+                if (items.length == 0)
+                    return new ArrayResource<>(null,new LoaderException(0));
                 else
-                    return new Resource<>(result,new LoaderException(null,input.error.getMessage()));
+                    return new ArrayResource<>(items,new LoaderException(null,input.error.getMessage()));
             }
         });
     }
 
-    public LiveData<Resource<EventItem>> getEventsofIdsandType(final String type,final ArrayList<String> ids){
-        return Transformations.map(getAllEventItems(), new Function<Resource<EventItem>,Resource<EventItem>>() {
+    public LiveData<ArrayResource<EventItem>> getEventsofIdsandType(final String type, final ArrayList<String> ids){
+        return Transformations.map(getAllEventItems(), new Function<ArrayResource<EventItem>, ArrayResource<EventItem>>() {
             @Override
-            public Resource<EventItem> apply(Resource<EventItem> input) {
+            public ArrayResource<EventItem> apply(ArrayResource<EventItem> input) {
 
                 if (input.value == null)
                     return input;
@@ -100,9 +102,9 @@ public class EventsModel extends ViewModel {
 
                 EventItem[] result = items.toArray(new EventItem[0]);
                 if (result.length == 0)
-                    return new Resource<>(null,new LoaderException(0));
+                    return new ArrayResource<>(null,new LoaderException(0));
                 else
-                    return new Resource<>(result,new LoaderException(null,input.error.getMessage()));
+                    return new ArrayResource<>(result,new LoaderException(null,input.error.getMessage()));
             }
         });
     }

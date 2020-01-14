@@ -18,6 +18,8 @@ import com.barebrains.gyanith20.statics.Anim;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.io.File;
+
 
 public class UploadPostActivity extends AppCompatActivity {
 
@@ -26,11 +28,6 @@ public class UploadPostActivity extends AppCompatActivity {
     View tapPanel;
     EditText captionsText;
     TextView captionPrompt;
-
-    final RequestOptions requestOptions = (new RequestOptions())
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .placeholder(R.drawable.l2)
-            .error(R.drawable.gyanith_error);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +38,7 @@ public class UploadPostActivity extends AppCompatActivity {
         imgSlider = findViewById(R.id.upd_img_slider);
         captionsText = findViewById(R.id.post_captions);
         captionPrompt = findViewById(R.id.caption_prompt);
+
         captionsText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -60,6 +58,8 @@ public class UploadPostActivity extends AppCompatActivity {
                     captionPrompt.setVisibility(View.VISIBLE);
             }
         });
+
+
         findViewById(R.id.upload_post_back_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,19 +73,24 @@ public class UploadPostActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         final String[] imgPaths = bundle.getStringArray("EXTRA_IMG_PATHS");
 
-        if (imgPaths == null)
+        if (imgPaths == null) {
             finish();
-
-        for (String path : imgPaths){
-          //  DefaultSliderView item = new DefaultSliderView(this);
-         /*   item.image(new File(path))
-                    .setRequestOption(requestOptions)
-                    .setProgressBarVisible(true)
-                    .setOnSliderClickListener(this);
-            imgSlider.addSlider(item);
-
-          */
+            return;
         }
+
+        final File[] files = new File[imgPaths.length];
+
+        for (int i =0;i<imgPaths.length;i++)
+            files[i] = new File(imgPaths[i]);
+
+        imgSlider.load(files).start();
+
+        imgSlider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                captionStateToggle();
+            }
+        });
 
         findViewById(R.id.post_btn).setOnClickListener(new View.OnClickListener() {
             @Override

@@ -10,7 +10,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+<com.barebrains.gyanith20.components.Loader
+    android:id="@+id/sign_up_loader"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -304,6 +307,7 @@
             </LinearLayout>
 
         </FrameLayout>
+</com.barebrains.gyanith20.components.Loader>
     </LinearLayout>
 
 

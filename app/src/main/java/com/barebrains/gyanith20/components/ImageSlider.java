@@ -2,8 +2,10 @@ package com.barebrains.gyanith20.components;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.PointF;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -17,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,6 +30,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator;
@@ -55,9 +59,9 @@ public class ImageSlider extends Loader {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
 
-    private List<StorageReference> loadables = new ArrayList<>();
+    private Object[] loadables = new Object[0];
     private RequestOptions requestOptions = (new RequestOptions())
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
             .placeholder(R.drawable.l2)
             .error(R.drawable.gyanith_error);
 
@@ -74,7 +78,7 @@ public class ImageSlider extends Loader {
         indicator.setSelectedDotColor(ContextCompat.getColor(getContext(),R.color.colorSecondaryAccent));
 
 
-        FrameLayout.LayoutParams recyclerViewLP = new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT );
+        FrameLayout.LayoutParams recyclerViewLP = new FrameLayout.LayoutParams(WRAP_CONTENT, MATCH_PARENT );
         FrameLayout.LayoutParams indicatorViewLP = new FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT );
 
         indicatorViewLP.gravity = Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
@@ -86,8 +90,30 @@ public class ImageSlider extends Loader {
         frameLayout.addView(recyclerView,recyclerViewLP);
         frameLayout.addView(indicator,indicatorViewLP);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        addView(frameLayout,recyclerViewLP);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false){
+            @Override
+            public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
+                final LinearSmoothScroller linearSmoothScroller =
+                        new LinearSmoothScroller(recyclerView.getContext()) {
+                            private static final float MILLISECONDS_PER_INCH = 200f;
+
+                            @Override
+                            public PointF computeScrollVectorForPosition(int targetPosition) {
+                                return super.computeScrollVectorForPosition(targetPosition);
+                            }
+
+                            @Override
+                            protected float calculateSpeedPerPixel
+                                    (DisplayMetrics displayMetrics) {
+                                return MILLISECONDS_PER_INCH / displayMetrics.densityDpi;
+                            }
+                        };
+                linearSmoothScroller.setTargetPosition(position);
+                startSmoothScroll(linearSmoothScroller);
+            }
+        });
+
+        addView(frameLayout);
 
         handleTouches();
 
@@ -100,10 +126,10 @@ public class ImageSlider extends Loader {
         @NonNull
         @Override
         public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ImageView imageView = new ImageView(getContext());
-            ViewGroup.LayoutParams layoutParams = new RecyclerView.LayoutParams(MATCH_PARENT,MATCH_PARENT);
-            imageView.setLayoutParams(layoutParams);
-            return new viewHolder(imageView);
+            FrameLayout itemView = new FrameLayout(getContext());
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(((RecyclerView) parent).getLayoutManager().getWidth(),MATCH_PARENT);
+            itemView.setLayoutParams(layoutParams);
+            return new viewHolder(itemView);
         }
 
         @Override
@@ -113,7 +139,7 @@ public class ImageSlider extends Loader {
 
         @Override
         public int getItemCount() {
-            return loadables.size();
+            return loadables.length;
         }
     }
 
@@ -121,28 +147,29 @@ public class ImageSlider extends Loader {
         private ImageView imageView;
         private viewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView;
+            imageView = new ImageView(getContext());
+            ((FrameLayout)itemView).addView(imageView);
         }
 
         private void loadImage(int position){
             Glide.with(getContext())
-                    .load(loadables.get(position))
+                    .load(loadables[position])
                     .apply(requestOptions)
-                    .fitCenter()
-                    .centerCrop()
                     .into(imageView);
 
         }
     }
 
     //Properties functions
-    public ImageSlider load(@NonNull List<StorageReference> loadables){
+    public ImageSlider load(@NonNull Object[] loadables){
         this.loadables = loadables;
         return this;
     }
 
+
+
     public ImageSlider apply(@NonNull RequestOptions requestOptions){
-        this.requestOptions = requestOptions;
+        this.requestOptions = this.requestOptions.apply(requestOptions);
         return this;
     }
 
@@ -162,25 +189,18 @@ public class ImageSlider extends Loader {
     }
 
     private void handleTouches(){
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener(){
+        final GestureDetector tapGestureDetector = new GestureDetector(getContext(), new TapGestureListener());
 
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener(){
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                if (e.getAction() == MotionEvent.ACTION_DOWN)
+                if (e.getAction() == MotionEvent.ACTION_DOWN) {
                     onTouchChanged(true);
-                else if (e.getAction() != MotionEvent.ACTION_MOVE)
+                } else if (e.getAction() != MotionEvent.ACTION_MOVE)
                     onTouchChanged(false);
 
-                GestureDetector gestureDetector = new GestureDetector(getContext(),new GestureDetector.SimpleOnGestureListener(){
-                    @Override
-                    public boolean onSingleTapConfirmed(MotionEvent e) {
-                        if (onClickListener != null)
-                            onClickListener.onClick(recyclerView);
+                tapGestureDetector.onTouchEvent(e);
 
-                        return false;
-                    }
-                });
-                gestureDetector.onTouchEvent(e);
                 return false;
             }
 
@@ -195,7 +215,19 @@ public class ImageSlider extends Loader {
             }
         });
     }
+    private class TapGestureListener extends GestureDetector.SimpleOnGestureListener {
 
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            if(onClickListener != null) {
+                onClickListener.onClick(recyclerView);
+            }
+
+            return true;
+        }
+
+
+    }
 
 
     //Scrolling Behaviour

@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.barebrains.gyanith20.adapters.eventCatAdapter;
 import com.barebrains.gyanith20.components.Loader;
-import com.barebrains.gyanith20.interfaces.Resource;
+import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.others.mFragment;
@@ -63,7 +63,7 @@ public class FavouritesFragment extends mFragment {
         adapter = new eventCatAdapter(getContext(),getViewLifecycleOwner(),R.layout.item_event_category){
             @Nullable
             @Override
-            public LiveData<Resource<EventItem>> getLiveData() {
+            public LiveData<ArrayResource<EventItem>> getLiveData() {
                 sp = getContext().getSharedPreferences(getString(R.string.package_name), Context.MODE_PRIVATE);
                 Set<String> favIds = sp.getStringSet(getString(R.string.favSet),new HashSet<String>());
                 return eventsModel.getEventsofIds(new ArrayList<>(favIds));

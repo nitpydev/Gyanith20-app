@@ -25,7 +25,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.AnimatedToggle;
 import com.barebrains.gyanith20.components.Loader;
-import com.barebrains.gyanith20.interfaces.Resource;
+import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.statics.EventsModel;
 import com.bumptech.glide.Glide;
@@ -63,9 +63,9 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         loader.loading();
 
-        model.getItem(getIntent().getStringExtra("EXTRA_ID")).observe(this, new Observer<Resource<EventItem>>() {
+        model.getItem(getIntent().getStringExtra("EXTRA_ID")).observe(this, new Observer<ArrayResource<EventItem>>() {
             @Override
-            public void onChanged(Resource<EventItem> res) {
+            public void onChanged(ArrayResource<EventItem> res) {
 
                 if (res.handleLoader(loader))
                     return;

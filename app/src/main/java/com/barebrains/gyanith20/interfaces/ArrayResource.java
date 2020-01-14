@@ -5,11 +5,11 @@ import android.widget.Toast;
 import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.others.LoaderException;
 
-public class Resource<T> {
-    public T value;
+public class ArrayResource<T> {
+    public T[] value;
     public LoaderException error;
 
-    public Resource(T value, LoaderException error){
+    public ArrayResource(T[] value, LoaderException error){
         this.value = value;
         this.error = error;
     }
@@ -29,7 +29,7 @@ public class Resource<T> {
                 return true;
             }
         }
-        if (value != null) {
+        if (value != null && value.length != 0) {
             loader.loaded();
         }
         return false;

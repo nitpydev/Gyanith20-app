@@ -103,7 +103,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(ProfileActivity.this,qrImg, "profile");
                 Intent intent = new Intent(ProfileActivity.this,QrActivity.class);
-                intent.putExtra("value",user.gyanithId);
+                intent.putExtra("Value",user.gyanithId);
                 startActivity(intent, options.toBundle());
             }
         });

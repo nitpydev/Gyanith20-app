@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Profile2Activity"></activity>
+        <activity android:name=".activities.Profile2Activity" />
         <activity android:name=".activities.QrActivity" />
         <activity android:name=".activities.AddNotificationActivity" />
         <activity android:name=".activities.StartPostActivity" />
@@ -65,7 +65,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.AboutActivity" />
-
         <receiver android:name=".others.NetworkChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

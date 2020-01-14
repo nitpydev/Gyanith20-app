@@ -3,7 +3,6 @@ package com.barebrains.gyanith20.components;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Network;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Pair;
@@ -20,7 +19,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.barebrains.gyanith20.adapters.postImagesAdaptor;
 import com.barebrains.gyanith20.interfaces.AuthStateListener;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
-import com.barebrains.gyanith20.interfaces.NetworkStateListener;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.R;
@@ -30,6 +28,7 @@ import com.barebrains.gyanith20.statics.LikesSystem;
 import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.Util;
+import com.google.firebase.storage.FirebaseStorage;
 import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
 
 public class PostView extends RelativeLayout {
@@ -48,8 +47,7 @@ public class PostView extends RelativeLayout {
     private View tapPanel;
 
     //FunctionalUI
-    private ClickableViewPager viewPager;
-    private SpringDotsIndicator dotsIndicator;
+    private ImageSlider imgSlider;
     private View postContent;
     private View deletedView;
     private View deletingProg;
@@ -61,27 +59,27 @@ public class PostView extends RelativeLayout {
 
     public PostView(Context context) {
         super(context);
-        init(context);
+        init();
     }
 
     public PostView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init();
     }
 
     public PostView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
+        init();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public PostView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context);
+        init();
     }
 
-    private void init(final Context context){
-        LayoutInflater.from(context).inflate(R.layout.view_post,this,true);
+    private void init(){
+        LayoutInflater.from(getContext()).inflate(R.layout.view_post,this,true);
 
         //Getting View References
         usernameTxt = findViewById(R.id.post_username);
@@ -89,13 +87,12 @@ public class PostView extends RelativeLayout {
         captionsText = findViewById(R.id.post_captions_text);
         bottomCaptionsText = findViewById(R.id.post_bottom_caption_txt);
         timestampText = findViewById(R.id.post_timestamp_txt);
-        viewPager = findViewById(R.id.post_img_viewpager);
+        imgSlider = findViewById(R.id.post_img_slider);
         shareBtn = findViewById(R.id.share_btn);
         tapPanel = findViewById(R.id.tap_panel);
         deleteBtn = findViewById(R.id.post_delete_btn);
         postContent = findViewById(R.id.post);
         deletedView = findViewById(R.id.deleted);
-        dotsIndicator = findViewById(R.id.dots);
         likeBtn = findViewById(R.id.like_img);
         deletingProg = findViewById(R.id.delete_prog);
 
@@ -106,7 +103,14 @@ public class PostView extends RelativeLayout {
         resetPostView();
         post = initalPost;
         SetupDataUI();
-        setUpViewPager(context, post.imgIds.toArray(new String[0]));
+        imgSlider.load(Util.getStorageRefs(post.imgIds, FirebaseStorage.getInstance().getReference().child("PostImages")))
+        .start();
+        imgSlider.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                captionStateToggle();
+            }
+        });
         SetupInteractiveUI(context);
     }
 
@@ -138,12 +142,6 @@ public class PostView extends RelativeLayout {
 
 
     private void SetupInteractiveUI(final Context context){
-        viewPager.setOnViewPagerClickListener(new ClickableViewPager.OnClickListener() {
-            @Override
-            public void onViewPagerClick(ViewPager viewPager) {
-                captionStateToggle();
-            }
-        });
 
         shareBtn.setOnClickListener(new OnClickListener() {
             @Override
@@ -249,32 +247,16 @@ public class PostView extends RelativeLayout {
 
     }
 
-    private void setUpViewPager(Context context,String[] imgIds){
-        final Bitmap[] bitmaps = new Bitmap[imgIds.length];
-        viewPager.setAdapter(new postImagesAdaptor(context,bitmaps));
-        viewPager.setOffscreenPageLimit(bitmaps.length -1);
-        dotsIndicator.setVisibility((bitmaps.length > 1)?VISIBLE:GONE);
-        dotsIndicator.setViewPager(viewPager);
-        for (int i = 0; i < bitmaps.length;i++)
-            PostManager.getPostImage(context, i, imgIds[i], new ResultListener<Pair<Bitmap, Integer>>() {
-                @Override
-                public void OnResult(Pair<Bitmap,Integer> result) {
-                    bitmaps[result.second] = result.first;
-                    ((postImagesAdaptor)viewPager.getAdapter()).UpdatePosition(viewPager,result.second);
-                }
-            });
-    }
-
     private String buildDeepLink(String postId){
         return "http://gyanith.com/post/" + postId;
     }
 
     private void captionStateToggle(){
         if (tapPanel.getVisibility() == View.VISIBLE) {
-            Anim.crossfade(tapPanel,viewPager,0f,350);
+            Anim.crossfade(tapPanel, imgSlider,0f,350);
             Anim.zoom(tapPanel,1f, 0.7f,450);
         } else {
-            Anim.crossfade(viewPager,tapPanel,0.3f,350);
+            Anim.crossfade(imgSlider,tapPanel,0.3f,350);
             Anim.zoom(tapPanel,0.7f,1f,400);
         }
     }

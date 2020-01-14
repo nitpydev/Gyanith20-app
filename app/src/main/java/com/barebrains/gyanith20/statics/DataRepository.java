@@ -8,11 +8,9 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.MainActivity;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
-import com.barebrains.gyanith20.interfaces.NetworkStateListener;
-import com.barebrains.gyanith20.interfaces.Resource;
+import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.models.NotificationItem;
@@ -28,15 +26,13 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.barebrains.gyanith20.gyanith20.sp;
 
 public class DataRepository {
 
     //PUBLIC FUNCTIONS
-    static MutableLiveData<Resource<ScheduleItem>> getAllScheduleItems(){
+    static MutableLiveData<ArrayResource<ScheduleItem>> getAllScheduleItems(){
         if (scheduleItems == null)
         {
             scheduleItems = new MutableLiveData<>();
@@ -45,25 +41,25 @@ public class DataRepository {
                 public void OnResult(ScheduleItem[] items) {
 
                     if (items != null)
-                        scheduleItems.setValue(new Resource<>(items, new LoaderException(null,null)));
+                        scheduleItems.setValue(new ArrayResource<>(items, new LoaderException(null,null)));
                     else
-                        scheduleItems.setValue(new Resource<ScheduleItem>(null,new LoaderException(0)));
+                        scheduleItems.setValue(new ArrayResource<ScheduleItem>(null,new LoaderException(0)));
                 }
 
                 @Override
                 public void OnComplete(ScheduleItem[] items, String error) {
                     if (items != null && items.length != 0)
-                        scheduleItems.setValue(new Resource<>(items,new LoaderException(null,error)));
+                        scheduleItems.setValue(new ArrayResource<>(items,new LoaderException(null,error)));
                     else
-                        scheduleItems.setValue(new Resource<ScheduleItem>(null,new LoaderException(0,error)));
+                        scheduleItems.setValue(new ArrayResource<ScheduleItem>(null,new LoaderException(0,error)));
                 }
 
                 @Override
                 public void OnError(String error) {
                     if (error != null)
-                        scheduleItems.setValue(new Resource<ScheduleItem>(null,new LoaderException(0,error)));
+                        scheduleItems.setValue(new ArrayResource<ScheduleItem>(null,new LoaderException(0,error)));
                     else
-                        scheduleItems.setValue(new Resource<ScheduleItem>(null,new LoaderException(0,null)));
+                        scheduleItems.setValue(new ArrayResource<ScheduleItem>(null,new LoaderException(0,null)));
                 }
             });
 
@@ -71,26 +67,26 @@ public class DataRepository {
         return scheduleItems;
     }
 
-    public static MutableLiveData<Resource<EventItem>> getAllEventItems(){
+    public static MutableLiveData<ArrayResource<EventItem>> getAllEventItems(){
         if (eventItems == null){
             eventItems = new MutableLiveData<>();
             fetchEventsData(new ResultListener<EventItem[]>(){
                 @Override
                 public void OnResult(EventItem[] items) {
                     if (items == null || items.length == 0)
-                        eventItems.setValue(new Resource<EventItem>(null,new LoaderException(0)));
+                        eventItems.setValue(new ArrayResource<EventItem>(null,new LoaderException(0)));
                     else
-                        eventItems.setValue(new Resource<>(items,new LoaderException(null,null)));
+                        eventItems.setValue(new ArrayResource<>(items,new LoaderException(null,null)));
                 }
 
                 @Override
                 public void OnError(String error) {
-                    eventItems.setValue(new Resource<EventItem>(null,new LoaderException(0,error)));
+                    eventItems.setValue(new ArrayResource<EventItem>(null,new LoaderException(0,error)));
                 }
 
                 @Override
                 public void OnComplete(EventItem[] items, String error) {
-                    eventItems.setValue(new Resource<>(items,new LoaderException(null,error)));
+                    eventItems.setValue(new ArrayResource<>(items,new LoaderException(null,error)));
                 }
             });
         }
@@ -104,7 +100,7 @@ public class DataRepository {
 
 
     //EVENT ITEMS FETCHING
-    private static MutableLiveData<Resource<EventItem>> eventItems;
+    private static MutableLiveData<ArrayResource<EventItem>> eventItems;
 
     private static final String allEventsKey = "allEvents";
 
@@ -153,7 +149,7 @@ public class DataRepository {
 
     //SCHEDULE ITEMS FETCHING
 
-    private static MutableLiveData<Resource<ScheduleItem>> scheduleItems;
+    private static MutableLiveData<ArrayResource<ScheduleItem>> scheduleItems;
 
     private static void fetchSchedules(final ResultListener<ScheduleItem[]> listener){
         FirebaseDatabase.getInstance().getReference().child("Schedule")
@@ -190,10 +186,10 @@ public class DataRepository {
 
 
     //NOTIFICATION ITEMS FETCHING
-    private static MutableLiveData<Resource<NotificationItem>> notiItems;
+    private static MutableLiveData<ArrayResource<NotificationItem>> notiItems;
 
 
-    public static MutableLiveData<Resource<NotificationItem>> getNotiItems(){
+    public static MutableLiveData<ArrayResource<NotificationItem>> getNotiItems(){
         if (notiItems == null)
         {
             notiItems = new MutableLiveData<>();
@@ -201,14 +197,14 @@ public class DataRepository {
                 @Override
                 public void OnResult(NotificationItem[] notificationItems) {
                     if (notificationItems.length == 0)
-                        notiItems.setValue(new Resource<NotificationItem>(null,new LoaderException(0)));
+                        notiItems.setValue(new ArrayResource<NotificationItem>(null,new LoaderException(0)));
                     else
-                        notiItems.setValue(new Resource<>(notificationItems, null));
+                        notiItems.setValue(new ArrayResource<>(notificationItems, null));
                 }
 
                 @Override
                 public void OnError(String error) {
-                    notiItems.setValue(new Resource<NotificationItem>(null,new LoaderException(0,error)));
+                    notiItems.setValue(new ArrayResource<NotificationItem>(null,new LoaderException(0,error)));
                 }
             });
         }
@@ -228,9 +224,9 @@ public class DataRepository {
                             items.add(snap.getValue(NotificationItem.class));
 
                         if (items.size() != 0)
-                            notiItems.setValue(new Resource<NotificationItem>(items.toArray(new NotificationItem[0]),null));
+                            notiItems.setValue(new ArrayResource<NotificationItem>(items.toArray(new NotificationItem[0]),null));
                         else
-                            notiItems.setValue(new Resource<NotificationItem>(null,new LoaderException(0)));
+                            notiItems.setValue(new ArrayResource<NotificationItem>(null,new LoaderException(0)));
 
 
                         if (MainActivity.botNav != null)

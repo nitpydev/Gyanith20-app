@@ -3,7 +3,6 @@ package com.barebrains.gyanith20.adapters;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
@@ -16,10 +15,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.components.Loader;
-import com.barebrains.gyanith20.interfaces.Resource;
+import com.barebrains.gyanith20.interfaces.ArrayResource;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public abstract class LiveListAdapter<T> extends ArrayAdapter {
@@ -28,11 +26,11 @@ public abstract class LiveListAdapter<T> extends ArrayAdapter {
     private Loader loader;
     private LifecycleOwner lifecycleOwner;
     private int pos = 0;
-    private LiveData<Resource<T>> liveData;
+    private LiveData<ArrayResource<T>> liveData;
 
-    private Observer<Resource<T>> observer = new Observer<Resource<T>>() {
+    private Observer<ArrayResource<T>> observer = new Observer<ArrayResource<T>>() {
         @Override
-        public void onChanged(Resource<T> res) {
+        public void onChanged(ArrayResource<T> res) {
            if (res.handleLoader(loader))
                return;
            clear();
@@ -44,7 +42,7 @@ public abstract class LiveListAdapter<T> extends ArrayAdapter {
     //PUBLIC FUNCTIONS
 
     @NonNull
-    public abstract LiveData<Resource<T>> getLiveData();
+    public abstract LiveData<ArrayResource<T>> getLiveData();
 
     @NonNull
     public abstract void bindView(View view,T data);

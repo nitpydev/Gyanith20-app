@@ -20,10 +20,7 @@
         style="@style/backbtn"
         android:layout_gravity="top|left"
         android:backgroundTint="@android:color/white" />
-<com.barebrains.gyanith20.components.Loader
-    android:id="@+id/login_loader"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,103 +39,102 @@
             android:layout_marginTop="-15dp"
             app:srcCompat="@drawable/l2" />
 
-        <com.google.android.material.textfield.TextInputLayout
+        <com.barebrains.gyanith20.components.Loader
+            android:id="@+id/login_loader"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="40dp"
-            style = "@style/textfieldstyle"
-            android:textColorHint="#64ffffff"
-            app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
+            android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/uid"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/sofiaprolight"
-                android:hint="User Id"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@color/whitealpha" />
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/textfieldstyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="40dp"
+                    android:textColorHint="#64ffffff"
+                    app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="40dp"
-            style = "@style/textfieldstyle"
-            android:textColorHint="#64ffffff"
-            app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout"
-            app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/colorAccent">
+                    <EditText
+                        android:id="@+id/uid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sofiaprolight"
+                        android:hint="User Id"
+                        android:inputType="textEmailAddress"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="@color/whitealpha" />
 
-            <EditText
-                android:id="@+id/password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sofiaprolight"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@color/whitealpha" />
-            <!--                   android:imeActionId="6"
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/textfieldstyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="40dp"
+                    android:textColorHint="#64ffffff"
+                    app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/colorAccent">
+
+                    <EditText
+                        android:id="@+id/password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sofiaprolight"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="@color/whitealpha" />
+                    <!--                   android:imeActionId="6"
                    android:imeActionLabel="@string/action_sign_in_short"
                    android:imeOptions="actionUnspecified"-->
 
-        </com.google.android.material.textfield.TextInputLayout>
-<com.barebrains.gyanith20.components.Loader
-    android:id="@+id/sign_in_loader"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:clickable="false">
+                </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+                <Button
+                    android:id="@+id/signinBtn"
+                    style="@style/txtBtn"
+                    android:backgroundTint="#191fcd"
+                    android:text="Sign in"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/signinBtn"
-            style="@style/txtBtn"
-            android:backgroundTint="#191fcd"
-            android:text="Sign in"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+                <LinearLayout
+                    android:id="@+id/signupll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="30dp"
+                    android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/signupll"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="30dp"
-            android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Don't have an account? "
+                        android:textColor="#64ffffff" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Don't have an account? "
-                android:textColor="#64ffffff" />
-
-            <TextView
-                android:id="@+id/sign_up"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sign up!"
-                android:textColor="@color/whitealpha" />
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/sign_up"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sign up!"
+                        android:textColor="@color/whitealpha" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.barebrains.gyanith20.components.Loader>
     </LinearLayout>
-
-</com.barebrains.gyanith20.components.Loader>
-
-    </LinearLayout>
-</com.barebrains.gyanith20.components.Loader>
 </FrameLayout>
