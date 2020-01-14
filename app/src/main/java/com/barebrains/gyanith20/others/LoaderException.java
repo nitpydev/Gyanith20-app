@@ -12,6 +12,9 @@ import androidx.annotation.Nullable;
 
 public class LoaderException extends Exception {
 
+    public static final int DATA_EMPTY = 0;
+    public static final int NO_DATA_AND_NET = 1;
+
     private Integer index;
 
     public LoaderException(@Nullable Integer index) {

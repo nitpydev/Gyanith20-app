@@ -74,7 +74,7 @@
                         android:layout_height="30dp"
                         android:layout_gravity="center"
                         android:background="@null"
-                        android:button="@drawable/toggle_button"
+                        android:button="@drawable/like_selector"
                         android:checked="false"
                         android:foregroundGravity="center"
                         android:minWidth="0dp"

@@ -62,6 +62,7 @@ public class HomeFragment extends mFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         imgSlider = root.findViewById(R.id.img_slider);
         trend = root.findViewById(R.id.trend);
@@ -73,28 +74,28 @@ public class HomeFragment extends mFragment {
             @Override
             public void onSuccess(ListResult listResult) {
                 List<StorageReference> imgRefs = listResult.getItems();
-                imgSlider.load(imgRefs.toArray(new  StorageReference[0])).apply((new RequestOptions()).centerCrop()).start();
+                imgSlider.load(imgRefs.toArray(new StorageReference[0])).apply((new RequestOptions()).centerCrop()).start();
                 imgSlider.autoScroll(true);
             }
         });
 
-    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("homefragment_urlredirect");
-    ref.addListenerForSingleValueEvent(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            try{
-            trendurl = dataSnapshot.getValue().toString();}
-            catch (NullPointerException n){
-                trendurl = "https://www.youtube.com/channel/UCL8yfte7HZy_KGE-fckMsqQ";
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("homefragment_urlredirect");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+                    trendurl = dataSnapshot.getValue().toString();
+                } catch (NullPointerException n) {
+                    trendurl = "https://www.youtube.com/channel/UCL8yfte7HZy_KGE-fckMsqQ";
+                }
+
             }
 
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-        }
-    });
+            }
+        });
 
         CardView w = root.findViewById(R.id.w);
         CardView te = root.findViewById(R.id.te);
@@ -211,18 +212,17 @@ public class HomeFragment extends mFragment {
         @Override
         public void  onClick(View view) {
             final Random r = new Random();
+            Toast.makeText(HomeFragment.this.getContext(), "Loading", Toast.LENGTH_SHORT).show();
             DataRepository.getAllEventItems().removeObservers(getViewLifecycleOwner());
             DataRepository.getAllEventItems().observe(getViewLifecycleOwner(), new Observer<ArrayResource<EventItem>>() {
                 @Override
                 public void onChanged(ArrayResource<EventItem> res) {
 
-                    if (res.error != null) {
-                        if (res.error.getMessage() != null)
-                            Toast.makeText(HomeFragment.this.getContext(), res.error.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (res.error.getMessage() != null)
+                        Toast.makeText(HomeFragment.this.getContext(), res.error.getMessage(), Toast.LENGTH_SHORT).show();
 
-                        if (res.error.getIndex() != null)
-                            return;
-                    }
+                    if (res.error.getIndex() != null)
+                        return;
 
                     int rnd = r.nextInt(res.value.length);
                     Intent evt = new Intent(getContext(), EventDetailsActivity.class);

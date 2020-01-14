@@ -90,7 +90,7 @@
                     </com.google.android.material.card.MaterialCardView>
 
 
-                    <com.barebrains.gyanith20.components.ClickableViewPager
+                    <androidx.viewpager.widget.ViewPager
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
                         android:background="@color/tint"
@@ -101,7 +101,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/oiasjia"
                         app:layout_constraintVertical_bias="0.0">
 
-                    </com.barebrains.gyanith20.components.ClickableViewPager>
+                    </androidx.viewpager.widget.ViewPager>
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/xzvzxcv"
@@ -236,7 +236,7 @@
                     </com.google.android.material.card.MaterialCardView>
 
 
-                    <com.barebrains.gyanith20.components.ClickableViewPager
+                    <androidx.viewpager.widget.ViewPager
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
                         android:background="@color/tint"
@@ -247,7 +247,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/oiasjia1"
                         app:layout_constraintVertical_bias="0.0">
 
-                    </com.barebrains.gyanith20.components.ClickableViewPager>
+                    </androidx.viewpager.widget.ViewPager>
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/xzvzxcv1"

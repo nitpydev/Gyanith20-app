@@ -124,13 +124,6 @@ public class UploadPostActivity extends AppCompatActivity {
         }
     }
 
-   /* @Override
-    public void onSliderClick(BaseSliderView slider) {
-        captionStateToggle();
-    }
-
-    */
-
     public void hideSoftKeyboard() {
 
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);

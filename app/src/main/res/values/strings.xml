@@ -3,7 +3,6 @@
     <string name="package_name">com.barebrains.gyanith20</string>
 
     <!--SharedPreference Keys-->
-    <string name="gyanithUserKey">gyanithUser</string>
     <string name="eventItemsKey">eventItems</string>
     <string name="favSet">favIdsSet</string>
 

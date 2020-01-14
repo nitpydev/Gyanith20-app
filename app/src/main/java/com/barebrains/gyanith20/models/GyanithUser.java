@@ -5,6 +5,8 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class GyanithUser {
+    public boolean trustedToken = true;
+
     public String gyanithId;
     public String name;
     public String userName;

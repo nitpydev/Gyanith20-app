@@ -60,17 +60,18 @@ public class FavouritesFragment extends mFragment {
         Loader loader = root.findViewById(R.id.fav_loader);
         ListView favListView = root.findViewById(R.id.favlv);
 
-        adapter = new eventCatAdapter(getContext(),getViewLifecycleOwner(),R.layout.item_event_category){
+        adapter = new eventCatAdapter(getContext(), getViewLifecycleOwner(), R.layout.item_event_category) {
             @Nullable
             @Override
             public LiveData<ArrayResource<EventItem>> getLiveData() {
                 sp = getContext().getSharedPreferences(getString(R.string.package_name), Context.MODE_PRIVATE);
-                Set<String> favIds = sp.getStringSet(getString(R.string.favSet),new HashSet<String>());
+                Set<String> favIds = sp.getStringSet(getString(R.string.favSet), new HashSet<String>());
                 return eventsModel.getEventsofIds(new ArrayList<>(favIds));
             }
         };
         adapter.setLoader(loader);
         favListView.setAdapter(adapter);
+        super.onCreateView(inflater, container, savedInstanceState);
         return root;
 
     }

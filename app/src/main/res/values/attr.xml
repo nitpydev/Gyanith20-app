@@ -4,5 +4,6 @@
         <attr name="loading_indicator" format="reference"/>
         <attr name="isErrorText" format="boolean"/>
         <attr name="empty_error" format="string|reference"/>
+        <attr name="no_net_error" format="string|reference"/>
     </declare-styleable>
 </resources>

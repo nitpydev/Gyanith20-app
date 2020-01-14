@@ -49,13 +49,14 @@ public class ScheduleFragment extends mFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View root= inflater.inflate(R.layout.fragment_schedule, container, false);
+        final View root = inflater.inflate(R.layout.fragment_schedule, container, false);
         TabLayout mtabLayout = root.findViewById(R.id.schtabLayout);
         ViewPager viewPager = root.findViewById(R.id.viewpager);
         viewPager.setAdapter(new pager());
         viewPager.setCurrentItem(0);
         viewPager.setOffscreenPageLimit(4);
         mtabLayout.setupWithViewPager(viewPager);
+        super.onCreateView(inflater, container, savedInstanceState);
         return root;
     }
 

@@ -56,7 +56,6 @@ public class AddNotificationActivity extends AppCompatActivity {
                     StringRequest notiRequest = new StringRequest(url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Log.d("asd","notification : " + response);
                             FirebaseDatabase.getInstance().getReference().child("Notifications")
                                     .push().setValue(notiItem);
 

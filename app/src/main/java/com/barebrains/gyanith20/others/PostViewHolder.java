@@ -7,6 +7,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.barebrains.gyanith20.R;
@@ -14,7 +15,9 @@ import com.barebrains.gyanith20.components.AnimatedToggle;
 import com.barebrains.gyanith20.components.ImageSlider;
 import com.barebrains.gyanith20.interfaces.AuthStateListener;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
+import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.interfaces.ResultListener;
+import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.statics.Anim;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
@@ -23,6 +26,7 @@ import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.Util;
 import com.google.firebase.storage.FirebaseStorage;
+
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -54,6 +58,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
     private ResultListener<String> likeRefreshListener;
     private long likedVal;
     private long unlikedVal;
+    private Observer<Resource<GyanithUser>> observer;
 
 
     public PostViewHolder(@NonNull View itemView) {
@@ -135,99 +140,100 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
             }
         });
 
+        deleteBtn.setVisibility(GONE);
+        likeCountText.setText((post.likes != 0) ? Long.toString(post.likes).substring(1) : "0");
+        likeBtn.setOnCheckedChangeListener(null);
+        likeBtn.setChecked(false);
+        deleteBtn.setOnClickListener(null);
+
         //Below are the Auth state aware Statements
-        authStateListener = new AuthStateListener(){
+        observer = new Observer<Resource<GyanithUser>>() {
             @Override
-            public void onChange() {
-                deleteBtn.setVisibility(GONE);
-                likeCountText.setText((post.likes != 0) ? Long.toString(post.likes).substring(1) : "0");
-                likeBtn.setOnCheckedChangeListener(null);
-                deleteBtn.setOnClickListener(null);
-            }
-
-            @Override
-            public void VerifiedUser() {
-                try {
-
-                    //If we are owner of post show delete btn
-                    if (post.gyanithId.equals(GyanithUserManager.getCurrentUser().gyanithId))
-                        deleteBtn.setVisibility(VISIBLE);
-
-                    //Initial Likes Setup
-                    final boolean isliked = LikesSystem.isLiked(post.postId);
-
-                    likedVal = isliked ? post.likes : post.likes - 1;
-                    unlikedVal = isliked ? post.likes + 1 : post.likes;
-                    likeBtn.setChecked(isliked);
-
+            public void onChanged(Resource<GyanithUser> res) {
+                if (res.value == null)
+                {
+                    deleteBtn.setVisibility(GONE);
+                    likeBtn.setOnCheckedChangeListener(null);
+                    likeBtn.setChecked(false);
+                    deleteBtn.setOnClickListener(null);
+                    if (likeRefreshListener != null) {
+                        LikesSystem.listeners.remove(likeRefreshListener);
+                        likeRefreshListener = null;
+                    }
                     likeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                            LikesSystem.ToggleLikeState(post.postId,b);
+                            Toast.makeText(compoundButton.getContext(),"Sign in to Like Posts", Toast.LENGTH_SHORT).show();
+                            compoundButton.setChecked(false);
                         }
                     });
-
-                    deleteBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View view) {
-                            if (!NetworkManager.getInstance().isNetAvailable()) {
-                                Toast.makeText(view.getContext(), "No Internet", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            deletingProg.setVisibility(VISIBLE);
-                            view.setVisibility(GONE);
-                            PostManager.deletePost(post, new CompletionListener() {
-                                @Override
-                                public void OnComplete() {
-                                    deletedView.setVisibility(VISIBLE);
-                                    postContent.setVisibility(GONE);
-                                }
-
-                                @Override
-                                public void OnError(String error) {
-                                    Toast.makeText(view.getContext(), "Could'nt Delete Post", Toast.LENGTH_SHORT).show();
-                                    deletingProg.setVisibility(GONE);
-                                    view.setVisibility(VISIBLE);
-                                }
-                            });
-                        }
-                    });
-
-                    //Refreshing Likes Listener
-                    likeRefreshListener = new ResultListener<String>(){
-                        @Override
-                        public void OnResult(String postId) {
-                            if (postId.equals(post.postId)) {
-                                boolean isLiked = LikesSystem.isLiked(postId);
-                                likeBtn.setChecked(isliked);
-                            }
-                        }
-                    };
-                    LikesSystem.listeners.add(likeRefreshListener);
-
-                }catch (IllegalStateException e){
-                   // Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
                 }
-            }
+                else {
+                    try {
 
-            @Override
-            public void NullUser() {
-                if (likeRefreshListener != null) {
-                    LikesSystem.listeners.remove(likeRefreshListener);
-                    likeRefreshListener = null;
-                }
-                likeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        Toast.makeText(compoundButton.getContext(),"Sign in to Like Posts", Toast.LENGTH_SHORT).show();
-                        compoundButton.setChecked(false);
+                        //If we are owner of post show delete btn
+                        if (post.gyanithId.equals(res.value.gyanithId))
+                            deleteBtn.setVisibility(VISIBLE);
+
+                        //Initial Likes Setup
+                        final boolean isliked = LikesSystem.isLiked(post.postId);
+
+                        likedVal = isliked ? post.likes : post.likes - 1;
+                        unlikedVal = isliked ? post.likes + 1 : post.likes;
+                        likeBtn.setChecked(isliked);
+
+                        likeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                                LikesSystem.ToggleLikeState(post.postId,b);
+                            }
+                        });
+
+                        deleteBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(final View view) {
+                                if (!NetworkManager.getInstance().isNetAvailable()) {
+                                    Toast.makeText(view.getContext(), "No Internet", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                deletingProg.setVisibility(VISIBLE);
+                                view.setVisibility(GONE);
+                                PostManager.deletePost(post, new CompletionListener() {
+                                    @Override
+                                    public void OnComplete() {
+                                        deletedView.setVisibility(VISIBLE);
+                                        postContent.setVisibility(GONE);
+                                    }
+
+                                    @Override
+                                    public void OnError(String error) {
+                                        Toast.makeText(view.getContext(), "Could'nt Delete Post", Toast.LENGTH_SHORT).show();
+                                        deletingProg.setVisibility(GONE);
+                                        view.setVisibility(VISIBLE);
+                                    }
+                                });
+                            }
+                        });
+
+                        //Refreshing Likes Listener
+                        likeRefreshListener = new ResultListener<String>(){
+                            @Override
+                            public void OnResult(String postId) {
+                                if (postId.equals(post.postId)) {
+                                    boolean isLiked = LikesSystem.isLiked(postId);
+                                    likeBtn.setChecked(isliked);
+                                    setLikeCount(isLiked);
+                                }
+                            }
+                        };
+                        LikesSystem.listeners.add(likeRefreshListener);
+
+                    }catch (IllegalStateException e){
+                        // Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
                     }
-                });
+                }
             }
         };
-
-        GyanithUserManager.addAuthStateListener(authStateListener);
-
     }
 
     private String buildDeepLink(String postId){

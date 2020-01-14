@@ -176,8 +176,8 @@ public class PostUploadService extends Service {
 
         private void commitPostToFirebase(final CompletionListener listener){
             Post post = new Post(""
-                    ,GyanithUserManager.getCurrentUser().userName
-                    ,GyanithUserManager.getCurrentUser().gyanithId
+                    ,GyanithUserManager.getCurrentUser().getValue().value.userName
+                    ,GyanithUserManager.getCurrentUser().getValue().value.gyanithId
                     ,System.currentTimeMillis()
                     ,caption
                     ,new ArrayList<>(currProgress.keySet()));
@@ -205,7 +205,7 @@ public class PostUploadService extends Service {
 
             rootRef.child("users").child(post.gyanithId).child("postCount").runTransaction(incrementer);
             rootRef.child("postCount").runTransaction(incrementer);
-            rootRef.child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
+            rootRef.child("users").child(GyanithUserManager.getCurrentUser().getValue().value.gyanithId)
                     .child("posts").child(post.postId).setValue(post);
         }
 

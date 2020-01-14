@@ -42,12 +42,12 @@ public class NotificationFragment extends mFragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View root= inflater.inflate(R.layout.fragment_notifications, container, false);
+        final View root = inflater.inflate(R.layout.fragment_notifications, container, false);
         ListView notiListView = root.findViewById(R.id.notificationListView);
         final Loader loader = root.findViewById(R.id.ad);
         loader.loading();
 
-        LiveListAdapter<NotificationItem> adapter = new LiveListAdapter<NotificationItem>(getContext(),getViewLifecycleOwner(),R.layout.item_notification) {
+        LiveListAdapter<NotificationItem> adapter = new LiveListAdapter<NotificationItem>(getContext(), getViewLifecycleOwner(), R.layout.item_notification) {
             @NonNull
             @Override
             public LiveData<ArrayResource<NotificationItem>> getLiveData() {
@@ -65,7 +65,7 @@ public class NotificationFragment extends mFragment {
             @NonNull
             @Override
             public View createView() {
-                return inflater.inflate(getResId(),null);
+                return inflater.inflate(getResId(), null);
             }
         };
         adapter.setLoader(loader);
@@ -74,6 +74,7 @@ public class NotificationFragment extends mFragment {
 
 
         View addBtn = root.findViewById(R.id.add_notification);
+
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,6 +83,7 @@ public class NotificationFragment extends mFragment {
             }
         });
 
+        super.onCreateView(inflater, container, savedInstanceState);
         return root;
     }
 

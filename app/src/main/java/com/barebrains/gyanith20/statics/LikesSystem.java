@@ -4,8 +4,10 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.interfaces.AuthStateListener;
+import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,26 +27,35 @@ import java.util.Set;
 import static com.barebrains.gyanith20.statics.Util.decrementer;
 import static com.barebrains.gyanith20.statics.Util.incrementer;
 
+@Deprecated//TODO: THIS SYSTEM NEEDS LIVE DATA DESPERATELY
 public class LikesSystem {
 
     private static Set<String> likedPost_cache;
 
     public static void Initialize(){
 
+        GyanithUserManager.getCurrentUser().observeForever(new Observer<Resource<GyanithUser>>() {
+            @Override
+            public void onChanged(Resource<GyanithUser> res) {
+                if (res.value != null){
+                    fetchLikedPosts(new ResultListener<String[]>(){
+                        @Override
+                        public void OnResult(String[] strings) {
+                            likedPost_cache = new HashSet<>(Arrays.asList(strings));
+                        }
+
+                        @Override
+                        public void OnError(String error) {
+                            Log.d("asd","LikesSystem : " + error);
+                        }
+                    });
+                }
+            }
+        });
         GyanithUserManager.addAuthStateListener(new AuthStateListener(){
             @Override
             public void VerifiedUser() {
-                fetchLikedPosts(new ResultListener<String[]>(){
-                    @Override
-                    public void OnResult(String[] strings) {
-                        likedPost_cache = new HashSet<>(Arrays.asList(strings));
-                    }
 
-                    @Override
-                    public void OnError(String error) {
-                        Log.d("asd","LikesSystem : " + error);
-                    }
-                });
             }
 
             @Override
@@ -61,58 +72,63 @@ public class LikesSystem {
         return likedPost_cache.contains(postId);
     }
 
-    public static void ToggleLikeState(String postId,boolean state) throws IllegalStateException
+    public static void ToggleLikeState(final String postId, final boolean state) throws IllegalStateException
     {
-        GyanithUser user = GyanithUserManager.getCurrentUser();
+        GyanithUserManager.getCurrentUser().observeForever(new Observer<Resource<GyanithUser>>() {
+            @Override
+            public void onChanged(Resource<GyanithUser> res) {
+                if (res.value == null)
+                    return;
+                //DatabaseRefs
+                DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                DatabaseReference userLikedPostsRef = rootRef.child("users").child(res.value.gyanithId).child("likedPosts");
+                DatabaseReference likesRef = rootRef.child("posts").child(postId).child("likes");
 
-        if (user == null)
-            throw new IllegalStateException("No User Signed In");
-
-        //DatabaseRefs
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference userLikedPostsRef = rootRef.child("users").child(user.gyanithId).child("likedPosts");
-        DatabaseReference likesRef = rootRef.child("posts").child(postId).child("likes");
-
-        //State specific
-        if (state) {
-            likedPost_cache.add(postId);
-            userLikedPostsRef.child(postId).setValue(postId);
-            likesRef.runTransaction(decrementer);
-        } else {
-            likedPost_cache.remove(postId);
-            userLikedPostsRef.child(postId).removeValue();
-            likesRef.runTransaction(incrementer);
-        }
-
-
-
-        respondListeners(postId);
+                //State specific
+                if (state) {
+                    likedPost_cache.add(postId);
+                    userLikedPostsRef.child(postId).setValue(postId);
+                    likesRef.runTransaction(decrementer);
+                } else {
+                    likedPost_cache.remove(postId);
+                    userLikedPostsRef.child(postId).removeValue();
+                    likesRef.runTransaction(incrementer);
+                }
+                respondListeners(postId);
+            }
+        });
     }
 
 
 
     private static void fetchLikedPosts(final ResultListener<String[]> callback){
-        GyanithUser user = GyanithUserManager.getCurrentUser();
-        if (user == null) {
-            callback.OnError("No User Signed In");
-            return;
-        }
-
-        FirebaseDatabase.getInstance().getReference().child("users").child(GyanithUserManager.getCurrentUser().gyanithId)
-                .child("likedPosts").addListenerForSingleValueEvent(new ValueEventListener() {
+        GyanithUserManager.getCurrentUser().observeForever(new Observer<Resource<GyanithUser>>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String[] posts = new String[(int) dataSnapshot.getChildrenCount()];
-                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
-                for (int i = 0;i<posts.length;i++)
-                    posts[i] = iterator.next().getValue(String.class);
+            public void onChanged(Resource<GyanithUser> res) {
+                if (res == null) {
+                    return;
+                }
+                FirebaseDatabase.getInstance().getReference().child("users").child(res.value.gyanithId)
+                        .child("likedPosts").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String[] posts = new String[(int) dataSnapshot.getChildrenCount()];
+                        Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                        for (int i = 0;i<posts.length;i++)
+                            posts[i] = iterator.next().getValue(String.class);
 
-                callback.OnResult(posts);
-            }
+                        callback.OnResult(posts);
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                callback.OnError("Network Error");
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        if (NetworkManager.internet.getValue())
+                            callback.OnResult(new String[0]);
+                        else
+                            callback.OnError(null);
+                    }
+                });
+                GyanithUserManager.getCurrentUser().removeObserver(this);
             }
         });
     }

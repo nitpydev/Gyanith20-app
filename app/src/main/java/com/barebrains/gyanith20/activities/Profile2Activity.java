@@ -14,6 +14,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -36,6 +37,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class Profile2Activity extends AppCompatActivity {
 
@@ -66,8 +69,8 @@ public class Profile2Activity extends AppCompatActivity {
             public void onChanged(Resource<GyanithUser> res) {
                 if (res.value == null)
                 {
-                    Toast.makeText(Profile2Activity.this, "Please Login to Continue", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Profile2Activity.this,LoginActivity.class);
+                    if (res.error.getMessage() != null)//TODO:SEND THIS MESSAGE
+                        Toast.makeText(Profile2Activity.this, res.error.getMessage(), Toast.LENGTH_SHORT).show();                    Intent intent = new Intent(Profile2Activity.this,LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
@@ -129,6 +132,10 @@ public class Profile2Activity extends AppCompatActivity {
                     coordinatorLayout.addView(postsFeed);
 
                     final FloatingActionButton addPostBtn = new FloatingActionButton(new ContextThemeWrapper(Profile2Activity.this,R.style.fab));
+                    CoordinatorLayout.LayoutParams layoutParams = new CoordinatorLayout.LayoutParams(WRAP_CONTENT,WRAP_CONTENT);
+                    layoutParams.gravity = Gravity.BOTTOM|Gravity.END;
+                    addPostBtn.setLayoutParams(layoutParams);
+                    addPostBtn.setBackgroundColor(ContextCompat.getColor(Profile2Activity.this,R.color.colorAccent));
                     GyanithUserManager.addAuthStateListner(557, new AuthStateListener() {
                         @Override
                         public void onChange() {

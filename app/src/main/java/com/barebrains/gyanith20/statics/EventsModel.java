@@ -11,6 +11,7 @@ import com.barebrains.gyanith20.others.LoaderException;
 
 import java.util.ArrayList;
 
+import static com.barebrains.gyanith20.others.LoaderException.DATA_EMPTY;
 import static com.barebrains.gyanith20.statics.DataRepository.getAllEventItems;
 
 public class EventsModel extends ViewModel {
@@ -24,10 +25,10 @@ public class EventsModel extends ViewModel {
 
                for (EventItem item : input.value) {
                    if (item.id.equals(id))
-                       return new ArrayResource<>(new EventItem[]{item},null);
+                       return new ArrayResource<>(new EventItem[]{item},new LoaderException(null));
                }
 
-               return new ArrayResource<>(null, new LoaderException(0));
+               return new ArrayResource<>(null, new LoaderException(DATA_EMPTY));
             }
         });
     }
@@ -48,9 +49,9 @@ public class EventsModel extends ViewModel {
                 EventItem[] result = items.toArray(new EventItem[0]);
 
                 if (result.length == 0)
-                    return new ArrayResource<>(null,new LoaderException(0));
+                    return new ArrayResource<>(null,new LoaderException(DATA_EMPTY));
                 else
-                    return new ArrayResource<>(result,null);
+                    return new ArrayResource<>(result,new LoaderException(null,input.error.getMessage()));
             }
         });
     }

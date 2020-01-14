@@ -36,11 +36,12 @@ public class gyanith20 extends MultiDexApplication {
 
         //NETWORKING INITIATIONS
         VolleyManager.setRequestQueue(this);
+        NetworkManager.init(getApplicationContext());
         NetworkManager.initialize(this);
         AppNotiManager.initNotifications();
         PostManager.StartListeningPostCount();
         //USER SYSTEM INITIATIONS
-        HandleUserManagement();
+        GyanithUserManager.SignInReturningUser();
         LikesSystem.Initialize();
 
         super.onCreate();
@@ -82,24 +83,6 @@ public class gyanith20 extends MultiDexApplication {
 
             }
         });
-    }
-
-    private void HandleUserManagement(){
-        try {
-            GyanithUserManager.SignInReturningUser(this, new ResultListener<GyanithUser>() {
-                @Override
-                public void OnResult(GyanithUser gyanithUser) {
-                    Log.d("asd","user return successful");
-                }
-
-                @Override
-                public void OnError(String error) {
-                    Log.d("asd","SignInReturningUser : " + error);
-                }
-            });
-        } catch (IllegalStateException e) {
-            Log.d("asd","No Saved User Found");//No Saved User Found
-        }
     }
 
     private void CreateProgressNotificationChannel(){

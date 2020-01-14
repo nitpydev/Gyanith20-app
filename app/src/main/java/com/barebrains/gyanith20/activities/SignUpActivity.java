@@ -13,11 +13,14 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.fragments.BottomSheetFragment;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
+import com.barebrains.gyanith20.interfaces.Resource;
+import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.models.SignUpDetails;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 
@@ -36,6 +39,7 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        //VIEW BINDINGS
         loader = findViewById(R.id.sign_up_loader);
         name = findViewById(R.id.name);
         num = findViewById(R.id.phone);
@@ -47,8 +51,6 @@ public class SignUpActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         signup = findViewById(R.id.signupBtn);
         back = findViewById(R.id.backbutsignup);
-        loader.loaded();//TODO:FOR NOW
-
 //back click
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,11 +59,13 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+        loader.loading();
+
+        handleAuthState();
 //click event
         signup.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                isLoading(true);
                 try {
                     final SignUpDetails details = new SignUpDetails(
                             usrname.getText().toString()
@@ -137,16 +141,22 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
 
-    private void isLoading(boolean state){
-        if (state){
-            prog.setVisibility(View.VISIBLE);
-            signup.setVisibility(View.GONE);
-        }
-        else {
-            prog.setVisibility(View.GONE);
-            signup.setVisibility(View.VISIBLE);
-        }
+    private void handleAuthState(){
+        GyanithUserManager.getCurrentUser().observe(this, new Observer<Resource<GyanithUser>>() {
+            @Override
+            public void onChanged(Resource<GyanithUser> res) {
+                loader.loaded();
+                if (res.error.getMessage() != null)
+                    Toast.makeText(SignUpActivity.this, res.error.getMessage(), Toast.LENGTH_SHORT).show();
 
+                if (res.value != null)
+                {
+                    Intent intent = new Intent(SignUpActivity.this,ProfileActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
     }
 
 }

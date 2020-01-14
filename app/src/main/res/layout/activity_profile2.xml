@@ -27,13 +27,21 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/profile2_tabs"
-        style="@style/tabs" />
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/profile2_viewpager"
+    <com.barebrains.gyanith20.components.Loader
+        android:id="@+id/profile2_loader"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/profile2_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/profile2_tabs"
+                style="@style/tabs"
+                android:layout_gravity="center_horizontal|top" />
+        </androidx.viewpager.widget.ViewPager>
+    </com.barebrains.gyanith20.components.Loader>
 
 </LinearLayout>

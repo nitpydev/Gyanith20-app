@@ -6,9 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -17,6 +19,8 @@ import com.barebrains.gyanith20.activities.StartPostActivity;
 import com.barebrains.gyanith20.components.PostsFeed;
 import com.barebrains.gyanith20.interfaces.AuthStateListener;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
+import com.barebrains.gyanith20.interfaces.Resource;
+import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -30,6 +34,7 @@ public class CommunityFragment extends mFragment {
 
 
     private View root;
+    private Observer<Resource<GyanithUser>> observer;
     private CompletionListener postUploadedListener;
 
     public CommunityFragment() {
@@ -65,32 +70,40 @@ public class CommunityFragment extends mFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.fragment_community,container,false);
+        root = inflater.inflate(R.layout.fragment_community, container, false);
         final View addPostBtn = root.findViewById(R.id.add_post_btn);
 
-        GyanithUserManager.addAuthStateListner(1, new AuthStateListener() {
+        observer = new Observer<Resource<GyanithUser>>() {
             @Override
-            public void onChange() {
-                addPostBtn.setOnClickListener(null);
-                addPostBtn.setVisibility(View.GONE);
+            public void onChanged(Resource<GyanithUser> res) {
+
+                if (res.value != null){
+                    addPostBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getContext(), StartPostActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                }
+                else
+                {
+                    addPostBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(CommunityFragment.this.getContext(), "Sign in to Post", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
             }
-            @Override
-            public void VerifiedUser() {
-                addPostBtn.setVisibility(View.VISIBLE);
-                addPostBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getContext(), StartPostActivity.class);
-                        startActivity(intent);
-                    }
-                });
-            }
-        });
+        };
+        super.onCreateView(inflater, container, savedInstanceState);
 
         final ViewPager viewPager = root.findViewById(R.id.feedViewPager);
 
         final IconSwitch iconSwitch = root.findViewById(R.id.trendingSwitch);
-        syncViewPagerAndIconSwitch(viewPager,iconSwitch);
+        syncViewPagerAndIconSwitch(viewPager, iconSwitch);
 
         viewPager.setOffscreenPageLimit(1);
 
@@ -108,11 +121,11 @@ public class CommunityFragment extends mFragment {
                 else
                     query = reference.child("posts").orderByChild("likes");
 
-                postsFeed.load(getViewLifecycleOwner(),query,reference.child("postCount"));
+                postsFeed.load(getViewLifecycleOwner(), query, reference.child("postCount"));
                 container.addView(postsFeed);
 
                 final CompletionListener beforelistener = postUploadedListener;
-                postUploadedListener = new CompletionListener(){
+                postUploadedListener = new CompletionListener() {
                     @Override
                     public void OnComplete() {
                         postsFeed.refresh();
@@ -144,10 +157,19 @@ public class CommunityFragment extends mFragment {
         return root;
     }
 
+
     @Override
-    public void onDestroyView() {
-        GyanithUserManager.removeAuthStateListener(1);
-        super.onDestroyView();
+    public void onShow() {
+        super.onShow();
+        if (observer != null)
+            GyanithUserManager.getCurrentUser().observeForever(observer);
+    }
+
+    @Override
+    public void onHide() {
+        super.onHide();
+        if (observer != null)
+            GyanithUserManager.getCurrentUser().removeObserver(observer);
     }
 
     private void syncViewPagerAndIconSwitch(final ViewPager viewPager, final IconSwitch iconSwitch){
