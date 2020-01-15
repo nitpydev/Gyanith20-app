@@ -2,12 +2,14 @@ package com.barebrains.gyanith20.fragments;
 
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.barebrains.gyanith20.R;
@@ -60,6 +62,11 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         {
             listener.OnComplete();
         }
+    }
+
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
     }
 
     @Override

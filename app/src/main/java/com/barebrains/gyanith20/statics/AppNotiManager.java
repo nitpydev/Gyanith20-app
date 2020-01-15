@@ -150,7 +150,7 @@ public class AppNotiManager {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        if (!NetworkManager.getInstance().isNetAvailable()) {
+                        if (!NetworkManager.internet_value) {
                             for (ResultListener<NotificationItem[]> listener : listeners.values())
                                 listener.OnError("No Internet");
                             return;

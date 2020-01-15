@@ -9,11 +9,15 @@ import android.os.FileUtils;
 import android.os.IBinder;
 import android.util.Log;
 import android.util.Pair;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.interfaces.CompletionListener;
+import com.barebrains.gyanith20.interfaces.Resource;
+import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.AppNotiManager;
@@ -175,38 +179,53 @@ public class PostUploadService extends Service {
         }
 
         private void commitPostToFirebase(final CompletionListener listener){
-            Post post = new Post(""
-                    ,GyanithUserManager.getCurrentUser().getValue().value.userName
-                    ,GyanithUserManager.getCurrentUser().getValue().value.gyanithId
-                    ,System.currentTimeMillis()
-                    ,caption
-                    ,new ArrayList<>(currProgress.keySet()));
-
-            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-            final DatabaseReference postRef = rootRef.child("posts").push();
-            post.time = -post.time;
-            post.postId = postRef.getKey();
-            postRef.setValue(post).addOnSuccessListener(new OnSuccessListener<Void>() {
+            GyanithUserManager.getCurrentUser().observeForever(new Observer<Resource<GyanithUser>>() {
                 @Override
-                public void onSuccess(Void aVoid) {
+                public void onChanged(Resource<GyanithUser> res) {
+                    if (res.value == null)
+                    {
+                        Toast.makeText(service, "User not signed In", Toast.LENGTH_SHORT).show();
+                        GyanithUserManager.getCurrentUser().removeObserver(this);
+                        return;
+                    }
+
+                    Post post = new Post(""
+                            ,res.value.userName
+                            ,res.value.gyanithId
+                            ,System.currentTimeMillis()
+                            ,caption
+                            ,new ArrayList<>(currProgress.keySet()));
+
+                    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                    final DatabaseReference postRef = rootRef.child("posts").push();
+                    post.time = -post.time;
+                    post.postId = postRef.getKey();
+                    postRef.setValue(post).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
 
 
 
-                    listener.OnComplete();
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    deleteDuplicates();
-                    listener.OnError(e.getMessage());
+                            listener.OnComplete();
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    deleteDuplicates();
+                                    listener.OnError(e.getMessage());
+                                }
+                            });
+
+                    rootRef.child("users").child(post.gyanithId).child("postCount").runTransaction(incrementer);
+                    rootRef.child("postCount").runTransaction(incrementer);
+                    rootRef.child("users").child(GyanithUserManager.loggedUser_value.value.gyanithId)
+                            .child("posts").child(post.postId).setValue(post);
+
+                    GyanithUserManager.getCurrentUser().removeObserver(this);
                 }
             });
 
-            rootRef.child("users").child(post.gyanithId).child("postCount").runTransaction(incrementer);
-            rootRef.child("postCount").runTransaction(incrementer);
-            rootRef.child("users").child(GyanithUserManager.getCurrentUser().getValue().value.gyanithId)
-                    .child("posts").child(post.postId).setValue(post);
         }
 
         private void updateProgress(){

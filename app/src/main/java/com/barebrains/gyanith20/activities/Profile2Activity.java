@@ -13,6 +13,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
@@ -26,13 +27,18 @@ import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.components.PostsFeed;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.interfaces.AuthStateListener;
+import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.models.GyanithUser;
+import com.barebrains.gyanith20.others.MoveUpwardBehavior;
+import com.barebrains.gyanith20.others.mActivity;
 import com.barebrains.gyanith20.statics.EventsModel;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.google.android.material.circularreveal.coordinatorlayout.CircularRevealCoordinatorLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -40,17 +46,42 @@ import com.google.firebase.database.Query;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-public class Profile2Activity extends AppCompatActivity {
+public class Profile2Activity extends mActivity {
 
     Loader loader;
     TabLayout tabLayout;
     ViewPager viewPager;
     EventsModel eventsModel;
 
+    View root;
+    private CompletionListener postUploadedListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile2);
+
+        syncWithPostService(new CompletionListener(){
+            @Override
+            public void OnComplete() {
+                if (root != null)
+                    Snackbar.make(root,"Posted Successfully !", BaseTransientBottomBar.LENGTH_LONG)
+                            .setAction("REFRESH FEED", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if (postUploadedListener != null)
+                                        postUploadedListener.OnComplete();
+                                }
+                            }).show();
+            }
+
+            @Override
+            public void OnError(String error) {
+                Log.d("asd","Error : " + error);
+                if (root != null)
+                    Snackbar.make(root,error,BaseTransientBottomBar.LENGTH_SHORT).show();
+            }
+        });
 
         //VIEW BINDINGS
         tabLayout = findViewById(R.id.profile2_tabs);
@@ -69,14 +100,13 @@ public class Profile2Activity extends AppCompatActivity {
             public void onChanged(Resource<GyanithUser> res) {
                 if (res.value == null)
                 {
-                    if (res.error.getMessage() != null)//TODO:SEND THIS MESSAGE
-                        Toast.makeText(Profile2Activity.this, res.error.getMessage(), Toast.LENGTH_SHORT).show();                    Intent intent = new Intent(Profile2Activity.this,LoginActivity.class);
+                    Intent intent = new Intent(Profile2Activity.this,LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
                     return;
                 }
-
+                loader.loaded();
                 setUpViewPagerAdapter(res.value);
             }
         });
@@ -126,7 +156,7 @@ public class Profile2Activity extends AppCompatActivity {
                             .child(user.gyanithId);
                     Query query = userRef.child("posts").orderByChild("time");
 
-                    PostsFeed postsFeed = new PostsFeed(Profile2Activity.this);
+                    final PostsFeed postsFeed = new PostsFeed(Profile2Activity.this);
                     postsFeed.load(Profile2Activity.this,query,userRef.child("postCount"));
 
                     coordinatorLayout.addView(postsFeed);
@@ -134,7 +164,10 @@ public class Profile2Activity extends AppCompatActivity {
                     final FloatingActionButton addPostBtn = new FloatingActionButton(new ContextThemeWrapper(Profile2Activity.this,R.style.fab));
                     CoordinatorLayout.LayoutParams layoutParams = new CoordinatorLayout.LayoutParams(WRAP_CONTENT,WRAP_CONTENT);
                     layoutParams.gravity = Gravity.BOTTOM|Gravity.END;
+                    layoutParams.setBehavior(new  MoveUpwardBehavior());
+                    layoutParams.rightMargin = layoutParams.bottomMargin = 50;
                     addPostBtn.setLayoutParams(layoutParams);
+                    addPostBtn.setBackgroundTintList(ContextCompat.getColorStateList(Profile2Activity.this,R.color.colorAccent));
                     addPostBtn.setBackgroundColor(ContextCompat.getColor(Profile2Activity.this,R.color.colorAccent));
                     GyanithUserManager.addAuthStateListner(557, new AuthStateListener() {
                         @Override
@@ -154,8 +187,15 @@ public class Profile2Activity extends AppCompatActivity {
                             });
                         }
                     });
-                    coordinatorLayout.addView(addPostBtn);
+                    coordinatorLayout.addView(addPostBtn,layoutParams);
                     container.addView(coordinatorLayout);
+                    root = coordinatorLayout;
+                    postUploadedListener = new CompletionListener(){
+                        @Override
+                        public void OnComplete() {
+                            postsFeed.refresh();
+                        }
+                    };
                     return coordinatorLayout;
                 }
 

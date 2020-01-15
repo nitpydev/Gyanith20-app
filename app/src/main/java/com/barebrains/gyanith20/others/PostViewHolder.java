@@ -13,10 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.AnimatedToggle;
 import com.barebrains.gyanith20.components.ImageSlider;
-import com.barebrains.gyanith20.interfaces.AuthStateListener;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.Resource;
-import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.statics.Anim;
@@ -27,9 +25,12 @@ import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.Util;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.List;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+
+//TODO: LOOK INTO IMPLEMENTATION OF DELETING POST
 
 public class PostViewHolder extends RecyclerView.ViewHolder{
     //Data UI
@@ -54,11 +55,10 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
 
     //Private Variables
     private Post post;
-    private AuthStateListener authStateListener;
-    private ResultListener<String> likeRefreshListener;
     private long likedVal;
     private long unlikedVal;
-    private Observer<Resource<GyanithUser>> observer;
+    private Observer<Resource<GyanithUser>> authObserver;
+    private Observer<List<String>> likesObserver;
 
 
     public PostViewHolder(@NonNull View itemView) {
@@ -103,17 +103,16 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
     private void resetPostView(){
         postContent.setVisibility(VISIBLE);
         deletedView.setVisibility(GONE);
-        if (authStateListener != null) {
-            GyanithUserManager.removeAuthStateListener(authStateListener);
-            authStateListener = null;
-        }
 
-        if(likeRefreshListener != null) {
-            LikesSystem.listeners.remove(likeRefreshListener);
-            likeRefreshListener = null;
-        }
+        if (authObserver != null)
+        GyanithUserManager.getCurrentUser().removeObserver(authObserver);
+
+        if (likesObserver != null)
+            LikesSystem.likedPosts.removeObserver(likesObserver);
+
         if (tapPanel.getVisibility() == VISIBLE)
             captionStateToggle();
+
         deletingProg.setVisibility(GONE);
     }
 
@@ -142,12 +141,18 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
 
         deleteBtn.setVisibility(GONE);
         likeCountText.setText((post.likes != 0) ? Long.toString(post.likes).substring(1) : "0");
-        likeBtn.setOnCheckedChangeListener(null);
+        likeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Toast.makeText(buttonView.getContext(), "Try Again!", Toast.LENGTH_SHORT).show();
+                likeBtn.setChecked(false);
+            }
+        });
         likeBtn.setChecked(false);
         deleteBtn.setOnClickListener(null);
 
         //Below are the Auth state aware Statements
-        observer = new Observer<Resource<GyanithUser>>() {
+        authObserver = new Observer<Resource<GyanithUser>>() {
             @Override
             public void onChanged(Resource<GyanithUser> res) {
                 if (res.value == null)
@@ -156,10 +161,8 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                     likeBtn.setOnCheckedChangeListener(null);
                     likeBtn.setChecked(false);
                     deleteBtn.setOnClickListener(null);
-                    if (likeRefreshListener != null) {
-                        LikesSystem.listeners.remove(likeRefreshListener);
-                        likeRefreshListener = null;
-                    }
+                    if (likesObserver != null)
+                        LikesSystem.likedPosts.removeObserver(likesObserver);
                     likeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -176,7 +179,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                             deleteBtn.setVisibility(VISIBLE);
 
                         //Initial Likes Setup
-                        final boolean isliked = LikesSystem.isLiked(post.postId);
+                        boolean isliked = (LikesSystem.likedPosts_value != null) && LikesSystem.likedPosts_value.contains(post.postId);
 
                         likedVal = isliked ? post.likes : post.likes - 1;
                         unlikedVal = isliked ? post.likes + 1 : post.likes;
@@ -185,14 +188,17 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                         likeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
                             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                                LikesSystem.ToggleLikeState(post.postId,b);
+                                if (NetworkManager.internet_value != null && NetworkManager.internet_value)
+                                    LikesSystem.ToggleLikeState(post.postId,b);
+                                else
+                                    Toast.makeText(compoundButton.getContext(), "No Internet", Toast.LENGTH_SHORT).show();
                             }
                         });
 
                         deleteBtn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(final View view) {
-                                if (!NetworkManager.getInstance().isNetAvailable()) {
+                                if (NetworkManager.internet_value == null || !NetworkManager.internet_value) {
                                     Toast.makeText(view.getContext(), "No Internet", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -216,18 +222,16 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                         });
 
                         //Refreshing Likes Listener
-                        likeRefreshListener = new ResultListener<String>(){
+                        likesObserver = new Observer<List<String>>() {
                             @Override
-                            public void OnResult(String postId) {
-                                if (postId.equals(post.postId)) {
-                                    boolean isLiked = LikesSystem.isLiked(postId);
-                                    likeBtn.setChecked(isliked);
-                                    setLikeCount(isLiked);
-                                }
+                            public void onChanged(List<String> postIds) {
+                                 boolean isLiked = postIds.contains(post.postId);
+                                 likeBtn.setChecked(isLiked);
+                                 setLikeCount(isLiked);
                             }
                         };
-                        LikesSystem.listeners.add(likeRefreshListener);
 
+                        LikesSystem.likedPosts.observeForever(likesObserver);
                     }catch (IllegalStateException e){
                         // Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
                     }

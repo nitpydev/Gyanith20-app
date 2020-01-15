@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -66,12 +67,6 @@ public class ProfileActivity extends AppCompatActivity {
         clg = findViewById(R.id.user_info_clg);
         signOutBtn = findViewById(R.id.signout_btn);
 
-        findViewById(R.id.profile_back_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
         qrLoader.loading();
         loader.loading();
 
@@ -86,7 +81,7 @@ public class ProfileActivity extends AppCompatActivity {
                     finish();
                     return;
                 }
-
+                loader.loaded();
                 FillUIWithData(res.value);
 
                 qrLoader.setLoaderListener(new Loader.LoaderListener(){

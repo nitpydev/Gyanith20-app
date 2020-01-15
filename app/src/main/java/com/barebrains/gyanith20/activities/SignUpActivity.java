@@ -83,18 +83,17 @@ public class SignUpActivity extends AppCompatActivity {
                         public void OnComplete() {
                             loader.loaded();
                             //Verify User
-                            BottomSheetFragment fragment = new BottomSheetFragment("Verify mail",getString(R.string.msg),true,new CompletionListener(){
+                            BottomSheetFragment fragment = new BottomSheetFragment("Hi " + details.usrname + ",",getString(R.string.msg),true,new CompletionListener(){
                                 @Override
                                 public void OnComplete() {
+                                    GyanithUserManager.SignInUser(details.usrname,details.pwd);
                                     Intent login = new Intent(SignUpActivity.this, LoginActivity.class);
-                                    login.putExtra("usrname",details.usrname);
-                                    login.putExtra("pwd",details.pwd);
+                                    login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(login);
                                     finish();
                                 }
                             });
                             fragment.show(getSupportFragmentManager(), "TAG");
-
                         }
 
                         @Override
@@ -105,7 +104,6 @@ public class SignUpActivity extends AppCompatActivity {
                                 @Override
                                 public void OnComplete() {
                                     //Let the user Retry
-
                                 }
                             });
                             fragment.show(getSupportFragmentManager(), "TAG");

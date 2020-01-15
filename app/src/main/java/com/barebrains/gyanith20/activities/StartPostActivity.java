@@ -38,7 +38,7 @@ public class StartPostActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!NetworkManager.getInstance().isNetAvailable()) {
+        if (!NetworkManager.internet_value) {
             Toast.makeText(this, "No Internet", Toast.LENGTH_SHORT).show();
             finish();
             return;

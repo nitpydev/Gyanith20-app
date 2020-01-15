@@ -124,7 +124,7 @@ public class DataRepository {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        if (NetworkManager.internet.getValue())
+                        if (NetworkManager.internet_value)
                             scheduleItems.postValue(new ArrayResource<ScheduleItem>(null,new LoaderException(DATA_EMPTY,null)));
                         else
                             scheduleItems.postValue(new ArrayResource<ScheduleItem>(null,new LoaderException(NO_DATA_AND_NET,null)));
@@ -189,7 +189,7 @@ public class DataRepository {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        if (NetworkManager.internet.getValue())
+                        if (NetworkManager.internet_value)
                             notiItems.postValue(new ArrayResource<NotificationItem>(null,new LoaderException(DATA_EMPTY,null)));
                         else
                             notiItems.postValue(new ArrayResource<NotificationItem>(null,new LoaderException(NO_DATA_AND_NET,null)));

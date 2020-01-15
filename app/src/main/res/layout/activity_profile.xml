@@ -26,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
+                app:collapsedTitleTextAppearance="@style/WhiteText"
                 app:contentScrim="@drawable/profile_bk"
                 app:expandedTitleMarginEnd="64dp"
                 app:expandedTitleMarginStart="48dp"
@@ -106,6 +107,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
+                            android:transitionName="profile2"
                             app:cardBackgroundColor="@color/colorAccent"
                             app:cardCornerRadius="30dp">
 
@@ -145,6 +147,7 @@
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
                     app:title="Your Info"
+                    app:titleTextAppearance="@style/TextAppearance.App.TextInputLayout"
                     app:titleTextColor="?android:textColor" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -427,10 +430,5 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </com.barebrains.gyanith20.components.Loader>
-    <ImageButton
-        android:id="@+id/profile_back_btn"
-        style="@style/backbtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
 </FrameLayout>
