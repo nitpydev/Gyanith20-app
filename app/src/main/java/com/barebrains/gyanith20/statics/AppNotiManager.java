@@ -34,14 +34,26 @@ import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 public class AppNotiManager {
 
     //PROGRESS NOTIFICATION
-    private static int acuracyFactor = 10000;
     private static Map<Integer,Integer> PROGRESS_MAXS = new HashMap<>();
     private static Map<Integer,NotificationCompat.Builder> builders = new HashMap<>();
     private static NotificationManagerCompat manager;
     private static int serviceNotificationId;
+    private static NotificationCompat.Builder groupBuilder;
 
     public static void Create(Service service,int id,long PROGRESS_MAX){
         PROGRESS_MAXS.put(id,(int) PROGRESS_MAX);
+
+        if (manager == null)
+            manager = NotificationManagerCompat.from(service);
+
+        if (groupBuilder == null){
+            groupBuilder = new NotificationCompat.Builder(service,gyanith20.PROGRESS_CHANNEL)
+                            .setContentTitle("Gyanith Community")
+                            .setSmallIcon(R.drawable.l2)
+                            .setGroupSummary(true)
+                            .setGroup(service.getString(R.string.package_name));
+            manager.notify(172, groupBuilder.build());
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(service, gyanith20.PROGRESS_CHANNEL);
 
@@ -56,8 +68,7 @@ public class AppNotiManager {
 
         builders.put(id,builder);
 
-        if (manager == null)
-        manager = NotificationManagerCompat.from(service);
+
 
         service.startForeground(id,builder.build());
         serviceNotificationId = id;
@@ -112,56 +123,5 @@ public class AppNotiManager {
                 return key;
         }
         throw new IllegalStateException("No other notification found,this is an impossible error");
-    }
-
-
-    private static Map<Integer,ResultListener<NotificationItem[]>> listeners = new HashMap<>();
-
-    public static NotificationItem[] notiItems;
-
-    public static void addNotificationListener(Integer code,ResultListener<NotificationItem[]> listener){
-        listeners.put(code,listener);
-        if (notiItems != null)
-            listener.OnResult(notiItems);
-    }
-
-    public static void removeNotificationListener(Integer code){
-        listeners.remove(code);
-    }
-
-    public static void initNotifications(){
-        FirebaseDatabase.getInstance().getReference().child("Notifications")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        ArrayList<NotificationItem> items = new ArrayList<>();
-
-                        for (DataSnapshot snap : dataSnapshot.getChildren())
-                            items.add(snap.getValue(NotificationItem.class));
-
-                        notiItems = items.toArray(new NotificationItem[0]);
-
-                        for (ResultListener<NotificationItem[]> listener : listeners.values())
-                            listener.OnResult(notiItems);
-
-                        if (MainActivity.botNav != null)
-                            MainActivity.botNav.updateCount(3,notiItems.length);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        if (!NetworkManager.internet_value) {
-                            for (ResultListener<NotificationItem[]> listener : listeners.values())
-                                listener.OnError("No Internet");
-                            return;
-                        }
-
-
-                        for (ResultListener<NotificationItem[]> listener : listeners.values()) {
-                            listener.OnError(null);
-                        }
-
-                    }
-                });
     }
 }

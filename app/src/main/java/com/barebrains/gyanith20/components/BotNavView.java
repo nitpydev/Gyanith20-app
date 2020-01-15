@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.statics.AppNotiManager;
+import com.barebrains.gyanith20.statics.DataRepository;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -44,8 +45,8 @@ public class BotNavView extends BottomNavigationView {
 
     private void init(Context context){
         sp = context.getSharedPreferences(context.getString(R.string.package_name),Context.MODE_PRIVATE);
-        if (AppNotiManager.notiItems != null)
-            updateCount(3, AppNotiManager.notiItems.length);
+        if (DataRepository.notiItems_value != null && DataRepository.notiItems_value.value != null)
+            updateCount(3, DataRepository.notiItems_value.value.length);
         updateCount(4, PostManager.postCount);
     }
 

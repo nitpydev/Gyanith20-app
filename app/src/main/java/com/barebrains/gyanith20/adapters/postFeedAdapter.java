@@ -1,5 +1,6 @@
 package com.barebrains.gyanith20.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.others.PostViewHolder;
+import com.firebase.ui.database.SnapshotParser;
 import com.firebase.ui.database.paging.DatabasePagingOptions;
 import com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter;
 import com.firebase.ui.database.paging.LoadingState;
@@ -66,7 +68,6 @@ public class postFeedAdapter extends FirebaseRecyclerPagingAdapter<Post, PostVie
                 .setLifecycleOwner(lifecycleOwner)
                 .setQuery(query, config,Post.class)
                 .build());
-        query.keepSynced(true);
         this.loader = loader;
         this.pullRefresh = pullRefresh;
         this.bottomRefresh = bottomRefresh;

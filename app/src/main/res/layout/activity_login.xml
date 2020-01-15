@@ -38,6 +38,10 @@
             android:layout_gravity="center_horizontal"
             app:srcCompat="@drawable/l2" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
         <com.barebrains.gyanith20.components.Loader
             android:id="@+id/login_loader"
             android:layout_width="match_parent"

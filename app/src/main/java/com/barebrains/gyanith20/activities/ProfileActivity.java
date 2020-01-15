@@ -43,6 +43,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView email;
     private TextView phone;
     private TextView clg;
+    private TextView userinfo_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class ProfileActivity extends AppCompatActivity {
         email = findViewById(R.id.user_info_email);
         phone = findViewById(R.id.user_info_mobile);
         clg = findViewById(R.id.user_info_clg);
+        userinfo_name = findViewById(R.id.user_info_name);
         signOutBtn = findViewById(R.id.signout_btn);
 
         qrLoader.loading();
@@ -131,6 +133,7 @@ public class ProfileActivity extends AppCompatActivity {
         emailTop.setText(user.email);
         phone.setText(user.phoneNo);
         clg.setText(user.clg);
+        userinfo_name.setText(user.name);
 
         profile2Btn.setOnClickListener(new View.OnClickListener() {
             @Override

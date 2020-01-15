@@ -150,15 +150,15 @@ public class AboutActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!show){
-                ObjectAnimator s=ObjectAnimator.ofFloat(share,"translationY",0f,-130f);
+                ObjectAnimator s=ObjectAnimator.ofFloat(share,"translationY",0f,-160f);
                 s.setDuration(400);
                 s.setInterpolator(new DecelerateInterpolator());
                 s.start();
-                ObjectAnimator d=ObjectAnimator.ofFloat(directions,"translationY",0f,-260f);
+                ObjectAnimator d=ObjectAnimator.ofFloat(directions,"translationY",0f,-320f);
                 d.setDuration(400);
                     d.setInterpolator(new DecelerateInterpolator());
                     d.start();
-                ObjectAnimator f=ObjectAnimator.ofFloat(feed,"translationY",0f,-390f);
+                ObjectAnimator f=ObjectAnimator.ofFloat(feed,"translationY",0f,-480f);
                 f.setDuration(400);
                     f.setInterpolator(new DecelerateInterpolator());
 

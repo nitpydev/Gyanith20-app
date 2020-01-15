@@ -1,6 +1,7 @@
 package com.barebrains.gyanith20.others;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -140,14 +141,18 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
         });
 
         likeCountText.setText((post.likes != 0) ? Long.toString(post.likes).substring(1) : "0");
+
         likeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Toast.makeText(buttonView.getContext(), "Try Again!", Toast.LENGTH_SHORT).show();
-                likeBtn.setChecked(false);
+                likeBtn.setSafeChecked(false);
             }
         });
-        likeBtn.setChecked(false);
+
+        likeBtn.setSafeChecked(false);
+
+
         deleteBtn.setVisibility(GONE);
         deleteBtn.setOnClickListener(null);
 
@@ -159,7 +164,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                 {
                     deleteBtn.setVisibility(GONE);
                     likeBtn.setOnCheckedChangeListener(null);
-                    likeBtn.setChecked(false);
+                    likeBtn.setSafeChecked(false);
                     deleteBtn.setOnClickListener(null);
                     if (likesObserver != null)
                         LikesSystem.likedPosts.removeObserver(likesObserver);
@@ -167,13 +172,12 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                         @Override
                         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                             Toast.makeText(compoundButton.getContext(),"Sign in to Like Posts", Toast.LENGTH_SHORT).show();
-                            compoundButton.setChecked(false);
+                            likeBtn.setSafeChecked(false);
                         }
                     });
                 }
                 else {
                     try {
-
                         //If we are owner of post show delete btn
                         if (post.gyanithId.equals(res.value.gyanithId))
                             deleteBtn.setVisibility(VISIBLE);
@@ -183,7 +187,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
 
                         likedVal = isliked ? post.likes : post.likes - 1;
                         unlikedVal = isliked ? post.likes + 1 : post.likes;
-                        likeBtn.setChecked(isliked);
+                        likeBtn.setSafeChecked(isliked);
 
                         likeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
@@ -228,7 +232,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                             @Override
                             public void onChanged(List<String> postIds) {
                                  boolean isLiked = postIds.contains(post.postId);
-                                 likeBtn.setChecked(isLiked);
+                                 likeBtn.setSafeChecked(isLiked);
                                  setLikeCount(isLiked);
                             }
                         };

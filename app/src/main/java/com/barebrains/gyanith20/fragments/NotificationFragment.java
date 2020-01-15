@@ -82,6 +82,5 @@ public class NotificationFragment extends mFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        AppNotiManager.removeNotificationListener(789);
     }
 }

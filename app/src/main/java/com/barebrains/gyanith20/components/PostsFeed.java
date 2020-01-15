@@ -56,14 +56,12 @@ public class PostsFeed extends SwipeRefreshLayout {
         linearLayout.addView(bottomRefresh,layoutParams);
         loader.set_empty_error("Tap post button and add a post that end up here");
 
-
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
         linearLayout.setOrientation(LinearLayout.VERTICAL);
     }
 
     public void load(LifecycleOwner lifecycleOwner, Query query, DatabaseReference postCountRef){
-        query.keepSynced(true);
+        query.keepSynced(false);
         this.adapter = new postFeedAdapter(lifecycleOwner,query,postCountRef,loader,this,bottomRefresh);
         setOnRefreshListener(new OnRefreshListener() {
             @Override

@@ -79,7 +79,7 @@ public class Util {
                 return Transaction.success(mutableData);
             }
             p--;
-            if (p < 0)
+            if (p > 0)
                 p = 0L;
             // Set value and report transaction success
             mutableData.setValue(p);

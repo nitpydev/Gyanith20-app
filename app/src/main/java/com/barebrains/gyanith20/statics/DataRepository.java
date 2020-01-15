@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -135,40 +136,28 @@ public class DataRepository {
 
     //NOTIFICATION ITEMS FETCHING
     private static MutableLiveData<ArrayResource<NotificationItem>> notiItems;
+    public static ArrayResource<NotificationItem> notiItems_value;
 
 
     public static MutableLiveData<ArrayResource<NotificationItem>> getNotiItems(){
         if (notiItems == null)
         {
             notiItems = new MutableLiveData<>();
-            fetchNotificationItems(new ResultListener<NotificationItem[]>(){
-                @Override
-                public void OnResult(NotificationItem[] notificationItems) {
-                    if (notificationItems.length == 0)
-                        notiItems.setValue(new ArrayResource<NotificationItem>(null,new LoaderException(DATA_EMPTY)));
-                    else
-                        notiItems.setValue(new ArrayResource<>(notificationItems, new LoaderException(null)));
-                }
-
-                @Override
-                public void OnError(String error) {
-                    notiItems.setValue(new ArrayResource<NotificationItem>(null,new LoaderException(0,error)));
-                }
-            });
+            fetchNotificationItems();
         }
 
         return notiItems;
     }
 
 
-    public static void fetchNotificationItems(final ResultListener<NotificationItem[]> listener){
+    public static void fetchNotificationItems() {
         FirebaseDatabase.getInstance().getReference().child("Notifications")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        if (!dataSnapshot.exists()){
-                            notiItems.postValue(new ArrayResource<NotificationItem>(null,new LoaderException(DATA_EMPTY,null)));
+                        if (!dataSnapshot.exists()) {
+                            notiItems.postValue(new ArrayResource<NotificationItem>(null, new LoaderException(DATA_EMPTY, null)));
                             return;
                         }
 
@@ -178,23 +167,30 @@ public class DataRepository {
                             items.add(snap.getValue(NotificationItem.class));
 
                         if (items.size() != 0)
-                            notiItems.setValue(new ArrayResource<>(items.toArray(new NotificationItem[0]),new LoaderException(null)));
+                            notiItems.setValue(new ArrayResource<>(items.toArray(new NotificationItem[0]), new LoaderException(null)));
                         else
-                            notiItems.setValue(new ArrayResource<NotificationItem>(null,new LoaderException(DATA_EMPTY)));
+                            notiItems.setValue(new ArrayResource<NotificationItem>(null, new LoaderException(DATA_EMPTY)));
 
 
                         if (MainActivity.botNav != null)
-                            MainActivity.botNav.updateCount(3,items.size());
+                            MainActivity.botNav.updateCount(3, items.size());
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         if (NetworkManager.internet_value)
-                            notiItems.postValue(new ArrayResource<NotificationItem>(null,new LoaderException(DATA_EMPTY,null)));
+                            notiItems.postValue(new ArrayResource<NotificationItem>(null, new LoaderException(DATA_EMPTY, null)));
                         else
-                            notiItems.postValue(new ArrayResource<NotificationItem>(null,new LoaderException(NO_DATA_AND_NET,null)));
+                            notiItems.postValue(new ArrayResource<NotificationItem>(null, new LoaderException(NO_DATA_AND_NET, null)));
 
                     }
                 });
+
+        notiItems.observeForever(new Observer<ArrayResource<NotificationItem>>() {
+            @Override
+            public void onChanged(ArrayResource<NotificationItem> notificationItemArrayResource) {
+                notiItems_value = notificationItemArrayResource;
+            }
+        });
     }
 }

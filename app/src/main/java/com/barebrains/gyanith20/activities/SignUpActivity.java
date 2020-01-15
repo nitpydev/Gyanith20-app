@@ -30,7 +30,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     Loader loader;
     EditText name,usrname,pwd,conpwd,clg,email,num;
-    ProgressBar prog;
     ImageButton back;
     Button signup;
     Boolean checked = false;

@@ -60,6 +60,7 @@ public class PostUploadService extends Service {
    @Override
     public void onCreate() {
         super.onCreate();
+        Log.d("asd","service created");
         works = new ArrayList<>();
         boundListeners = new ArrayList<>();
     }
@@ -76,12 +77,18 @@ public class PostUploadService extends Service {
                 public void OnComplete() {
                     for (CompletionListener listener : boundListeners)
                         if (listener != null)listener.OnComplete();
+
+                    if (works.size() == 0)
+                        stopSelf();
                 }
 
                 @Override
                 public void OnError(String error) {
                     for (CompletionListener listener : boundListeners)
                         if (listener != null)listener.OnError("Posting Interrupted");
+
+                    if (works.size() == 0)
+                        stopSelf();
                 }
             }));
         } catch (IOException e) {
@@ -104,8 +111,7 @@ public class PostUploadService extends Service {
             boundListeners.add(listener);
         }
 
-        public void removeListener(CompletionListener listener){boundListeners.remove(listener);
-        }
+        public void removeListener(CompletionListener listener){boundListeners.remove(listener);}
     }
 
 
@@ -203,9 +209,6 @@ public class PostUploadService extends Service {
                     postRef.setValue(post).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-
-
-
                             listener.OnComplete();
                         }
                     })
@@ -241,11 +244,13 @@ public class PostUploadService extends Service {
                         AppNotiManager.setProgressTitle(workId,"Posted !");
                         AppNotiManager.finishNotification(service,workId);
                         completionListener.OnComplete();
+                        works.remove(PostUploadWork.this);
                     }
 
                     @Override
                     public void OnError(String error) {
                         updateError(new Exception("While commit to db , :" + error));
+                        works.remove(PostUploadWork.this);
                     }
                 });
 

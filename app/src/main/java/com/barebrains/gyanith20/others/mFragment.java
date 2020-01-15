@@ -64,7 +64,7 @@ public abstract class mFragment extends Fragment{
     //MARKING BADGES FUNCTIONALITY
     private Integer index = null;
 
-    public void markBadges(Integer index){
+    protected void markBadges(Integer index){
         this.index = index;
         updateMark();
     }
@@ -85,19 +85,20 @@ public abstract class mFragment extends Fragment{
     private boolean isListenerAdded = false;
 
     //Should be with onCreate()
-    protected void syncWithPostService(CompletionListener listener){
+    protected void syncWithPostService(final CompletionListener listener){
         this.listener = listener;
         Intent bindingIntent = new Intent(getContext(), PostUploadService.class);
         serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 postBinder = (PostUploadService.PostBinder)iBinder;
-                Log.d("asd","Post Binded");
+                postBinder.addListener(listener);
+                isListenerAdded = true;
             }
 
             @Override
             public void onServiceDisconnected(ComponentName componentName) {
-                Log.d("asd","service disconnected");
+
             }
         };
 
@@ -120,6 +121,7 @@ public abstract class mFragment extends Fragment{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        onHiddenChanged(true);
         if (getContext() != null && serviceConnection != null)
             getContext().unbindService(serviceConnection);
     }

@@ -30,12 +30,10 @@ public abstract class mActivity extends AppCompatActivity {
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 postBinder = (PostUploadService.PostBinder) iBinder;
                 postBinder.addListener(listener);
-                Log.d("asd", "Post Binded");
             }
 
             @Override
             public void onServiceDisconnected(ComponentName componentName) {
-                Log.d("asd", "service disconnected");
             }
         };
 

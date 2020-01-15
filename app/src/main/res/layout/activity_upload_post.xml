@@ -91,6 +91,7 @@
             android:inputType="textShortMessage|textMultiLine"
             android:textAlignment="center"
             android:textColor="@color/txtColor"
+            android:textColorHint="@color/whitealpha"
             android:textSize="18sp"
             android:textStyle="bold" />
 

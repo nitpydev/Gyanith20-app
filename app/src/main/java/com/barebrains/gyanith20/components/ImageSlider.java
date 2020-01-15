@@ -135,11 +135,10 @@ public class ImageSlider extends Loader {
             final int width = recyclerView.getLayoutManager().getWidth();
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams((width == 0)?MATCH_PARENT:width,MATCH_PARENT);
             itemView.setLayoutParams(layoutParams);
-
-            recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            post(new Runnable() {
                 @Override
-                public void onGlobalLayout() {
-                    itemView.getLayoutParams().width = recyclerView.getWidth();
+                public void run() {
+                    itemView.getLayoutParams().width = getWidth();
                 }
             });
 
