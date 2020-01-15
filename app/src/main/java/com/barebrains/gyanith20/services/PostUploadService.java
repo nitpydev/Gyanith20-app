@@ -219,7 +219,7 @@ public class PostUploadService extends Service {
 
                     rootRef.child("users").child(post.gyanithId).child("postCount").runTransaction(incrementer);
                     rootRef.child("postCount").runTransaction(incrementer);
-                    rootRef.child("users").child(GyanithUserManager.getCurrentUser().getValue().value.gyanithId)
+                    rootRef.child("users").child(GyanithUserManager.loggedUser_value.value.gyanithId)
                             .child("posts").child(post.postId).setValue(post);
 
                     GyanithUserManager.getCurrentUser().removeObserver(this);

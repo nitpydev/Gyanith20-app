@@ -64,7 +64,7 @@ public class  PostManager{
         postRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (NetworkManager.getInstance().isNetAvailable())
+                if (NetworkManager.internet_value)
                 callback.OnResult(dataSnapshot.getValue(Post.class));
                 else
                     callback.OnComplete(dataSnapshot.getValue(Post.class),"No Internet");

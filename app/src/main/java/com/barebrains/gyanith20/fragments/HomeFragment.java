@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.barebrains.gyanith20.activities.EventsCategoryActivity;
 import com.barebrains.gyanith20.activities.Profile2Activity;
 import com.barebrains.gyanith20.components.ImageSlider;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
+import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.others.mFragment;
@@ -257,20 +259,26 @@ public class HomeFragment extends mFragment {
     public void onHide() {
         super.onHide();
         DataRepository.getAllEventItems().removeObservers(getViewLifecycleOwner());
+        GyanithUserManager.getCurrentUser().removeObservers(getViewLifecycleOwner());
     }
 
     private View.OnClickListener devclk = new View.OnClickListener(){
         @Override
         public void  onClick(View view){
-            if (GyanithUserManager.getCurrentUser().getValue() != null) {
-                if (GyanithUserManager.getCurrentUser().getValue().value != null) {
-                    Intent redirect = new Intent(getContext(), Profile2Activity.class);
-                    startActivity(redirect);
+            GyanithUserManager.getCurrentUser().removeObservers(getViewLifecycleOwner());
+            GyanithUserManager.getCurrentUser().observe(HomeFragment.this.getViewLifecycleOwner(), new Observer<Resource<GyanithUser>>() {
+                @Override
+                public void onChanged(Resource<GyanithUser> resource) {
+                    if (resource.value != null) {
+                        Intent redirect = new Intent(getContext(), Profile2Activity.class);
+                        startActivity(redirect);
+                    }
+                    else
+                        Toast.makeText(HomeFragment.this.getContext(), "You are not Signed In!", Toast.LENGTH_SHORT).show();
+
+                    GyanithUserManager.getCurrentUser().removeObserver(this);
                 }
-                else {
-                    Toast.makeText(HomeFragment.this.getContext(), "You are not Signed In!", Toast.LENGTH_SHORT).show();
-                }
-            }else Toast.makeText(HomeFragment.this.getContext(), "Try Again", Toast.LENGTH_SHORT).show();
+            });
         }
     };
 }

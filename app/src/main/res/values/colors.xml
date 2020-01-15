@@ -6,7 +6,7 @@
     <color name="colorSecondaryAccent">#F71976</color>
     <color name="colorBackDrop">#141414</color>
     <color name="colorSecondaryBackDrop">#49546B</color>
-    <color name="colorBackdropAccent">#1F1F1F</color>
+    <color name="colorBackdropAccent">#222222</color>
     <color name="colorTransparent">#00000000</color>
     <color name="colorSecondary">#ffffff</color>
     <color name="colorInactive">#96ffffff</color>

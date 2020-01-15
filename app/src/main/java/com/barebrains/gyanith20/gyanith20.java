@@ -3,6 +3,7 @@ package com.barebrains.gyanith20;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
@@ -26,10 +27,12 @@ import com.google.firebase.database.FirebaseDatabase;
 public class gyanith20 extends MultiDexApplication {
     public static final String PROGRESS_CHANNEL = "progress";
     public static SharedPreferences sp;
+    public static Context appContext;
     @Override
     public void onCreate() {
         //APP BASICS INITIATIONS
         sp = getSharedPreferences(getString(R.string.package_name),MODE_PRIVATE);
+        appContext = getApplicationContext();
         setScreenOrientation();
         CreateProgressNotificationChannel();
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
@@ -37,9 +40,9 @@ public class gyanith20 extends MultiDexApplication {
         //NETWORKING INITIATIONS
         VolleyManager.setRequestQueue(this);
         NetworkManager.init(getApplicationContext());
-        NetworkManager.initialize(this);
         AppNotiManager.initNotifications();
         PostManager.StartListeningPostCount();
+
         //USER SYSTEM INITIATIONS
         GyanithUserManager.SignInReturningUser();
         LikesSystem.fetchLikedPosts();

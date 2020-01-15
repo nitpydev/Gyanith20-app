@@ -13,7 +13,7 @@
         <item name="colorPrimaryVariant">@color/colorPrimaryLight</item>
         <item name="colorControlActivated">@color/colorAccent</item>
         <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="android:windowContentTransitions">true</item>
         <item name="android:textColorSecondary">@color/colorSecondary</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
 </resources>

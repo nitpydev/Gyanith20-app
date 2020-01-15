@@ -100,8 +100,7 @@ public class Profile2Activity extends mActivity {
             public void onChanged(Resource<GyanithUser> res) {
                 if (res.value == null)
                 {
-                    if (res.error.getMessage() != null)//TODO:SEND THIS MESSAGE
-                        Toast.makeText(Profile2Activity.this, res.error.getMessage(), Toast.LENGTH_SHORT).show();                    Intent intent = new Intent(Profile2Activity.this,LoginActivity.class);
+                    Intent intent = new Intent(Profile2Activity.this,LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();

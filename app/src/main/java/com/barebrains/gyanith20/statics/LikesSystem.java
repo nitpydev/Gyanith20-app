@@ -1,12 +1,10 @@
 package com.barebrains.gyanith20.statics;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.interfaces.Resource;
-import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,19 +21,21 @@ import static com.barebrains.gyanith20.statics.Util.incrementer;
 
 public class LikesSystem {
 
+    public static List<String> likedPosts_value;
+
     public static MutableLiveData<List<String>> likedPosts = new MutableLiveData<>();
 
     public static void ToggleLikeState(final String postId, final boolean state) throws IllegalStateException {
-        Resource<GyanithUser> res = GyanithUserManager.getCurrentUser().getValue();
+        Resource<GyanithUser> res = GyanithUserManager.loggedUser_value;
 
-        if (likedPosts.getValue() == null || res == null || res.value == null)
+        if (likedPosts_value == null || res == null || res.value == null)
             return;
 
         //DatabaseRefs
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference userLikedPostsRef = rootRef.child("users").child(res.value.gyanithId).child("likedPosts");
         DatabaseReference likesRef = rootRef.child("posts").child(postId).child("likes");
-        List<String> likedposts = likedPosts.getValue();
+        List<String> likedposts = likedPosts_value;
 
         //State specific
         if (state) {
@@ -77,12 +77,19 @@ public class LikesSystem {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        if (NetworkManager.internet.getValue() != null && NetworkManager.internet.getValue())
+                        if (NetworkManager.internet_value != null && NetworkManager.internet_value)
                             likedPosts.postValue(new ArrayList<String>());
                         else
                             likedPosts.postValue(null);
                     }
                 });
+            }
+        });
+
+        likedPosts.observeForever(new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> strings) {
+                likedPosts_value = strings;
             }
         });
     }

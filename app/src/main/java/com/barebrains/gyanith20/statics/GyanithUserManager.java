@@ -1,11 +1,13 @@
 package com.barebrains.gyanith20.statics;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 
 import com.android.volley.AuthFailureError;
@@ -15,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.barebrains.gyanith20.gyanith20;
 import com.barebrains.gyanith20.interfaces.AuthStateListener;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.Resource;
@@ -50,18 +53,31 @@ public class GyanithUserManager {
     private static final String GYANITH_USER_SP_KEY = "gyanithUser";
     private static String firebaseUserSessionToken;
 
+    public static Resource<GyanithUser> loggedUser_value;
+
     private static MutableLiveData<Resource<GyanithUser>> loggedUser = new MutableLiveData<>();
 
+    private static Observer<Resource<GyanithUser>> observer;
 
     public static LiveData<Resource<GyanithUser>> getCurrentUser(){
         return Transformations.map(loggedUser, new Function<Resource<GyanithUser>, Resource<GyanithUser>>() {
             @Override
             public Resource<GyanithUser> apply(Resource<GyanithUser> input) {
+
+                if (observer == null)
+                    observer = new Observer<Resource<GyanithUser>>() {
+                        @Override
+                        public void onChanged(Resource<GyanithUser> resource) {
+                            loggedUser_value = resource;
+                        }
+                    };
+
+
                 if (input == null)
                     return input;
 
-                if (NetworkManager.internet.getValue() != null)
-                    input.internet = NetworkManager.internet.getValue();
+                if (NetworkManager.internet_value != null)
+                    input.internet = NetworkManager.internet_value;
 
                 if (input.value == null) {
                     return input;
@@ -82,7 +98,7 @@ public class GyanithUserManager {
     //Use this sign in only if all the traces of a user is removed
     public static void SignInUser(String username, String password) throws IllegalStateException
     {
-        if (loggedUser.getValue() != null && loggedUser.getValue().value != null)
+        if (loggedUser_value != null && loggedUser_value.value != null)
             throw new IllegalStateException("SignInUser : Already user Signed in /IMPOSSIBLE");
 
         GetGyanithUserToken(username, password, new ResultListener<String>() {
@@ -323,13 +339,13 @@ public class GyanithUserManager {
 
     //Completely removes the trace of a user
     public static void SignOutUser(String toast){
-        if (loggedUser.getValue() != null && loggedUser.getValue().value == null)
+        if (loggedUser_value != null && loggedUser_value.value == null)
             return;
         AuthStateChanged();
         sp.edit().remove(GYANITH_USER_SP_KEY).apply();
         FirebaseAuth.getInstance().signOut();
-        //TODO:REMOVE LIKED_POSTS
-        loggedUser.postValue(new Resource<GyanithUser>(null,new LoaderException(null,toast)));
+        loggedUser.postValue(new Resource<GyanithUser>(null,new LoaderException(null,null)));
+        Toast.makeText(gyanith20.appContext, toast, Toast.LENGTH_SHORT).show();
     }
 
 

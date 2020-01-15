@@ -1,10 +1,10 @@
 package com.barebrains.gyanith20.activities;
 
 import android.animation.ObjectAnimator;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +30,8 @@ import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.statics.EventsModel;
 import com.bumptech.glide.Glide;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.HashSet;
@@ -46,8 +48,6 @@ public class EventDetailsActivity extends AppCompatActivity {
             getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         }
         setContentView(R.layout.activity_event_details);
-
-
 
 
 
@@ -88,18 +88,27 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     private void fillTopUI(final EventItem eventItem){
         final ImageView f= findViewById(R.id.fh);
-        TextView title=findViewById(R.id.evedttitle);
         ImageView eveimage = findViewById(R.id.eveimv);
         AnimatedToggle favBtn =findViewById(R.id.favButton);
+        final TextView title = findViewById(R.id.event_title);
         Toolbar toolbar = findViewById(R.id.tool);
+        AppBarLayout appBarLayout = findViewById(R.id.appbar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                title.setAlpha(1+(verticalOffset/100f));
+            }
+        });
+        setSupportActionBar(toolbar);
         Glide.with(this)
                 .load(eventItem.img1)
                 .placeholder(R.drawable.l2)
                 .error(R.drawable.gyanith_error)
                 .centerCrop()
                 .into(eveimage);
-        title.setText(eventItem.name);
         toolbar.setTitle(eventItem.name);
+        title.setText(eventItem.name);
+
         Set<String> favIds = sp.getStringSet(getString(R.string.favSet), new HashSet<String>());
 
         favBtn.setChecked(favIds.contains(eventItem.id));

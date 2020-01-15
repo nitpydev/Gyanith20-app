@@ -13,10 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.AnimatedToggle;
 import com.barebrains.gyanith20.components.ImageSlider;
-import com.barebrains.gyanith20.interfaces.AuthStateListener;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.Resource;
-import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.statics.Anim;
@@ -27,9 +25,7 @@ import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.Util;
 import com.google.firebase.storage.FirebaseStorage;
 
-
 import java.util.List;
-import java.util.Set;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -183,7 +179,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                             deleteBtn.setVisibility(VISIBLE);
 
                         //Initial Likes Setup
-                        boolean isliked = (LikesSystem.likedPosts.getValue() != null) && LikesSystem.likedPosts.getValue().contains(post.postId);
+                        boolean isliked = (LikesSystem.likedPosts_value != null) && LikesSystem.likedPosts_value.contains(post.postId);
 
                         likedVal = isliked ? post.likes : post.likes - 1;
                         unlikedVal = isliked ? post.likes + 1 : post.likes;
@@ -192,7 +188,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                         likeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
                             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                                if (NetworkManager.internet.getValue() != null && NetworkManager.internet.getValue())
+                                if (NetworkManager.internet_value != null && NetworkManager.internet_value)
                                     LikesSystem.ToggleLikeState(post.postId,b);
                                 else
                                     Toast.makeText(compoundButton.getContext(), "No Internet", Toast.LENGTH_SHORT).show();
@@ -202,7 +198,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                         deleteBtn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(final View view) {
-                                if (NetworkManager.internet.getValue() == null || !NetworkManager.internet.getValue()) {
+                                if (NetworkManager.internet_value == null || !NetworkManager.internet_value) {
                                     Toast.makeText(view.getContext(), "No Internet", Toast.LENGTH_SHORT).show();
                                     return;
                                 }

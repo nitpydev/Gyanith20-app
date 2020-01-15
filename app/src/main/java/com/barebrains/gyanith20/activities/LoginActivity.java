@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -100,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (res.error.getIndex() != null && res.error.getIndex() == 1)
                 {
-                    BottomSheetFragment fragment = new BottomSheetFragment("Verify mail",getString(R.string.msg),true,new CompletionListener(){
+                    BottomSheetFragment fragment = new BottomSheetFragment("Hi " + uid.getText().toString() + ",",getString(R.string.msg),true,new CompletionListener(){
                         @Override
                         public void OnComplete() {
                             signinBtn.performClick();
