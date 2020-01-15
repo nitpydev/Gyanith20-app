@@ -25,6 +25,7 @@ import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.adapters.eventCatAdapter;
 import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.components.PostsFeed;
+import com.barebrains.gyanith20.fragments.CommunityFragment;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.interfaces.AuthStateListener;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
@@ -169,24 +170,32 @@ public class Profile2Activity extends mActivity {
                     addPostBtn.setLayoutParams(layoutParams);
                     addPostBtn.setBackgroundTintList(ContextCompat.getColorStateList(Profile2Activity.this,R.color.colorAccent));
                     addPostBtn.setBackgroundColor(ContextCompat.getColor(Profile2Activity.this,R.color.colorAccent));
-                    GyanithUserManager.addAuthStateListner(557, new AuthStateListener() {
-                        @Override
-                        public void onChange() {
-                            addPostBtn.setOnClickListener(null);
-                            addPostBtn.setVisibility(View.GONE);
-                        }
-                        @Override
-                        public void VerifiedUser() {
-                            addPostBtn.setVisibility(View.VISIBLE);
-                            addPostBtn.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(Profile2Activity.this, StartPostActivity.class);
-                                    startActivity(intent);
-                                }
-                            });
-                        }
-                    });
+
+                   GyanithUserManager.getCurrentUser().observe(Profile2Activity.this,new Observer<Resource<GyanithUser>>() {
+                       @Override
+                       public void onChanged(Resource<GyanithUser> res) {
+
+                           if (res.value != null){
+                               addPostBtn.setOnClickListener(new View.OnClickListener() {
+                                   @Override
+                                   public void onClick(View v) {
+                                       Intent intent = new Intent(Profile2Activity.this, StartPostActivity.class);
+                                       startActivity(intent);
+                                   }
+                               });
+                           }
+                           else
+                           {
+                               addPostBtn.setOnClickListener(new View.OnClickListener() {
+                                   @Override
+                                   public void onClick(View v) {
+                                       Toast.makeText(Profile2Activity.this, "Sign in to Post", Toast.LENGTH_SHORT).show();
+                                   }
+                               });
+                           }
+
+                       }});
+
                     coordinatorLayout.addView(addPostBtn,layoutParams);
                     container.addView(coordinatorLayout);
                     root = coordinatorLayout;

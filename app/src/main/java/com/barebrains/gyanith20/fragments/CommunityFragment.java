@@ -203,15 +203,5 @@ public class CommunityFragment extends mFragment {
         });
 
     }
-
-
-    //SINGLETON
-    private static CommunityFragment instance;
-
-    public static CommunityFragment getInstance(){
-        if (instance == null)
-            instance = new CommunityFragment();
-        return instance;
-    }
 }
 

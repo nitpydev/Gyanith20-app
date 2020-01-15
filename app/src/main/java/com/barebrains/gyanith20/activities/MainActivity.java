@@ -140,15 +140,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private Fragment getNewFragment(int order) throws Exception{
         switch (order){
             case 0:
-                return HomeFragment.getInstance();
+                return new  HomeFragment();
             case 1:
-                return ScheduleFragment.getInstance();
+                return new  ScheduleFragment();
             case 2:
-                return FavouritesFragment.getInstance();
+                return new FavouritesFragment();
             case 3:
-                return NotificationFragment.getInstance();
+                return new  NotificationFragment();
             case 4:
-                return CommunityFragment.getInstance();
+                return new CommunityFragment();
             default:
                 throw new Exception("No fragment defined for id");
         }

@@ -12,11 +12,15 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.multidex.MultiDexApplication;
 
+import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.interfaces.ResultListener;
+import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.statics.AppNotiManager;
+import com.barebrains.gyanith20.statics.DataRepository;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.LikesSystem;
 import com.barebrains.gyanith20.statics.NetworkManager;
@@ -47,6 +51,14 @@ public class gyanith20 extends MultiDexApplication {
         GyanithUserManager.SignInReturningUser();
         LikesSystem.fetchLikedPosts();
 
+
+        //INITIATION TO FETCH DATA
+        DataRepository.getAllEventItems().observeForever(new Observer<ArrayResource<EventItem>>() {
+            @Override
+            public void onChanged(ArrayResource<EventItem> eventItemArrayResource) {
+                DataRepository.getAllEventItems().removeObserver(this);
+            }
+        });
         super.onCreate();
     }
     private void setScreenOrientation(){

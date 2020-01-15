@@ -23,14 +23,6 @@ import com.barebrains.gyanith20.statics.DataRepository;
 import com.barebrains.gyanith20.statics.Util;
 
 public class NotificationFragment extends mFragment {
-    //SINGLETON
-    private static NotificationFragment instance;
-
-    public static NotificationFragment getInstance(){
-        if (instance == null)
-            instance = new NotificationFragment();
-        return instance;
-    }
 
 
     public NotificationFragment() {

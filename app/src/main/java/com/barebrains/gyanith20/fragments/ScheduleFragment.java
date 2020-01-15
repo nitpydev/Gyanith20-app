@@ -150,16 +150,6 @@ public class ScheduleFragment extends mFragment {
     }
 
 
-
-    //SINGLETON
-    private static ScheduleFragment instance;
-
-    public static ScheduleFragment getInstance(){
-        if (instance == null)
-            instance = new ScheduleFragment();
-        return instance;
-    }
-
     private abstract class scheduleAdapter extends LiveListAdapter<ScheduleItem> {
 
         scheduleAdapter(){

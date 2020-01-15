@@ -139,7 +139,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
             }
         });
 
-        deleteBtn.setVisibility(GONE);
         likeCountText.setText((post.likes != 0) ? Long.toString(post.likes).substring(1) : "0");
         likeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -149,6 +148,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
             }
         });
         likeBtn.setChecked(false);
+        deleteBtn.setVisibility(GONE);
         deleteBtn.setOnClickListener(null);
 
         //Below are the Auth state aware Statements
@@ -195,6 +195,8 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                             }
                         });
 
+                        deleteBtn.setVisibility(VISIBLE);
+
                         deleteBtn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(final View view) {
@@ -238,6 +240,8 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                 }
             }
         };
+
+        GyanithUserManager.getCurrentUser().observeForever(authObserver);
     }
 
     private String buildDeepLink(String postId){

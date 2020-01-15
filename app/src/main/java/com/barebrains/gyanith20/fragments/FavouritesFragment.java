@@ -76,12 +76,4 @@ public class FavouritesFragment extends mFragment {
 
     }
 
-    //SINGLETON
-    private static FavouritesFragment instance;
-
-    public static FavouritesFragment getInstance(){
-        if (instance == null)
-            instance = new FavouritesFragment();
-        return instance;
-    }
 }

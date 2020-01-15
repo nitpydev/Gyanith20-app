@@ -208,14 +208,7 @@ public class HomeFragment extends mFragment {
         }
     };
 
-    //SINGLETON
-    private static HomeFragment instance;
 
-    public static HomeFragment getInstance(){
-        if (instance == null)
-            instance = new HomeFragment();
-        return instance;
-    }
     private View.OnClickListener trendclk = new View.OnClickListener(){
         @Override
         public void  onClick(View view){
