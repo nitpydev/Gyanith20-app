@@ -46,7 +46,7 @@ public class Loader extends FrameLayout {
     private String no_net_error_string = "Oops ! Could'nt Connect to the Internet";
 
     private int empty_error_visual = R.layout.loader_empty_error_visual;
-    private int no_net_error_visual;//TODO : NEED TO SET DEFAULT VALUE
+    private int no_net_error_visual = R.layout.loader_empty_error_visual;//TODO : NEED TO SET DEFAULT VALUE
 
     private View loadingIndicator = null;
     private View errorHolder = null;
@@ -54,6 +54,7 @@ public class Loader extends FrameLayout {
 
     //Conditions
     private boolean neverErrorFlag = false;
+    private boolean neverLoadingFlag = false;
 
     private LoaderListener loaderListener;
 
@@ -68,7 +69,7 @@ public class Loader extends FrameLayout {
             if (n != null && !n.isEmpty())no_net_error_string = n;
         } else {
             empty_error_visual = attrs.getResourceId(R.styleable.Loader_empty_error,R.layout.loader_empty_error_visual);
-
+            no_net_error_visual = attrs.getResourceId(R.styleable.Loader_no_net_error,R.layout.loader_empty_error_visual);//TODO:SET PROPER DEFAULT
         }
         attrs.recycle();
     }
@@ -80,7 +81,6 @@ public class Loader extends FrameLayout {
     public void setEmpty_error_visual(int error_visual){
         empty_error_visual = error_visual;
     }
-
 
     public void set_empty_error(String error){
         this.empty_error_string = error;
@@ -96,6 +96,8 @@ public class Loader extends FrameLayout {
         neverErrorFlag = value;
     }
 
+
+    public void setNeverLoadingFlag(boolean value){neverLoadingFlag = value;}
 
     @Override
     public void onViewAdded(View child) {
@@ -127,6 +129,10 @@ public class Loader extends FrameLayout {
     }
 
     public void loading(){
+        if (neverLoadingFlag) {
+            loaded();
+            return;
+        }
         if (loaderListener != null)
             loaderListener.onLoading();
         loadingIndicator.setVisibility(VISIBLE);
@@ -183,14 +189,21 @@ public class Loader extends FrameLayout {
             errorHolder.setVisibility(VISIBLE);
         }
         else
-            setErrorVisual();
+            setErrorVisual(index);
     }
 
-    private void setErrorVisual(){
+    private void setErrorVisual(int index){
         if (errorHolder != null)
             removeView(errorHolder);
-        Log.d("asd","c 6");
-        errorHolder = LayoutInflater.from(getContext()).inflate(empty_error_visual,this,false);
+        int visual;
+        switch (index){
+            case 1:
+                visual = no_net_error_visual;
+                break;
+            default:
+                visual = empty_error_visual;
+        }
+        errorHolder = LayoutInflater.from(getContext()).inflate(visual,this,false);
         addView(errorHolder);
     }
 

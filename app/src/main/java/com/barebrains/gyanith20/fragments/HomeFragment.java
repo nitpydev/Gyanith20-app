@@ -59,7 +59,7 @@ public class HomeFragment extends mFragment {
     //private  Loader loader ;
 
 
-    public HomeFragment() { }
+    public HomeFragment() {    }
 
 
     @Override

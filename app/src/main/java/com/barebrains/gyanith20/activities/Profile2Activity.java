@@ -158,7 +158,7 @@ public class Profile2Activity extends mActivity {
                     Query query = userRef.child("posts").orderByChild("time");
 
                     final PostsFeed postsFeed = new PostsFeed(Profile2Activity.this);
-                    postsFeed.load(Profile2Activity.this,query,userRef.child("postCount"));
+                    postsFeed.load(getSupportFragmentManager(),Profile2Activity.this,query,true);
 
                     coordinatorLayout.addView(postsFeed);
 

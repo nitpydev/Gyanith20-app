@@ -25,9 +25,12 @@ import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.polyak.iconswitch.IconSwitch;
 
 public class CommunityFragment extends mFragment {
@@ -121,7 +124,7 @@ public class CommunityFragment extends mFragment {
                 else
                     query = reference.child("posts").orderByChild("likes");
 
-                postsFeed.load(getViewLifecycleOwner(), query, reference.child("postCount"));
+                postsFeed.load(getFragmentManager(),getViewLifecycleOwner(), query, (position == 0));
                 container.addView(postsFeed);
 
                 final CompletionListener beforelistener = postUploadedListener;

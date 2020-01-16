@@ -31,59 +31,7 @@ import java.util.ArrayList;
 import static com.barebrains.gyanith20.statics.Util.decrementer;
 
 public class  PostManager{
-    public static void getPostImage(Context context,final int requestId, final String imgId, final ResultListener<Pair<Bitmap,Integer>> callback){
-        final SharedPreferences sp = context.getSharedPreferences(context.getString(R.string.package_name),Context.MODE_PRIVATE);
-        String imgPath = sp.getString(imgId,"");
-       if (!imgPath.equals("")){
-           Bitmap bitmap = BitmapFactory.decodeFile(imgPath);
-           if (bitmap != null) {
-               callback.OnResult(new Pair<>(bitmap,requestId));
-               return;
-           }
-       }
-
-       StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("PostImages").child(imgId);
-       final File imgFile = new File(context.getCacheDir(),imgId);
-       storageReference.getFile(imgFile).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
-           @Override
-           public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
-               if (!task.isSuccessful()) {
-                   Log.d("asd","e : " + task.getException().getLocalizedMessage());
-                   callback.OnResult(new Pair<Bitmap, Integer>(null,requestId));
-                   return;
-               }
-               sp.edit().putString(imgId,imgFile.getAbsolutePath()).apply();
-               callback.OnResult(new Pair<>(BitmapFactory.decodeFile(imgFile.getAbsolutePath()),requestId));
-           }
-       });
-    }
-
-    public static void getSpecificPost(String postId, final ResultListener<Post> callback){
-        DatabaseReference root = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference postRef = root.child("posts").child(postId);
-        postRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (NetworkManager.internet_value)
-                callback.OnResult(dataSnapshot.getValue(Post.class));
-                else
-                    callback.OnComplete(dataSnapshot.getValue(Post.class),"No Internet");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                callback.OnError(null);
-            }
-        });
-    }
-
-    private static ArrayList<String> deletedPosts = new ArrayList<>();
-
     public static void deletePost(Post post, final CompletionListener callback){
-        if (deletedPosts.contains(post.postId))
-            return;
-
-        deletedPosts.add(post.postId);
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference postRef = rootRef.child("posts").child(post.postId);
         postRef.removeValue();
@@ -92,9 +40,9 @@ public class  PostManager{
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful())
-                callback.OnComplete();
+                    callback.OnComplete();
                 else
-                    callback.OnError("Error");
+                    callback.OnError("Could'nt Delete Post");
             }
         });
 

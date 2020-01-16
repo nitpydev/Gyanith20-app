@@ -1,6 +1,6 @@
 package com.barebrains.gyanith20.activities;
 
-import android.content.Context;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
@@ -17,7 +16,7 @@ import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.Loader;
-import com.barebrains.gyanith20.fragments.BottomSheetFragment;
+import com.barebrains.gyanith20.fragments.botSheet;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.GyanithUser;
@@ -25,6 +24,8 @@ import com.barebrains.gyanith20.models.SignUpDetails;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 
 import java.security.InvalidParameterException;
+
+import static com.barebrains.gyanith20.fragments.botSheet.EMAIL_REQUEST_ID;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -82,30 +83,40 @@ public class SignUpActivity extends AppCompatActivity {
                         public void OnComplete() {
                             loader.loaded();
                             //Verify User
-                            BottomSheetFragment fragment = new BottomSheetFragment("Hi " + details.usrname + ",",getString(R.string.msg),true,new CompletionListener(){
-                                @Override
-                                public void OnComplete() {
-                                    GyanithUserManager.SignInUser(details.usrname,details.pwd);
-                                    Intent login = new Intent(SignUpActivity.this, LoginActivity.class);
-                                    login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    startActivity(login);
-                                    finish();
-                                }
-                            });
-                            fragment.show(getSupportFragmentManager(), "TAG");
+                            botSheet.makeBotSheet(getSupportFragmentManager())
+                                    .setTitle("Hi " + usrname.getText().toString() + ",")
+                                    .setBody(getString(R.string.msg))
+                                    .setAction("VERIFY")
+                                    .setActionListener(new CompletionListener() {
+                                                           @Override
+                                                           public void OnComplete() {
+                                                               try
+                                                               {
+                                                                   Intent email = new Intent(Intent.ACTION_MAIN);
+                                                                   email.addCategory(Intent.CATEGORY_APP_EMAIL);
+                                                                   startActivityForResult(email, EMAIL_REQUEST_ID);
+                                                               }catch(ActivityNotFoundException n)
+                                                               {
+                                                                   Toast.makeText(SignUpActivity.this, "Error opening Default Email app, sorry", Toast.LENGTH_SHORT).show();
+                                                               }
+                                                           }
+
+                                                           @Override
+                                                           public void OnError(String error) {
+                                                               GyanithUserManager.SignOutUser(null);
+                                                           }
+                                                       }
+                                    ).show();
                         }
 
                         @Override
                         public void OnError(String error) {
                             loader.loaded();
                             //Show Error
-                            BottomSheetFragment fragment = new BottomSheetFragment("Error",error,false,new CompletionListener(){
-                                @Override
-                                public void OnComplete() {
-                                    //Let the user Retry
-                                }
-                            });
-                            fragment.show(getSupportFragmentManager(), "TAG");
+                            botSheet.makeBotSheet(getSupportFragmentManager())
+                                    .setTitle("Something went wrong")
+                                    .setBody(getString(R.string.msg))
+                                    .show();
                         }
                     });
                 }catch (InvalidParameterException e){
@@ -156,4 +167,16 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == EMAIL_REQUEST_ID)
+        {
+            GyanithUserManager.SignInUser(usrname.getText().toString(),pwd.getText().toString());
+            Intent login = new Intent(SignUpActivity.this, LoginActivity.class);
+            login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(login);
+            finish();
+        }
+    }
 }

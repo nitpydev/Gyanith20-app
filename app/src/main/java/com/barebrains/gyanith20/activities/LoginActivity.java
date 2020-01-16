@@ -1,12 +1,11 @@
 package com.barebrains.gyanith20.activities;
 
-import android.content.Context;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 
 
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,18 +14,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.Loader;
-import com.barebrains.gyanith20.fragments.BottomSheetFragment;
+import com.barebrains.gyanith20.fragments.botSheet;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.Resource;
-import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
-import com.barebrains.gyanith20.statics.NetworkManager;
+
+import static com.barebrains.gyanith20.fragments.botSheet.EMAIL_REQUEST_ID;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -101,13 +101,30 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (res.error.getIndex() != null && res.error.getIndex() == 1)
                 {
-                    BottomSheetFragment fragment = new BottomSheetFragment("Hi " + uid.getText().toString() + ",",getString(R.string.msg),true,new CompletionListener(){
-                        @Override
-                        public void OnComplete() {
-                            signinBtn.performClick();
-                        }
-                    });
-                    fragment.show(getSupportFragmentManager(), "TAG");
+                    botSheet.makeBotSheet(getSupportFragmentManager())
+                            .setTitle("Hi " + uid.getText().toString() + ",")
+                            .setBody(getString(R.string.msg))
+                            .setAction("VERIFY")
+                            .setActionListener(new CompletionListener() {
+                                @Override
+                                public void OnComplete() {
+                                    try
+                                    {
+                                        Intent email = new Intent(Intent.ACTION_MAIN);
+                                        email.addCategory(Intent.CATEGORY_APP_EMAIL);
+                                        startActivityForResult(email, EMAIL_REQUEST_ID);
+                                    }catch(ActivityNotFoundException n)
+                                    {
+                                        Toast.makeText(LoginActivity.this, "Error opening Default Email app, sorry", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void OnError(String error) {
+                                    GyanithUserManager.SignOutUser(null);
+                                }
+                            }
+                    ).show();
                 }
 
                 if (res.value != null)
@@ -119,5 +136,12 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == EMAIL_REQUEST_ID)
+            signinBtn.performClick();
     }
 }

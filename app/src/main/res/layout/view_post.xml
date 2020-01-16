@@ -11,266 +11,211 @@
     app:cardBackgroundColor="#2B2B2B"
     app:cardElevation="4dp">
 
-    <LinearLayout
-        android:id="@+id/deleted"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="?android:attr/selectableItemBackground"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="8dp"
-            app:srcCompat="@drawable/ic_delete_forever_black_24dp" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:gravity="center"
-            android:text="This Post has been Deleted !"
-            android:textColor="@color/txtColor"
-            android:textSize="24sp" />
-    </LinearLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/post"
+    <com.barebrains.gyanith20.components.Loader
+        android:id="@+id/post_loader"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:visibility="visible">
+        android:longClickable="true"
+        app:isErrorText="false"
+        app:loading_indicator="@layout/loader_shimmer_post"
+        app:no_net_error="@layout/loader_post_deleted">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/materialCardView2"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/post"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/colorBackdropAccent"
-            app:cardElevation="15dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp">
-
-                <LinearLayout
-                    android:id="@+id/share_btn"
-                    android:layout_width="100dp"
-                    android:layout_height="0dp"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:gravity="center"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:tint="@color/txtColor"
-                        app:srcCompat="?attr/actionModeShareDrawable" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:gravity="center_vertical"
-                        android:text="Share"
-                        android:textColor="#FFFFFF" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/post_username"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:gravity="center_vertical"
-                        android:text="user_name"
-                        android:textColor="@color/txtColor"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        </com.google.android.material.card.MaterialCardView>
-
-
-        <com.barebrains.gyanith20.components.ImageSlider
-            android:id="@+id/post_img_slider"
-            android:layout_width="0dp"
-            android:layout_height="300dp"
-            app:layout_constraintBottom_toTopOf="@+id/materialCardView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialCardView2"
-            app:layout_constraintVertical_bias="0.0">
-
-        </com.barebrains.gyanith20.components.ImageSlider>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/materialCardView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/colorBackdropAccent"
-            app:cardElevation="15dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/post_timestamp_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="TextView"
-                    android:textColor="#E7DFDF"
-                    android:textStyle="italic"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/post_bottom_caption_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="TextView"
-                    android:textAlignment="center"
-                    android:textColor="@color/txtColor"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/like_btn"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/post_timestamp_txt" />
-
-                <LinearLayout
-                    android:id="@+id/like_btn"
-                    android:layout_width="120dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="center"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-
-                    <com.barebrains.gyanith20.components.AnimatedToggle
-                        android:id="@+id/like_img"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:background="@drawable/like_selector"
-                        android:hapticFeedbackEnabled="true"
-                        android:text=""
-                        android:textOff=""
-                        android:textOn="" />
-
-                    <TextView
-                        android:id="@+id/post_likecount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:gravity="center_vertical"
-                        android:text="451"
-                        android:textColor="@color/txtColor" />
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <LinearLayout
-            android:id="@+id/tap_panel"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/post_img_slider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialCardView2">
-
-            <TextView
-                android:id="@+id/post_captions_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="THIS IS THE CAPTONS"
-                android:textAlignment="center"
-                android:textColor="@color/txtColor"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="visible">
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/post_delete_btn"
-                android:layout_width="120dp"
+                android:id="@+id/materialCardView2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="80dp"
-                android:foreground="?android:attr/selectableItemBackground"
-                app:cardBackgroundColor="#F71920">
+                app:cardBackgroundColor="@color/colorBackdropAccent"
+                app:cardElevation="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/imageView12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_margin="8dp"
-                    android:tint="#FFFFFF"
-                    app:srcCompat="@drawable/ic_delete_forever_black_24dp" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right|center_vertical"
-                    android:layout_marginEnd="25dp"
-                    android:gravity="center"
-                    android:text="Delete"
-                    android:textColor="@color/txtColor"
-                    android:textSize="18sp" />
+                    <LinearLayout
+                        android:id="@+id/share_btn"
+                        android:layout_width="100dp"
+                        android:layout_height="0dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:tint="@color/txtColor"
+                            app:srcCompat="?attr/actionModeShareDrawable" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:gravity="center_vertical"
+                            android:text="Share"
+                            android:textColor="#FFFFFF" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/post_username"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:gravity="center_vertical"
+                            android:text="user_name"
+                            android:textColor="@color/txtColor"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
             </com.google.android.material.card.MaterialCardView>
 
-            <ProgressBar
-                android:id="@+id/delete_prog"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="120dp"
+
+            <com.barebrains.gyanith20.components.ImageSlider
+                android:id="@+id/post_img_slider"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:longClickable="false"
+                app:layout_constraintBottom_toTopOf="@+id/materialCardView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialCardView2"
+                app:layout_constraintVertical_bias="0.0">
+
+            </com.barebrains.gyanith20.components.ImageSlider>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/materialCardView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="80dp"
-                android:indeterminate="true" />
+                app:cardBackgroundColor="@color/colorBackdropAccent"
+                app:cardElevation="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
-        </LinearLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:id="@+id/post_timestamp_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="TextView"
+                        android:textColor="#E7DFDF"
+                        android:textStyle="italic"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
+                    <TextView
+                        android:id="@+id/post_bottom_caption_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="TextView"
+                        android:textAlignment="center"
+                        android:textColor="@color/txtColor"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/like_btn"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/post_timestamp_txt" />
+
+                    <LinearLayout
+                        android:id="@+id/like_btn"
+                        android:layout_width="120dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+
+                        <com.barebrains.gyanith20.components.AnimatedToggle
+                            android:id="@+id/like_img"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:background="@drawable/like_selector"
+                            android:hapticFeedbackEnabled="true"
+                            android:text=""
+                            android:textOff=""
+                            android:textOn="" />
+
+                        <TextView
+                            android:id="@+id/post_likecount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:gravity="center_vertical"
+                            android:text="451"
+                            android:textColor="@color/txtColor" />
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:id="@+id/tap_panel"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/post_img_slider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialCardView2">
+
+                <TextView
+                    android:id="@+id/post_captions_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="THIS IS THE CAPTONS"
+                    android:textAlignment="center"
+                    android:textColor="@color/txtColor"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.barebrains.gyanith20.components.Loader>
 
 </com.google.android.material.card.MaterialCardView>

@@ -342,6 +342,7 @@ public class GyanithUserManager {
         sp.edit().remove(GYANITH_USER_SP_KEY).apply();
         FirebaseAuth.getInstance().signOut();
         loggedUser.postValue(new Resource<GyanithUser>(null,new LoaderException(null,null)));
+        if (toast != null)
         Toast.makeText(gyanith20.appContext, toast, Toast.LENGTH_SHORT).show();
     }
 }

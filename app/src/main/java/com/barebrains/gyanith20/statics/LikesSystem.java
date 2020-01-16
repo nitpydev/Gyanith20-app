@@ -65,7 +65,7 @@ public class LikesSystem {
                         .child("likedPosts").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()){
+                        if (!dataSnapshot.exists()){
                             likedPosts.postValue(new ArrayList<String>());
                             return;
                         }
