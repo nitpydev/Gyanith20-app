@@ -2,7 +2,6 @@ package com.barebrains.gyanith20.others;
 
 import android.content.Intent;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +20,6 @@ import com.barebrains.gyanith20.components.AnimatedToggle;
 import com.barebrains.gyanith20.components.ImageSlider;
 import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.fragments.botSheet;
-import com.barebrains.gyanith20.gyanith20;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.GyanithUser;
@@ -33,12 +30,12 @@ import com.barebrains.gyanith20.statics.LikesSystem;
 import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.Util;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.List;
 import static android.view.View.VISIBLE;
 import static com.barebrains.gyanith20.gyanith20.appContext;
+import static com.barebrains.gyanith20.others.Response.DATA_EMPTY;
 
 public class PostViewHolder extends RecyclerView.ViewHolder{
 
@@ -58,7 +55,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
 
     //FunctionalUI
     private ImageSlider imgSlider;
-    private Loader loader;//TODO:COMPLETE LOADER ERRORS AND LOADING SHIMMER
+    private Loader loader;
 
 
     //Private Variables
@@ -127,7 +124,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                 if (post == null)//POST DELETED
                 {
                     clear();
-                    loader.error(1);
+                    loader.error(DATA_EMPTY);
                     return;
                 }
 
@@ -175,8 +172,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                                            if (likedVal == null || unlikedVal == null){
                                                likedVal = isLiked ? post.likes : post.likes - 1;
                                                unlikedVal = isLiked ? post.likes + 1 : post.likes;
-                                               Log.d("asd",post.postId + " " + isLiked + " " + likedVal + " " + unlikedVal);
-
                                            }
                                        } else {
                                            likedVal = null;

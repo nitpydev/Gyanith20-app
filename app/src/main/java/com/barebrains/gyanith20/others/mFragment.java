@@ -57,8 +57,8 @@ public abstract class mFragment extends Fragment{
     @CallSuper
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         onHiddenChanged(true);
+        super.onDestroyView();
     }
 
     //MARKING BADGES FUNCTIONALITY

@@ -59,7 +59,6 @@ public class ImageSlider extends Loader {
     }
 
     private ScrollingPagerIndicator indicator;
-    private FrameLayout frameLayout;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
 
@@ -73,7 +72,7 @@ public class ImageSlider extends Loader {
 
         this.setIsTextError(false);
 
-        frameLayout = new FrameLayout(getContext());
+        FrameLayout frameLayout = new FrameLayout(getContext());
         recyclerView = new RecyclerView(getContext());
         adapter = new recyclerAdapter();
         indicator = new ScrollingPagerIndicator(getContext());
@@ -141,7 +140,6 @@ public class ImageSlider extends Loader {
                     itemView.getLayoutParams().width = getWidth();
                 }
             });
-
             return new viewHolder(itemView);
         }
 

@@ -24,9 +24,11 @@ import com.barebrains.gyanith20.fragments.botSheet;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.GyanithUser;
+import com.barebrains.gyanith20.others.Response;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 
 import static com.barebrains.gyanith20.fragments.botSheet.EMAIL_REQUEST_ID;
+import static com.barebrains.gyanith20.others.Response.ILLEGAL_STATE;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -95,11 +97,9 @@ public class LoginActivity extends AppCompatActivity {
         GyanithUserManager.getCurrentUser().observe(this, new Observer<Resource<GyanithUser>>() {
             @Override
             public void onChanged(Resource<GyanithUser> res) {
+                res.response.handle();
                 loader.loaded();
-                if (res.error.getMessage() != null)
-                    Toast.makeText(LoginActivity.this, res.error.getMessage(), Toast.LENGTH_SHORT).show();
-
-                if (res.error.getIndex() != null && res.error.getIndex() == 1)
+                if (res.response.getCode() != null && res.response.getCode() == ILLEGAL_STATE)
                 {
                     botSheet.makeBotSheet(getSupportFragmentManager())
                             .setTitle("Hi " + uid.getText().toString() + ",")

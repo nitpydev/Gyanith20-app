@@ -76,8 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onChanged(final Resource<GyanithUser> res) {
                 if (res.value == null){
-                    if (res.error.getMessage() != null)//TODO:SEND THIS MESSAGE
-                        Toast.makeText(ProfileActivity.this, res.error.getMessage(), Toast.LENGTH_SHORT).show();                    Intent intent = new Intent(ProfileActivity.this,LoginActivity.class);
+                    Intent intent = new Intent(ProfileActivity.this,LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();

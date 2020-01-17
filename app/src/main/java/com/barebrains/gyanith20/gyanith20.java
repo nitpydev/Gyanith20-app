@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,10 +15,8 @@ import androidx.lifecycle.Observer;
 import androidx.multidex.MultiDexApplication;
 
 import com.barebrains.gyanith20.interfaces.ArrayResource;
-import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.EventItem;
-import com.barebrains.gyanith20.models.GyanithUser;
-import com.barebrains.gyanith20.statics.AppNotiManager;
+import com.barebrains.gyanith20.models.NotificationItem;
 import com.barebrains.gyanith20.statics.DataRepository;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.LikesSystem;
@@ -56,6 +53,13 @@ public class gyanith20 extends MultiDexApplication {
             @Override
             public void onChanged(ArrayResource<EventItem> eventItemArrayResource) {
                 DataRepository.getAllEventItems().removeObserver(this);
+            }
+        });
+
+        DataRepository.getAllNotiItems().observeForever(new Observer<ArrayResource<NotificationItem>>() {
+            @Override
+            public void onChanged(ArrayResource<NotificationItem> notificationItemArrayResource) {
+                DataRepository.getAllNotiItems().removeObserver(this);
             }
         });
         super.onCreate();

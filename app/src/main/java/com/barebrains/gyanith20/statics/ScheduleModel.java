@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.ScheduleItem;
-import com.barebrains.gyanith20.others.LoaderException;
+import com.barebrains.gyanith20.others.Response;
 
 import java.util.ArrayList;
 
@@ -22,6 +22,7 @@ public class ScheduleModel extends ViewModel {
             public ArrayResource<ScheduleItem> apply(ArrayResource<ScheduleItem> input) {
                 if (input.value == null)
                     return input;
+
                 ArrayList<ScheduleItem> items = new ArrayList<>();
 
                 for (ScheduleItem item : input.value) {
@@ -29,10 +30,9 @@ public class ScheduleModel extends ViewModel {
                         items.add(item);
                     }
                 }
-                if (items.size() != 0)
-                    return new ArrayResource<>(items.toArray(new ScheduleItem[0]),input.error);
-                else
-                    return new ArrayResource<>(null, new LoaderException(0,(input.error != null)?input.error.getMessage():null));            }
+
+                return input.passFilter(items.toArray(new ScheduleItem[0]));
+            }
         });
     }
 
@@ -50,10 +50,8 @@ public class ScheduleModel extends ViewModel {
                         items.add(item);
                     }
                 }
-                if (items.size() != 0)
-                    return new ArrayResource<>(items.toArray(new ScheduleItem[0]),input.error);
-                else
-                    return new ArrayResource<>(null, new LoaderException(0,input.error.getMessage()));
+
+                return input.passFilter(items.toArray(new ScheduleItem[0]));
             }
         });
     }

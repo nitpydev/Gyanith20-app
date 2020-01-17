@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.Loader;
-import com.barebrains.gyanith20.interfaces.NetworkStateListener;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
@@ -50,8 +49,6 @@ public class QrActivity extends AppCompatActivity {
             @Override
             public void onChanged(final Resource<GyanithUser> res) {
                 if (res.value == null){
-                    if (res.error.getMessage() != null)//TODO:SEND THIS MESSAGE
-                        Toast.makeText(QrActivity.this, res.error.getMessage(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(QrActivity.this,LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);

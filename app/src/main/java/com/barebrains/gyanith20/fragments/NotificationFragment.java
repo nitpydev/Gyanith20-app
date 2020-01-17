@@ -18,7 +18,6 @@ import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.NotificationItem;
 import com.barebrains.gyanith20.others.mFragment;
-import com.barebrains.gyanith20.statics.AppNotiManager;
 import com.barebrains.gyanith20.statics.DataRepository;
 import com.barebrains.gyanith20.statics.Util;
 
@@ -43,7 +42,7 @@ public class NotificationFragment extends mFragment {
             @NonNull
             @Override
             public LiveData<ArrayResource<NotificationItem>> getLiveData() {
-                return DataRepository.getNotiItems();
+                return DataRepository.getAllNotiItems();
             }
 
             @NonNull
@@ -53,7 +52,6 @@ public class NotificationFragment extends mFragment {
                 ((TextView) view.findViewById(R.id.notificationTime)).setText(Util.BuildDateString(data.time));
                 ((TextView) view.findViewById(R.id.notificationText)).setText(data.body);
             }
-
             @NonNull
             @Override
             public View createView() {

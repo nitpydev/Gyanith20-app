@@ -154,8 +154,8 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onChanged(Resource<GyanithUser> res) {
                 loader.loaded();
-                if (res.error.getMessage() != null)
-                    Toast.makeText(SignUpActivity.this, res.error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                res.response.handle();
 
                 if (res.value != null)
                 {

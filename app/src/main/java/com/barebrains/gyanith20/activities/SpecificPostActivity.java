@@ -7,20 +7,15 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.barebrains.gyanith20.adapters.postsAdapter;
 import com.barebrains.gyanith20.components.Loader;
-import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.others.PostViewHolder;
 import com.barebrains.gyanith20.statics.NetworkManager;
-import com.barebrains.gyanith20.statics.PostManager;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
-import static com.barebrains.gyanith20.others.LoaderException.NO_DATA_AND_NET;
+import static com.barebrains.gyanith20.others.Response.NO_DATA_AND_NET;
 
 //TODO:IF IMAGE FETCHING TRANSFERED TO POSTS_SOURCE CHANGE HERE ALSO
 public class SpecificPostActivity extends AppCompatActivity {

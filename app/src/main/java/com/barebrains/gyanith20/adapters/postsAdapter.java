@@ -1,5 +1,7 @@
 package com.barebrains.gyanith20.adapters;
 
+import android.util.Log;
+import android.util.Pair;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -7,6 +9,7 @@ import androidx.arch.core.util.Function;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
@@ -15,7 +18,7 @@ import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.barebrains.gyanith20.models.Post;
-import com.barebrains.gyanith20.others.LoaderException;
+import com.barebrains.gyanith20.others.Response;
 import com.barebrains.gyanith20.others.PostViewHolder;
 import com.barebrains.gyanith20.statics.PostsSource;
 import com.firebase.ui.database.paging.LoadingState;
@@ -30,8 +33,8 @@ public abstract class postsAdapter extends PagedListAdapter<Post, PostViewHolder
 
     private static final PagedList.Config CONFIG = new PagedList.Config.Builder()
             .setEnablePlaceholders(true)
-            .setPrefetchDistance(1)
-            .setPageSize(2)
+            .setPrefetchDistance(15)
+            .setPageSize(15)
             .build();
 
     private LiveData<PostsSource> DataSource;
@@ -43,7 +46,7 @@ public abstract class postsAdapter extends PagedListAdapter<Post, PostViewHolder
 
          this.fragmentManager =  fragmentManager;
 
-        LiveData<PagedList<Post>> postsList = new PostsSource.Factory()
+        final LiveData<PagedList<Post>> postsList = new PostsSource.Factory()
                 .setQuery(query)
                 .setOrder(timeOrdered)
                 .setConfig(CONFIG)
@@ -58,7 +61,7 @@ public abstract class postsAdapter extends PagedListAdapter<Post, PostViewHolder
                     }
                 });
 
-        LiveData<LoadingState> mLoadingState = Transformations.switchMap(DataSource, new Function<PostsSource, LiveData<LoadingState>>() {
+        final LiveData<LoadingState> mLoadingState = Transformations.switchMap(DataSource, new Function<PostsSource, LiveData<LoadingState>>() {
             @Override
             public LiveData<LoadingState> apply(PostsSource input) {
                 return input.getLoadingState();
@@ -66,9 +69,9 @@ public abstract class postsAdapter extends PagedListAdapter<Post, PostViewHolder
         });
 
 
-        LiveData<LoaderException> mDatabaseError = Transformations.switchMap(DataSource, new Function<PostsSource, LiveData<LoaderException>>() {
+        LiveData<Response> mDatabaseError = Transformations.switchMap(DataSource, new Function<PostsSource, LiveData<Response>>() {
             @Override
-            public LiveData<LoaderException> apply(PostsSource input) {
+            public LiveData<Response> apply(PostsSource input) {
                 return input.getLastError();
             }
         });
@@ -87,9 +90,9 @@ public abstract class postsAdapter extends PagedListAdapter<Post, PostViewHolder
             }
         });
 
-        mDatabaseError.observe(lifecycleOwner, new Observer<LoaderException>() {
+        mDatabaseError.observe(lifecycleOwner, new Observer<Response>() {
             @Override
-            public void onChanged(LoaderException e) {
+            public void onChanged(Response e) {
                 onError(e);
             }
         });
@@ -138,6 +141,6 @@ public abstract class postsAdapter extends PagedListAdapter<Post, PostViewHolder
         }
     };
 
-    protected abstract void onError(@NonNull LoaderException error);
+    protected abstract void onError(@NonNull Response error);
     protected abstract void onLoadingStateChanged(@NonNull LoadingState state);
 }

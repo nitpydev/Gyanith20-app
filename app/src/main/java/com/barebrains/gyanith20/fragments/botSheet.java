@@ -94,7 +94,7 @@ public class botSheet extends BottomSheetDialogFragment {
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
         if (listener != null)
-        listener.OnError(null);
+            listener.OnError(null);
         super.onCancel(dialog);
     }
 

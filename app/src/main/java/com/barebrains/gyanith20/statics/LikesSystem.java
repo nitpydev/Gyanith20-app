@@ -1,8 +1,7 @@
 package com.barebrains.gyanith20.statics;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
@@ -12,14 +11,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import static com.barebrains.gyanith20.statics.Util.decrementer;
-import static com.barebrains.gyanith20.statics.Util.incrementer;
 
 public class LikesSystem {
 
@@ -94,4 +92,49 @@ public class LikesSystem {
             }
         });
     }
+
+    public static Transaction.Handler incrementer = new Transaction.Handler() {
+        @NonNull
+        @Override
+        public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+            Long p = mutableData.getValue(Long.class);
+            if (p == null) {
+                return Transaction.success(mutableData);
+            }
+            p++;
+
+            if (p > 0)
+                p = 0L;
+            // Set value and report transaction success
+            mutableData.setValue(p);
+            return Transaction.success(mutableData);
+        }
+
+        @Override
+        public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+        }
+    };
+
+    public static Transaction.Handler decrementer = new Transaction.Handler() {
+        @NonNull
+        @Override
+        public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+            Long p = mutableData.getValue(Long.class);
+            if (p == null) {
+                return Transaction.success(mutableData);
+            }
+            p--;
+            if (p > 0)
+                p = 0L;
+            // Set value and report transaction success
+            mutableData.setValue(p);
+            return Transaction.success(mutableData);
+        }
+
+        @Override
+        public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+        }
+    };
 }

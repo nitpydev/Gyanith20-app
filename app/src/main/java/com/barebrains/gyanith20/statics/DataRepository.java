@@ -6,18 +6,15 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.barebrains.gyanith20.activities.MainActivity;
-import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.interfaces.Resource;
-import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.models.NotificationItem;
 import com.barebrains.gyanith20.models.ScheduleItem;
-import com.barebrains.gyanith20.others.LoaderException;
+import com.barebrains.gyanith20.others.Response;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -30,8 +27,8 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 
 import static com.barebrains.gyanith20.gyanith20.sp;
-import static com.barebrains.gyanith20.others.LoaderException.DATA_EMPTY;
-import static com.barebrains.gyanith20.others.LoaderException.NO_DATA_AND_NET;
+import static com.barebrains.gyanith20.others.Response.DATA_EMPTY;
+import static com.barebrains.gyanith20.others.Response.NO_DATA_AND_NET;
 
 public class DataRepository {
 
@@ -52,9 +49,14 @@ public class DataRepository {
         return eventItems;
     }
 
+    public static MutableLiveData<ArrayResource<NotificationItem>> getAllNotiItems(){
+        if (notiItems == null){
+            notiItems = new MutableLiveData<>();
+            fetchNotificationItems();
+        }
 
-
-
+        return notiItems;
+    }
 
 
 
@@ -65,23 +67,35 @@ public class DataRepository {
 
     private static void fetchEventsData(){
         String url = "http://gyanith.org/api.php?action=fetchAll&key=2ppagy0";
-        JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+        JsonArrayRequest request = new JsonArrayRequest(url, new com.android.volley.Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 Gson gson = new Gson();
-                eventItems.postValue(new ArrayResource<>(gson.fromJson(response.toString(), EventItem[].class),new LoaderException(null)));
+                eventItems.postValue(ArrayResource.withValue(gson.fromJson(response.toString(), EventItem[].class)));
 
+                //Caching
                 sp.edit().putString(allEventsKey,response.toString()).apply();
             }
-        }, new Response.ErrorListener() {
+        }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //if error continue using cache
                 EventItem[] a = getEventItemsFromCache();
-                if (a == null || a.length == 0)
-                    eventItems.postValue(new ArrayResource<EventItem>(null,new LoaderException(NO_DATA_AND_NET)));
+
+                if (a == null)
+                    eventItems.postValue(ArrayResource.<EventItem>onlyCode(NO_DATA_AND_NET));
                 else
-                    eventItems.postValue(new ArrayResource<>(a, new LoaderException(null)));
+                    eventItems.postValue(ArrayResource.withValue(a));
+
+                NetworkManager.internet.observeForever(new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean internet) {
+                        if (internet) {
+                            fetchEventsData();
+                            NetworkManager.internet.removeObserver(this);
+                        }
+                    }
+                });
 
             }
         });
@@ -108,7 +122,7 @@ public class DataRepository {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (!dataSnapshot.exists()) {
-                            scheduleItems.postValue(new ArrayResource<ScheduleItem>(null,new LoaderException(DATA_EMPTY,null)));
+                            scheduleItems.postValue(ArrayResource.<ScheduleItem>onlyCode(DATA_EMPTY));
                             return;
                         }
 
@@ -117,18 +131,15 @@ public class DataRepository {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren())
                                 items.add(snapshot.getValue(ScheduleItem.class));
 
-                            scheduleItems.postValue(new ArrayResource<>(items.toArray(new ScheduleItem[0]),new LoaderException(null,null)));
+                            scheduleItems.postValue(ArrayResource.withValue(items.toArray(new ScheduleItem[0])));
                         }catch (DatabaseException e){
-                            scheduleItems.postValue(new ArrayResource<ScheduleItem>(null,new LoaderException(null,"Internal Error")));
+                            scheduleItems.postValue(ArrayResource.<ScheduleItem>onlyToasts("Internal Error"));
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        if (NetworkManager.internet_value)
-                            scheduleItems.postValue(new ArrayResource<ScheduleItem>(null,new LoaderException(DATA_EMPTY,null)));
-                        else
-                            scheduleItems.postValue(new ArrayResource<ScheduleItem>(null,new LoaderException(NO_DATA_AND_NET,null)));
+                       scheduleItems.postValue(ArrayResource.<ScheduleItem>autoRespond());
                     }
                 });
     }
@@ -138,18 +149,6 @@ public class DataRepository {
     private static MutableLiveData<ArrayResource<NotificationItem>> notiItems;
     public static ArrayResource<NotificationItem> notiItems_value;
 
-
-    public static MutableLiveData<ArrayResource<NotificationItem>> getNotiItems(){
-        if (notiItems == null)
-        {
-            notiItems = new MutableLiveData<>();
-            fetchNotificationItems();
-        }
-
-        return notiItems;
-    }
-
-
     public static void fetchNotificationItems() {
         FirebaseDatabase.getInstance().getReference().child("Notifications")
                 .addValueEventListener(new ValueEventListener() {
@@ -157,7 +156,7 @@ public class DataRepository {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                         if (!dataSnapshot.exists()) {
-                            notiItems.postValue(new ArrayResource<NotificationItem>(null, new LoaderException(DATA_EMPTY, null)));
+                            notiItems.postValue(ArrayResource.<NotificationItem>onlyCode(DATA_EMPTY));
                             return;
                         }
 
@@ -166,11 +165,7 @@ public class DataRepository {
                         for (DataSnapshot snap : dataSnapshot.getChildren())
                             items.add(snap.getValue(NotificationItem.class));
 
-                        if (items.size() != 0)
-                            notiItems.setValue(new ArrayResource<>(items.toArray(new NotificationItem[0]), new LoaderException(null)));
-                        else
-                            notiItems.setValue(new ArrayResource<NotificationItem>(null, new LoaderException(DATA_EMPTY)));
-
+                        notiItems.postValue(ArrayResource.withValue(items.toArray(new NotificationItem[0])));
 
                         if (MainActivity.botNav != null)
                             MainActivity.botNav.updateCount(3, items.size());
@@ -178,11 +173,7 @@ public class DataRepository {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        if (NetworkManager.internet_value)
-                            notiItems.postValue(new ArrayResource<NotificationItem>(null, new LoaderException(DATA_EMPTY, null)));
-                        else
-                            notiItems.postValue(new ArrayResource<NotificationItem>(null, new LoaderException(NO_DATA_AND_NET, null)));
-
+                       notiItems.postValue(ArrayResource.<NotificationItem>autoRespond());
                     }
                 });
 

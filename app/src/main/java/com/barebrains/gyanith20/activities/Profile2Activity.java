@@ -2,7 +2,6 @@ package com.barebrains.gyanith20.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
@@ -25,9 +24,7 @@ import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.adapters.eventCatAdapter;
 import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.components.PostsFeed;
-import com.barebrains.gyanith20.fragments.CommunityFragment;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
-import com.barebrains.gyanith20.interfaces.AuthStateListener;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;

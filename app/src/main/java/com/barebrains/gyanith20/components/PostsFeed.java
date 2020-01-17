@@ -56,7 +56,7 @@ public class PostsFeed extends SwipeRefreshLayout {
     }
 
     public void load(FragmentManager fragmentManager, LifecycleOwner lifecycleOwner, Query query, boolean timeOrdered){
-        query.keepSynced(false);
+        query.keepSynced(true);
         this.adapter = new postFeedAdapter(fragmentManager,lifecycleOwner,query,timeOrdered,loader,this);
         setOnRefreshListener(new OnRefreshListener() {
             @Override

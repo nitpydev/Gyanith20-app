@@ -28,18 +28,25 @@ public class NetworkManager {
 
     private static final String NETWORK_CHANGE_ACTION = "com.barebrains.gyanith20.NETWORK_CHANGED";
 
-    public static Boolean internet_value;
+    public static Boolean internet_value = false;
 
     public static MutableLiveData<Boolean> internet = new MutableLiveData<>();
-
     public static void init(final Context context){
         internet.observeForever(new Observer<Boolean>() {
             @Override
-            public void onChanged(Boolean aBoolean) {
-                internet_value = aBoolean;
+            public void onChanged(Boolean internet) {
+                Resource<GyanithUser> res = GyanithUserManager.loggedUser_value;
+                internet_value = internet;
+                if (!internet) {
+                    if (res == null || res.value == null)
+                        Toast.makeText(context, "No Internet", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(context, "Offline Mode", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
-        setInternet(false);
+
             IntentFilter filter = new IntentFilter();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 registerNetworkCallbacks(context);
@@ -49,21 +56,6 @@ public class NetworkManager {
             }
 
             context.registerReceiver(new NetworkChangeReceiver(), filter);
-
-
-            internet.observeForever(new Observer<Boolean>() {
-                @Override
-                public void onChanged(Boolean internet) {
-                    Resource<GyanithUser> res = GyanithUserManager.loggedUser_value;
-                    if (!internet) {
-                        if (res == null || res.value == null)
-                            Toast.makeText(context, "No Internet", Toast.LENGTH_SHORT).show();
-                        else
-                            Toast.makeText(context, "Offline Mode", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            });
     }
 
 

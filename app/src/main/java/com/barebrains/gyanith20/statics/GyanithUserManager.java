@@ -12,7 +12,6 @@ import androidx.lifecycle.Transformations;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -22,7 +21,7 @@ import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.models.SignUpDetails;
-import com.barebrains.gyanith20.others.LoaderException;
+import com.barebrains.gyanith20.others.Response;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -43,6 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.barebrains.gyanith20.gyanith20.sp;
+import static com.barebrains.gyanith20.others.Response.ILLEGAL_STATE;
 
 
 public class GyanithUserManager {
@@ -71,13 +71,6 @@ public class GyanithUserManager {
                     loggedUser.observeForever(observer);
                 }
 
-
-                if (input == null)
-                    return input;
-
-                if (NetworkManager.internet_value != null)
-                    input.internet = NetworkManager.internet_value;
-
                 if (input.value == null) {
                     return input;
                 }
@@ -88,6 +81,7 @@ public class GyanithUserManager {
                     FirebaseAuth.getInstance().signOut();
                     FirebaseUserSignIn(input.value);
                 }
+
                 return input;
             }
         });
@@ -108,10 +102,12 @@ public class GyanithUserManager {
 
             @Override
             public void OnError(String error) {
-                if (error.equals("not verified"))
-                    loggedUser.postValue(new Resource<GyanithUser>(null,new LoaderException(1,null)));
+                if (error.equals("not verified")) {
+                    loggedUser.postValue(Resource.<GyanithUser>onlyCode(ILLEGAL_STATE));
+                } else if (error.equals("invalid request"))//TODO: CHECK HERE
+                    loggedUser.postValue(Resource.<GyanithUser>onlyToasts("Invalid Credentials"));
                 else
-                    loggedUser.postValue(new Resource<GyanithUser>(null,new LoaderException(null,"Invalid Credentials")));
+                    loggedUser.postValue(Resource.<GyanithUser>onlyToasts(error));
             }
         });
     }
@@ -119,7 +115,7 @@ public class GyanithUserManager {
     public static void SignInReturningUser() throws IllegalStateException {
         final GyanithUser user = RetriveGyanithUser();
         if (user == null) {
-            loggedUser.postValue(new Resource<GyanithUser>(null,new LoaderException(null)));
+            SignOutUser(null);
             return;//NO SAVED USER FOUND
         }
         GyanithSignInWithToken(user.token);
@@ -128,7 +124,7 @@ public class GyanithUserManager {
     private static void GetGyanithUserToken(final String username, final String password, final ResultListener<String> result){
 
         JsonObjectRequest userTokenRequest = new JsonObjectRequest
-                (Request.Method.GET, buildTokenRequestUrl(username,password), null, new Response.Listener<JSONObject>() {
+                (Request.Method.GET, buildTokenRequestUrl(username,password), null, new com.android.volley.Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
@@ -144,11 +140,11 @@ public class GyanithUserManager {
                             result.OnError("Internal Error");
                         }
                     }
-                }, new Response.ErrorListener() {
+                }, new com.android.volley.Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        result.OnError("Internal Error");
+                        result.OnError("No Internet");
                         error.printStackTrace();
                     }
                 });
@@ -158,14 +154,16 @@ public class GyanithUserManager {
 
     private static void GyanithSignInWithToken(final String token) {
         JsonObjectRequest userInfoRequest = new JsonObjectRequest(Request.Method.GET,buildUserInfoRequestUrl(token), null
-                ,new Response.Listener<JSONObject>(){
+                ,new com.android.volley.Response.Listener<JSONObject>(){
 
             @Override
             public void onResponse(JSONObject response) {
                 if (response.has("usr")) {//SUCCESS
                     GyanithUser user = Util.jsonToGyanithUser(response.toString(),token);
                     SaveGyanithUser(user);
-                    loggedUser.postValue(new Resource<>(user,new LoaderException(null,null)));
+
+                    loggedUser.postValue(Resource.withValue(user));
+
                     StartNewUserSession(user.gyanithId);
                     Log.d("asd","User Signed In");
                 } else if (response.has("reg"))//TODO:CHECK HERE
@@ -173,17 +171,17 @@ public class GyanithUserManager {
                     SignOutUser("User Session Expired");
                     Log.d("asd","User Session Expired");
                 } else {
-                    loggedUser.postValue(new Resource<GyanithUser>(null,new LoaderException(null,"Internal Error")));
+                    loggedUser.postValue(Resource.<GyanithUser>onlyToasts("Internal Error"));
                     Log.d("asd","Server Error");
 
                 }
             }
-        },new Response.ErrorListener(){
+        },new com.android.volley.Response.ErrorListener(){
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 GyanithUser user = RetriveGyanithUser();
-                loggedUser.postValue(new Resource<>(user,new LoaderException(null,null)));
+                loggedUser.postValue(Resource.withValue(user));
             }
         });
         VolleyManager.requestQueue.add(userInfoRequest);
@@ -193,7 +191,7 @@ public class GyanithUserManager {
 
         String url = "http://gyanith.org/api.php?action=signup&key=2ppagy0";
 
-        StringRequest signUpRequest = new StringRequest(Request.Method.POST,url,new Response.Listener<String>(){
+        StringRequest signUpRequest = new StringRequest(Request.Method.POST,url,new com.android.volley.Response.Listener<String>(){
             @Override
             public void onResponse(String response) {
                 JSONObject obj = null;
@@ -211,14 +209,14 @@ public class GyanithUserManager {
                 }
 
             }
-        },new Response.ErrorListener(){
+        },new com.android.volley.Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
                 listener.OnError("Network Error");
             }
         }){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String,String> params = new HashMap<String, String>();
                 params.put("pname",details.name);
                 params.put("usr",details.usrname);
@@ -341,9 +339,9 @@ public class GyanithUserManager {
             return;
         sp.edit().remove(GYANITH_USER_SP_KEY).apply();
         FirebaseAuth.getInstance().signOut();
-        loggedUser.postValue(new Resource<GyanithUser>(null,new LoaderException(null,null)));
+        loggedUser.postValue(Resource.<GyanithUser>withValue(null));
         if (toast != null)
-        Toast.makeText(gyanith20.appContext, toast, Toast.LENGTH_SHORT).show();
+            Toast.makeText(gyanith20.appContext, toast, Toast.LENGTH_SHORT).show();
     }
 }
 

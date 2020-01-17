@@ -2,44 +2,61 @@ package com.barebrains.gyanith20.interfaces;
 
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.barebrains.gyanith20.components.Loader;
-import com.barebrains.gyanith20.others.LoaderException;
+import com.barebrains.gyanith20.others.Response;
+
+import static com.barebrains.gyanith20.others.Response.DATA_EMPTY;
 
 public class Resource<T> {
-    public T value;
-    public LoaderException error;
+    public T value = null;
+    public Response response = new Response();
 
-    public boolean internet = false;
 
-    public Resource(T value, LoaderException error){
+    private Resource(T value){
         this.value = value;
-        this.error = error;
     }
 
-    public Resource(boolean internet,Resource<T> resource){
-        this.internet = internet;
-        this.value = resource.value;
-        this.error = resource.error;
+    public static<V> Resource<V> withValue(V value){
+        return new Resource<>(value);
     }
 
-    //If error contains message toast it if it has errorIndex(must have) use loader to display it
+    public Resource<T> toasts(String toast){
+        response.setToast(toast);
+        return this;
+    }
 
-    public boolean handleLoader(Loader loader){
-        if (loader == null)
-            return false;
+    public Resource<T> withCode(Integer code){
+        response.setCode(code);
+        return this;
+    }
 
-        if (error != null) {
-            if (error.getMessage() != null)
-                Toast.makeText(loader.getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+    public static<V> Resource<V> onlyCode(Integer code){return new Resource<V>( null).withCode(code);}
 
-            if (error.getIndex() != null) {
-                loader.error(error.getIndex());
-                return true;
-            }
+    public static<V> Resource<V> onlyToasts(String toast){return new Resource<V>( null).toasts(toast);}
+
+    public static<V> Resource<V> onlyResponse(Response response){
+        Resource<V> resource = new Resource<>(null);
+        resource.response = response;
+        return resource;
+    }
+
+   public static<V> Resource<V> autoRespond(){return onlyResponse(Response.autoRespond());}
+
+    public boolean handleWithLoader(@NonNull Loader loader) {
+
+      if (response.handleWithLoader(loader))
+          return true;
+
+        //if no response is present but the value is absent then set code to dataEmpty
+        if (value == null) {
+            loader.error(DATA_EMPTY);
+            return true;
         }
-        if (value != null) {
-            loader.loaded();
-        }
+
+        //No Error so show loaded value
+        loader.loaded();
         return false;
     }
 }

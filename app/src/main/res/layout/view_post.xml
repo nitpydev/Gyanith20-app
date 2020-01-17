@@ -18,7 +18,7 @@
         android:longClickable="true"
         app:isErrorText="false"
         app:loading_indicator="@layout/loader_shimmer_post"
-        app:no_net_error="@layout/loader_post_deleted">
+        app:empty_error="@layout/loader_post_deleted">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/post"

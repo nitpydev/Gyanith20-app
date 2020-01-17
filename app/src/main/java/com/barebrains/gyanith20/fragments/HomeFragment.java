@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,10 +27,8 @@ import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.DataRepository;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
-import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.Util;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,7 +36,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -227,19 +223,14 @@ public class HomeFragment extends mFragment {
             DataRepository.getAllEventItems().observe(getViewLifecycleOwner(), new Observer<ArrayResource<EventItem>>() {
                 @Override
                 public void onChanged(ArrayResource<EventItem> res) {
-
-                    if (res.error != null) {
-                        if (res.error.getMessage() != null)
-                            Toast.makeText(HomeFragment.this.getContext(), res.error.getMessage(), Toast.LENGTH_SHORT).show();
-
-                        if (res.error.getIndex() != null)
-                            return;
-                    }
+                   if (res.response.handle())
+                       return;
 
                     int rnd = r.nextInt(res.value.length);
                     Intent evt = new Intent(getContext(), EventDetailsActivity.class);
                     evt.putExtra("EXTRA_ID", res.value[rnd].id);
                     startActivity(evt);
+
 
                     DataRepository.getAllEventItems().removeObserver(this);
                 }
@@ -251,6 +242,8 @@ public class HomeFragment extends mFragment {
     @Override
     public void onHide() {
         super.onHide();
+        if (getView() == null)
+            return;
         DataRepository.getAllEventItems().removeObservers(getViewLifecycleOwner());
         GyanithUserManager.getCurrentUser().removeObservers(getViewLifecycleOwner());
     }

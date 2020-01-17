@@ -3,6 +3,7 @@ package com.barebrains.gyanith20.adapters;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
@@ -31,7 +32,8 @@ public abstract class LiveListAdapter<T> extends ArrayAdapter {
     private Observer<ArrayResource<T>> observer = new Observer<ArrayResource<T>>() {
         @Override
         public void onChanged(ArrayResource<T> res) {
-           if (res.handleLoader(loader))
+            Log.d("asd","res : " + res.response.getCode());
+           if (res.handleWithLoader(loader))
                return;
            clear();
            addAll(res.value);

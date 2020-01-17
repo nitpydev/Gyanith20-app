@@ -17,7 +17,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.StartPostActivity;
 import com.barebrains.gyanith20.components.PostsFeed;
-import com.barebrains.gyanith20.interfaces.AuthStateListener;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.GyanithUser;
@@ -25,12 +24,9 @@ import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.polyak.iconswitch.IconSwitch;
 
 public class CommunityFragment extends mFragment {

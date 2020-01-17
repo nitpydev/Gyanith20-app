@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +26,11 @@ import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.AnimatedToggle;
 import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
+import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.statics.EventsModel;
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.HashSet;
@@ -64,17 +63,15 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         loader.loading();
 
-        model.getItem(getIntent().getStringExtra("EXTRA_ID")).observe(this, new Observer<ArrayResource<EventItem>>() {
+        model.getItem(getIntent().getStringExtra("EXTRA_ID")).observe(this, new Observer<Resource<EventItem>>() {
             @Override
-            public void onChanged(ArrayResource<EventItem> res) {
+            public void onChanged(Resource<EventItem> res) {
 
-                if (res.handleLoader(loader))
+                if (res.handleWithLoader(loader))
                     return;
 
-                fillTopUI(res.value[0]);
-                setUpViewPager(res.value[0]);
-
-                loader.loaded();
+                fillTopUI(res.value);
+                setUpViewPager(res.value);
             }
         });
 
