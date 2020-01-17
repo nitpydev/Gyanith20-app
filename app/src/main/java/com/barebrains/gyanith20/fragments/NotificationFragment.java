@@ -49,7 +49,7 @@ public class NotificationFragment extends mFragment {
             @Override
             public void bindView(View view, NotificationItem data) {
                 ((TextView) view.findViewById(R.id.notificationSender)).setText(data.title);
-                ((TextView) view.findViewById(R.id.notificationTime)).setText(Util.BuildDateString(data.time));
+                ((TextView) view.findViewById(R.id.notificationTime)).setText(Util.BuildScheduleDateString(data.time));
                 ((TextView) view.findViewById(R.id.notificationText)).setText(data.body);
             }
             @NonNull

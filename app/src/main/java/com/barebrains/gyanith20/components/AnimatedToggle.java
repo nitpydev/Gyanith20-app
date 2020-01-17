@@ -16,8 +16,6 @@ public class AnimatedToggle extends ToggleButton {
 
     private OnCheckedChangeListener listener;
 
-    private boolean disableListener;
-
     public AnimatedToggle(Context context) {
         super(context);
         init();
@@ -57,11 +55,6 @@ public class AnimatedToggle extends ToggleButton {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 AnimatedToggle.this.listener.onCheckedChanged(compoundButton,b);
 
-                if (disableListener){
-                    disableListener = false;
-                    return;
-                }
-
                 if (listener != null)
                 listener.onCheckedChanged(compoundButton,b);
             }
@@ -69,9 +62,7 @@ public class AnimatedToggle extends ToggleButton {
     }
 
     public void setSafeChecked(boolean state){
-
         if (state != isChecked()) {
-            disableListener = true;
             performClick();
         }
     }

@@ -148,16 +148,18 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                                 @Override
                                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                     Toast.makeText(buttonView.getContext(),"Sign in to Like Posts", Toast.LENGTH_SHORT).show();
+                                    if (likeBtn.isChecked())
                                     likeBtn.setSafeChecked(false);
                                 }
                             });
-                            imgSlider.setOnLongClickListener(new View.OnLongClickListener() {
+                            longClickListener = new View.OnLongClickListener() {
                                 @Override
                                 public boolean onLongClick(View v) {
                                     Toast.makeText(appContext, "Sign in to Delete Post!", Toast.LENGTH_SHORT).show();
                                     return true;
                                 }
-                            });
+                            };
+                            loader.setOnLongClickListener(longClickListener);
                         }
                         else {
                             try {

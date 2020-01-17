@@ -96,30 +96,7 @@ public class Util {
         return FirebaseDatabase.getInstance().getReference().push().getKey();
     }
 
-    public static String timeToDate(String time)
-    {
-        String date;
-        try {
-            long timeInt = Long.parseLong(time);
-            SimpleDateFormat s = new SimpleDateFormat("MMM dd");
-
-            Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(timeInt);
-            if (c.getTime().getDate() == Calendar.getInstance().getTime().getDate())
-                return "Today";
-            else if (c.getTime().getDate() == Calendar.getInstance().getTime().getDate() + 1)
-                return "Tommorow";
-
-            Date d = new Date(timeInt);
-            date = s.format(d);
-        }catch (NumberFormatException n)
-        {
-            date = "Feb 26 10 am";
-        }
-        return date;
-    }
-
-    public static String BuildDateString(long time){
+    public static String BuildScheduleDateString(long time){
         Calendar cl = Calendar.getInstance();
         cl.setTimeInMillis(time);
 
@@ -159,37 +136,6 @@ public static String amPm(int i){
             return "PM";
 }
 
-    public static String UriAbsPath(Context context,Uri imgUri){
-        String[] filePathColumn = { MediaStore.Images.Media.DATA };
-        // Get the cursor
-        Cursor cursor =  context.getContentResolver().query(imgUri, filePathColumn, null, null, null);
-        // Move to first row
-        cursor.moveToFirst();
-        //Get the column index of MediaStore.Images.Media.DATA
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        //Gets the String value in the column
-        String path = cursor.getString(columnIndex);
-        cursor.close();
-        return path;
-    }
-
-    public static Bitmap[] getImgBitmaps(String[] imgPaths){
-        Bitmap[] bitmaps = new Bitmap[imgPaths.length];
-        for (int i =0;i<imgPaths.length;i++) {
-            bitmaps[i] = BitmapFactory.decodeFile(imgPaths[i]);
-        }
-
-        return bitmaps;
-    }
-
-    public static Pair<Integer,String>[] arrayToPair(List<String> array){
-        Pair<Integer,String>[] pairs = new Pair[array.size()];
-        for (int i=0;i<array.size();i++)
-            pairs[i] = new Pair<>(i,array.get(i));
-
-        return pairs;
-    }
-
     public static String BuildTimeAgoString(long postTime){
         final int minute = 60000;
         final int hrs = 60*minute;
@@ -211,56 +157,6 @@ public static String amPm(int i){
             return "yesterday";
         else
             return diff/days + " days ago";
-    }
-
-    public static void putBitmaptoFile(Bitmap bitmap,File file) throws IOException {
-        OutputStream os;
-        try {
-            os = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-            os.flush();
-            os.close();
-        } catch (Exception e) {
-            Log.e(Util.class.getSimpleName(), "Error writing bitmap", e);
-        }
-
-    }
-
-    public static Bitmap decodeFile(File f) {
-        Bitmap b = null;
-
-        //Decode image size
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(f);
-            BitmapFactory.decodeStream(fis, null, o);
-            fis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        int IMAGE_MAX_SIZE = 1024;
-        int scale = 1;
-        if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
-            scale = (int) Math.pow(2, (int) Math.ceil(Math.log(IMAGE_MAX_SIZE /
-                    (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
-        }
-
-        //Decode with inSampleSize
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        try {
-            fis = new FileInputStream(f);
-            b = BitmapFactory.decodeStream(fis, null, o2);
-            fis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return b;
     }
 
     public static String sha1(String input){
@@ -302,6 +198,7 @@ public static String amPm(int i){
         ,json.usr
         ,json.email
         ,json.phno
+        ,json.gender
         ,json.clg
         ,json.reg
         ,token);

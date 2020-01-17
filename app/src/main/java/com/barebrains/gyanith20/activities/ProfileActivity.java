@@ -44,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView phone;
     private TextView clg;
     private TextView userinfo_name;
+    private TextView gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
         email = findViewById(R.id.user_info_email);
         phone = findViewById(R.id.user_info_mobile);
         clg = findViewById(R.id.user_info_clg);
+        gender = findViewById(R.id.user_info_gender);
         userinfo_name = findViewById(R.id.user_info_name);
         signOutBtn = findViewById(R.id.signout_btn);
 
@@ -131,6 +133,7 @@ public class ProfileActivity extends AppCompatActivity {
         email.setText(user.email);
         emailTop.setText(user.email);
         phone.setText(user.phoneNo);
+        gender.setText(user.gender);
         clg.setText(user.clg);
         userinfo_name.setText(user.name);
 

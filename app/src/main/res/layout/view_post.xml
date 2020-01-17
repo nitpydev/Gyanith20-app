@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="15dp"
     android:animateLayoutChanges="true"
+    android:longClickable="false"
     android:orientation="vertical"
     app:cardBackgroundColor="#2B2B2B"
     app:cardElevation="4dp">
@@ -15,22 +16,24 @@
         android:id="@+id/post_loader"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:longClickable="true"
+        android:longClickable="false"
+        app:empty_error="@layout/loader_post_deleted"
         app:isErrorText="false"
-        app:loading_indicator="@layout/loader_shimmer_post"
-        app:empty_error="@layout/loader_post_deleted">
+        app:loading_indicator="@layout/loader_shimmer_post">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/post"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:longClickable="false"
             android:visibility="visible">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/materialCardView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:longClickable="false"
                 app:cardBackgroundColor="@color/colorBackdropAccent"
                 app:cardElevation="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +42,8 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp">
+                    android:layout_height="50dp"
+                    android:longClickable="false">
 
                     <LinearLayout
                         android:id="@+id/share_btn"
@@ -116,6 +120,7 @@
                 android:id="@+id/materialCardView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:longClickable="false"
                 app:cardBackgroundColor="@color/colorBackdropAccent"
                 app:cardElevation="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"

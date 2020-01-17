@@ -85,7 +85,7 @@ public class HomeFragment extends mFragment {
                         imgnames.add(data.getValue().toString());
                 }
                 imgSlider.load(Util.getStorageRefs(imgnames, slidesFolderRef)).apply((new RequestOptions()).centerCrop()).start();
-
+                imgSlider.autoScroll(true);
             }
 
             @Override

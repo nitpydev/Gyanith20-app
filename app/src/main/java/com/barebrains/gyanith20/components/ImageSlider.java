@@ -118,6 +118,11 @@ public class ImageSlider extends Loader {
 
         addView(frameLayout);
 
+        noLongClickable(this);
+        noLongClickable(frameLayout);
+        noLongClickable(recyclerView);
+        noLongClickable(indicator);
+
         handleTouches();
 
         this.loading();
@@ -134,6 +139,7 @@ public class ImageSlider extends Loader {
             final int width = recyclerView.getLayoutManager().getWidth();
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams((width == 0)?MATCH_PARENT:width,MATCH_PARENT);
             itemView.setLayoutParams(layoutParams);
+            noLongClickable(itemView);
             post(new Runnable() {
                 @Override
                 public void run() {
@@ -160,6 +166,8 @@ public class ImageSlider extends Loader {
             super(itemView);
             imageView = new ImageView(getContext());
             ((FrameLayout)itemView).addView(imageView);
+
+            noLongClickable(imageView);
         }
 
         private void loadImage(int position){
@@ -281,5 +289,14 @@ public class ImageSlider extends Loader {
             handler.postDelayed(runnable, scrollSpeed);
         else
             handler.removeCallbacks(runnable);
+    }
+
+    private void noLongClickable(View view){
+        view.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return false;
+            }
+        });
     }
 }

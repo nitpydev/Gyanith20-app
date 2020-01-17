@@ -60,7 +60,7 @@ public class FavouritesFragment extends mFragment {
         Loader loader = root.findViewById(R.id.fav_loader);
         ListView favListView = root.findViewById(R.id.favlv);
 
-        adapter = new eventCatAdapter(getContext(), getViewLifecycleOwner(), R.layout.item_event_category) {
+        adapter = new eventCatAdapter(getActivity(), getViewLifecycleOwner(), R.layout.item_event_category) {
             @Nullable
             @Override
             public LiveData<ArrayResource<EventItem>> getLiveData() {

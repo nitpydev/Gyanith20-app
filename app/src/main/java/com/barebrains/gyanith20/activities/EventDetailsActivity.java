@@ -40,12 +40,19 @@ import static com.barebrains.gyanith20.gyanith20.sp;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
+    ImageView eveimage;
+    AppBarLayout appBarLayout;
+    TextView title;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+            //getWindow().setSharedElementReturnTransition(null);
+            //getWindow().setSharedElementReenterTransition(null);
         }
+
         setContentView(R.layout.activity_event_details);
 
 
@@ -60,6 +67,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         });
 
         EventsModel model = ViewModelProviders.of(this).get(EventsModel.class);
+        eveimage = findViewById(R.id.eveimv);
+        appBarLayout = findViewById(R.id.appbar);
+        title = findViewById(R.id.event_title);
 
         loader.loading();
 
@@ -85,11 +95,11 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     private void fillTopUI(final EventItem eventItem){
         final ImageView f= findViewById(R.id.fh);
-        ImageView eveimage = findViewById(R.id.eveimv);
         AnimatedToggle favBtn =findViewById(R.id.favButton);
-        final TextView title = findViewById(R.id.event_title);
+
+
         Toolbar toolbar = findViewById(R.id.tool);
-        AppBarLayout appBarLayout = findViewById(R.id.appbar);
+
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {

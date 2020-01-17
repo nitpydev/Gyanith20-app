@@ -28,6 +28,15 @@
             app:cardCornerRadius="5dp"
             app:cardElevation="4dp">
 
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:tint="#B0222222"
+                android:visibility="visible"
+                app:srcCompat="@drawable/about" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -36,10 +45,11 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/logo"
+                    android:id="@+id/logo1"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/l2" />
+                    android:src="@drawable/l2"
+                    android:visibility="gone" />
 
 
                 <LinearLayout
@@ -57,7 +67,7 @@
                         android:fontFamily="@font/pnbold"
                         android:text="Introduction to deep learning"
                         android:textColor="@android:color/white"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"/>
 
                     <TextView
                         android:id="@+id/eveittime"
@@ -69,6 +79,7 @@
                         android:textSize="16sp" />
                 </LinearLayout>
             </LinearLayout>
+
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
