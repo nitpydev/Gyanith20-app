@@ -44,6 +44,8 @@ public class SplashActivity extends AppCompatActivity {
         s1.setInterpolator(new AccelerateInterpolator());
         s1.start();
 
+
+
  */
 
 
@@ -60,6 +62,6 @@ public class SplashActivity extends AppCompatActivity {
 
 
             }
-        },0);//2000);
+        },2000);
     }
 }
