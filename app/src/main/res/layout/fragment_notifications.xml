@@ -8,7 +8,7 @@
     tools:context="fragments.NotificationFragment">
 
     <com.barebrains.gyanith20.components.Loader
-        android:id="@+id/ad"
+        android:id="@+id/noti_loader"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:empty_error="Notification feed is Empty"
@@ -31,13 +31,11 @@
                 android:layout_gravity="bottom|end"
                 app:srcCompat="@drawable/ic_baseline_add_24px" />
 
-            <ListView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/notificationListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@null"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="0dp" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
         </FrameLayout>
     </com.barebrains.gyanith20.components.Loader>

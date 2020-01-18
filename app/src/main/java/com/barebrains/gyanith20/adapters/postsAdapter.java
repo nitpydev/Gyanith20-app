@@ -3,6 +3,8 @@ package com.barebrains.gyanith20.adapters;
 import android.util.Log;
 import android.util.Pair;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
 import androidx.annotation.NonNull;
 import androidx.arch.core.util.Function;
@@ -16,7 +18,9 @@ import androidx.lifecycle.Transformations;
 import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.models.Post;
 import com.barebrains.gyanith20.others.Response;
 import com.barebrains.gyanith20.others.PostViewHolder;
@@ -128,6 +132,12 @@ public abstract class postsAdapter extends PagedListAdapter<Post, PostViewHolder
         return PostViewHolder.getHolder(parent,fragmentManager);
     }
 
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(recyclerView.getContext(), R.anim.layout_anim);
+        recyclerView.setLayoutAnimation(animation);
+        super.onAttachedToRecyclerView(recyclerView);
+    }
 
     private static DiffUtil.ItemCallback<Post> DIFF_CALLBACK = new DiffUtil.ItemCallback<Post>() {
         @Override

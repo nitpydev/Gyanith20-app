@@ -5,21 +5,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.AddNotificationActivity;
 import com.barebrains.gyanith20.adapters.LiveListAdapter;
+import com.barebrains.gyanith20.adapters.notiViewHolder;
 import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.NotificationItem;
 import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.DataRepository;
-import com.barebrains.gyanith20.statics.Util;
 
 public class NotificationFragment extends mFragment {
 
@@ -33,12 +33,10 @@ public class NotificationFragment extends mFragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View root = inflater.inflate(R.layout.fragment_notifications, container, false);
-        ListView notiListView = root.findViewById(R.id.notificationListView);
-        final Loader loader = root.findViewById(R.id.ad);
-        loader.loading();
-
-        LiveListAdapter<NotificationItem> adapter = new LiveListAdapter<NotificationItem>(getContext(), getViewLifecycleOwner(), R.layout.item_notification) {
+        final View root =  inflater.inflate(R.layout.fragment_notifications, container, false);
+        RecyclerView notiRecyclerView = root.findViewById(R.id.notificationListView);
+        Loader loader = root.findViewById(R.id.noti_loader);
+        LiveListAdapter<NotificationItem, notiViewHolder> adapter = new LiveListAdapter<NotificationItem,notiViewHolder>(getContext(), getViewLifecycleOwner(), R.layout.item_notification,loader) {
             @NonNull
             @Override
             public LiveData<ArrayResource<NotificationItem>> getLiveData() {
@@ -47,22 +45,12 @@ public class NotificationFragment extends mFragment {
 
             @NonNull
             @Override
-            public void bindView(View view, NotificationItem data) {
-                ((TextView) view.findViewById(R.id.notificationSender)).setText(data.title);
-                ((TextView) view.findViewById(R.id.notificationTime)).setText(Util.BuildScheduleDateString(data.time));
-                ((TextView) view.findViewById(R.id.notificationText)).setText(data.body);
+            public notiViewHolder createViewHolder(View ItemView) {
+                return new notiViewHolder(ItemView,getActivity());
             }
-            @NonNull
-            @Override
-            public View createView() {
-                return inflater.inflate(getResId(), null);
-            }
+
         };
-        adapter.setLoader(loader);
-        notiListView.setAdapter(adapter);
-        adapter.observe();
-
-
+        notiRecyclerView.setAdapter(adapter);
         View addBtn = root.findViewById(R.id.add_notification);
 
         addBtn.setOnClickListener(new View.OnClickListener() {
@@ -75,10 +63,5 @@ public class NotificationFragment extends mFragment {
 
         super.onCreateView(inflater, container, savedInstanceState);
         return root;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 }

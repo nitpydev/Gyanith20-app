@@ -193,5 +193,6 @@
     <orderEntry type="library" name="Gradle: com.polyak:icon-switch:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: id.zelory:compressor:2.1.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: ru.tinkoff.scrollingpagerindicator:scrollingpagerindicator:1.0.6@aar" level="project" />
+    <orderEntry type="library" name="Gradle: jp.wasabeef:recyclerview-animators:3.0.0@aar" level="project" />
   </component>
 </module>

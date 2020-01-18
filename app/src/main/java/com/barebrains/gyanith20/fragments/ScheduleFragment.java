@@ -10,14 +10,17 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.adapters.LiveListAdapter;
+import com.barebrains.gyanith20.adapters.scheduleViewHolder;
 import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.ScheduleItem;
@@ -68,19 +71,16 @@ public class ScheduleFragment extends mFragment {
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
 
-            ListView item = new ListView(getContext());
+            RecyclerView item = new RecyclerView(getContext());
             scheduleAdapter adapter = getSchduleAdapter(position);
-            item.setAdapter(adapter);
 
-            adapter.setLoader(new Loader(getContext()));
             if (position == 0)
                 adapter.getLoader().set_empty_error("No Events Live !");
             else
                 adapter.getLoader().set_empty_error("Will be Updated Soon");
 
-            adapter.getLoader().addView(item);
+            item.setAdapter(adapter);
             container.addView(adapter.getLoader());
-            adapter.observe();
             return adapter.getLoader();
         }
 
@@ -149,58 +149,21 @@ public class ScheduleFragment extends mFragment {
         }
     }
 
+    public abstract class scheduleAdapter extends LiveListAdapter<ScheduleItem, scheduleViewHolder> {
 
-    private abstract class scheduleAdapter extends LiveListAdapter<ScheduleItem> {
 
-        scheduleAdapter(){
-            super(ScheduleFragment.this.getContext()
-                    ,ScheduleFragment.this.getViewLifecycleOwner(),res);
+        public scheduleAdapter() {
+            super(ScheduleFragment.this.getContext(),ScheduleFragment.this.getViewLifecycleOwner(), R.layout.item_schedule);
         }
 
         @Override
         public abstract LiveData<ArrayResource<ScheduleItem>> getLiveData();
 
-
-
+        @NonNull
         @Override
-        public void bindView(View view, final ScheduleItem data) {
-            TextView time = view.findViewById(R.id.time);
-            TextView title = view.findViewById(R.id.title);
-            TextView venue = view.findViewById(R.id.venue);
-            View live = view.findViewById(R.id.liveindicator);
-            View btn = view.findViewById(R.id.btn);
-            time.setText(formatTime(data.start_time));
-            title.setText(data.title);
-            venue.setText(data.venue);
-
-            if (data.isLive())
-                live.setVisibility(View.VISIBLE);
-            else
-                live.setVisibility(View.INVISIBLE);
-
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (data.id != null){
-                        Intent intent = new Intent(getContext(),EventDetailsActivity.class);
-                        intent.putExtra("EXTRA_ID",data.id);
-                        startActivity(intent);
-                    }
-                }
-            });
+        public scheduleViewHolder createViewHolder(View ItemView) {
+            return new scheduleViewHolder(ItemView,ScheduleFragment.this.getActivity());
         }
 
-        @Override
-        public View createView() {
-            return LayoutInflater.from(getContext()).inflate(res, null);
-        }
-
-        private String formatTime(Long time){
-            Calendar cl = Calendar.getInstance();
-            cl.setTimeInMillis(time);
-            return cl.get(Calendar.HOUR) + ":"
-                    + cl.get(Calendar.MINUTE) + " "
-                    + Util.amPm(cl.get(Calendar.AM_PM));
-        }
     }
 }

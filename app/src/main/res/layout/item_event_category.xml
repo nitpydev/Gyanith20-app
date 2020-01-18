@@ -1,32 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.google.android.material.card.MaterialCardView android:id="@+id/eve_cat_btn"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="100dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="5dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardBackgroundColor="?colorPrimary"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="4dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/eve_cat_btn"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="5dp"
-            android:foreground="?android:attr/selectableItemBackground"
-            app:cardBackgroundColor="?colorPrimary"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="4dp">
 
             <ImageView
                 android:id="@+id/logo"
@@ -67,7 +52,7 @@
                         android:fontFamily="@font/pnbold"
                         android:text="Introduction to deep learning"
                         android:textColor="@android:color/white"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/eveittime"
@@ -81,6 +66,3 @@
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>

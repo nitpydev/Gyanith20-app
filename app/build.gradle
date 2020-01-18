@@ -51,6 +51,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     implementation "ru.tinkoff.scrollingpagerindicator:scrollingpagerindicator:1.0.6"
+    implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

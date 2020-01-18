@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.adapters.eventCatAdapter;
@@ -39,7 +40,7 @@ public class EventsCategoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_categories);
 
         //VIEW BINDINGS
-        ListView eventCatList = findViewById(R.id.eve_cat);
+        RecyclerView eventCatList = findViewById(R.id.eve_cat);
         Loader loader = findViewById(R.id.eve_cat_loader);
         TextView catTitleText = findViewById(R.id.cattitle);
 
@@ -58,16 +59,14 @@ public class EventsCategoryActivity extends AppCompatActivity {
 
         final EventsModel viewModel = ViewModelProviders.of(this).get(EventsModel.class);
 
-        eventCatAdapter adapter = new eventCatAdapter(this,this,res) {
+        eventCatAdapter adapter = new eventCatAdapter(this,this,loader) {
             @NonNull
             @Override
             public LiveData<ArrayResource<EventItem>> getLiveData() {
                 return viewModel.getEventsOfType(catType);
             }
         };
-        adapter.setLoader(loader);
         eventCatList.setAdapter(adapter);
-        adapter.observe();
     }
 }
 

@@ -10,6 +10,7 @@ import android.widget.ListView;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.barebrains.gyanith20.adapters.eventCatAdapter;
 import com.barebrains.gyanith20.components.Loader;
@@ -57,10 +58,10 @@ public class FavouritesFragment extends mFragment {
         // Inflate the layout for this fragment
         final View root = inflater.inflate(R.layout.fragment_favourites, container, false);
 
+        RecyclerView favListView = root.findViewById(R.id.favlv);
         Loader loader = root.findViewById(R.id.fav_loader);
-        ListView favListView = root.findViewById(R.id.favlv);
 
-        adapter = new eventCatAdapter(getActivity(), getViewLifecycleOwner(), R.layout.item_event_category) {
+        adapter = new eventCatAdapter(getActivity(), getViewLifecycleOwner(),loader) {
             @Nullable
             @Override
             public LiveData<ArrayResource<EventItem>> getLiveData() {
@@ -69,7 +70,6 @@ public class FavouritesFragment extends mFragment {
                 return eventsModel.getEventsofIds(new ArrayList<>(favIds));
             }
         };
-        adapter.setLoader(loader);
         favListView.setAdapter(adapter);
         super.onCreateView(inflater, container, savedInstanceState);
         return root;

@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -128,11 +129,9 @@ public class Profile2Activity extends mActivity {
             public Object instantiateItem(@NonNull ViewGroup container, final int position) {
 
                 if (position != 2){
-                    Loader loader = new Loader(Profile2Activity.this);
-                    loader.set_empty_error(emptyStates[position]);
 
-                    ListView listView = new ListView(Profile2Activity.this);
-                    eventCatAdapter eventCatAdapter = new eventCatAdapter(Profile2Activity.this, Profile2Activity.this, R.layout.item_event_category) {
+                    RecyclerView listView = new RecyclerView(Profile2Activity.this);
+                    eventCatAdapter eventCatAdapter = new eventCatAdapter(Profile2Activity.this, Profile2Activity.this) {
 
                         @Nullable
                         @Override
@@ -140,12 +139,10 @@ public class Profile2Activity extends mActivity {
                             return eventsModel.getEventsofIdsandType((position == 0) ? "w" : "te", user.regEventIds);
                         }
                     };
-                    eventCatAdapter.setLoader(loader);
+                    eventCatAdapter.getLoader().set_empty_error(emptyStates[position]);
                     listView.setAdapter(eventCatAdapter);
-                    loader.addView(listView );
-                    eventCatAdapter.observe();
-                    container.addView(loader);
-                    return loader;
+                    container.addView(eventCatAdapter.getLoader());
+                    return eventCatAdapter.getLoader();
                 }
                 else {
                     CircularRevealCoordinatorLayout coordinatorLayout = new CircularRevealCoordinatorLayout(Profile2Activity.this);

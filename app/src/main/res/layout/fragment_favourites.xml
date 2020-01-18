@@ -18,13 +18,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:no_net_error="Tap  ♥ button in events to add to favourites and get notified">
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/favlv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@null">
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
-        </ListView>
+        </androidx.recyclerview.widget.RecyclerView>
     </com.barebrains.gyanith20.components.Loader>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
