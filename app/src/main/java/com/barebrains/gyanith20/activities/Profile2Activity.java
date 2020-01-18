@@ -164,7 +164,6 @@ public class Profile2Activity extends mActivity {
                     addPostBtn.setLayoutParams(layoutParams);
                     addPostBtn.setBackgroundTintList(ContextCompat.getColorStateList(Profile2Activity.this,R.color.colorAccent));
                     addPostBtn.setBackgroundColor(ContextCompat.getColor(Profile2Activity.this,R.color.colorAccent));
-
                    GyanithUserManager.getCurrentUser().observe(Profile2Activity.this,new Observer<Resource<GyanithUser>>() {
                        @Override
                        public void onChanged(Resource<GyanithUser> res) {

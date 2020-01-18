@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layoutAnimation
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:animation="@anim/item_intro_left"
-    android:columnDelay="30%"
-    android:rowDelay="30%"
-    android:animationOrder="normal"
-    />
