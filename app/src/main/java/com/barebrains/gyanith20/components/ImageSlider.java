@@ -45,17 +45,20 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 public class ImageSlider extends Loader {
     public ImageSlider(@NonNull Context context) {
         super(context);
+        if (!isInEditMode())
         init();
     }
 
     public ImageSlider(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        if (!isInEditMode())
+            init();
     }
 
     public ImageSlider(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        if (!isInEditMode())
+            init();
     }
 
     private ScrollingPagerIndicator indicator;
@@ -198,13 +201,23 @@ public class ImageSlider extends Loader {
         this.loaded();
     }
 
+    public ScrollingPagerIndicator getIndicator()
+    {
+        return indicator;
+    }
 
     //Touch and Click Behaviour
     private OnClickListener onClickListener;
+    private OnLongClickListener onLongClickListener;
 
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
         onClickListener = l;
+    }
+
+    @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
+        onLongClickListener = l;
     }
 
     private void handleTouches(){
@@ -238,14 +251,18 @@ public class ImageSlider extends Loader {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            if(onClickListener != null) {
+            if(onClickListener != null)
                 onClickListener.onClick(recyclerView);
-            }
 
             return true;
         }
 
-
+        @Override
+        public void onLongPress(MotionEvent e) {
+            if(onLongClickListener != null)
+                onLongClickListener.onLongClick(recyclerView);
+            super.onLongPress(e);
+        }
     }
 
 

@@ -1,9 +1,12 @@
 package com.barebrains.gyanith20.fragments;
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.activities.EventsCategoryActivity;
 import com.barebrains.gyanith20.activities.Profile2Activity;
 import com.barebrains.gyanith20.components.ImageSlider;
+import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
@@ -50,9 +54,6 @@ public class HomeFragment extends mFragment {
     private long delay2 = 0;
     private ImageSlider imgSlider;
     private String trendurl = "",devurl ="https://www.gyanith.org/Team%20Gyanith/Team%20Gyanith.html",urlimg;
-    private FloatingActionButton random, trend, dev;
-    private  DatabaseReference urlref,imgurl;
-    //private  Loader loader ;
 
 
     public HomeFragment() {    }
@@ -70,10 +71,10 @@ public class HomeFragment extends mFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         imgSlider = root.findViewById(R.id.img_slider);
-        trend = root.findViewById(R.id.trend);
-        random = root.findViewById(R.id.random);
-        dev = root.findViewById(R.id.fab);
-        imgurl = FirebaseDatabase.getInstance().getReference().child("ImageUrls");
+        FloatingActionButton trend = root.findViewById(R.id.trend);
+        FloatingActionButton random = root.findViewById(R.id.random);
+        FloatingActionButton dev = root.findViewById(R.id.fab);
+        DatabaseReference imgurl = FirebaseDatabase.getInstance().getReference().child("ImageUrls");
         final StorageReference slidesFolderRef = FirebaseStorage.getInstance().getReference().child("/HomeImageSlides");
 
         imgurl.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -93,7 +94,7 @@ public class HomeFragment extends mFragment {
 
             }
         });
-        urlref = FirebaseDatabase.getInstance().getReference().child("homefragment_urlredirect");
+        DatabaseReference urlref = FirebaseDatabase.getInstance().getReference().child("homefragment_urlredirect");
         urlref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -111,6 +112,8 @@ public class HomeFragment extends mFragment {
             }
         });
 
+        imgSlider.getIndicator().setVisibility(View.GONE);
+
         CardView w = root.findViewById(R.id.w);
         CardView te = root.findViewById(R.id.te);
         CardView nte = root.findViewById(R.id.ne);
@@ -121,11 +124,14 @@ public class HomeFragment extends mFragment {
         trend.setOnClickListener(trendclk);
         random.setOnClickListener(rndclk);
         dev.setOnClickListener(devclk);
+
+
         w.setOnClickListener(eventCategoryClick);
         te.setOnClickListener(eventCategoryClick);
         nte.setOnClickListener(eventCategoryClick);
         ps.setOnClickListener(eventCategoryClick);
         gl.setOnClickListener(eventCategoryClick);
+
         au.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,7 +139,7 @@ public class HomeFragment extends mFragment {
                 startActivity(i);
             }
         });
-
+/*
         ObjectAnimator wa = ObjectAnimator.ofFloat(w, "translationX", -300f, 0f);
         wa.setInterpolator(new DecelerateInterpolator());
         wa.setStartDelay(delay1);
@@ -187,6 +193,8 @@ public class HomeFragment extends mFragment {
         gll.setStartDelay(delay2);
         gll.start();
         delay2 += 150;
+
+ */
 
 
         return root;

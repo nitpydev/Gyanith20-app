@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/post_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -43,6 +42,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:foreground="?android:selectableItemBackground"
                     android:longClickable="false">
 
                     <LinearLayout
@@ -106,6 +106,7 @@
                 android:id="@+id/post_img_slider"
                 android:layout_width="0dp"
                 android:layout_height="300dp"
+                android:foreground="?android:selectableItemBackground"
                 android:longClickable="false"
                 app:layout_constraintBottom_toTopOf="@+id/materialCardView"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -129,7 +130,8 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:foreground="?android:selectableItemBackground">
 
                     <TextView
                         android:id="@+id/post_timestamp_txt"

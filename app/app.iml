@@ -146,6 +146,7 @@
     <orderEntry type="library" name="Gradle: androidx.cardview:cardview:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.paging:paging-runtime:2.1.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.recyclerview:recyclerview:1.1.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.gridlayout:gridlayout:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-core-ui:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.swiperefreshlayout:swiperefreshlayout:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.facebook.shimmer:shimmer:0.5.0@aar" level="project" />
@@ -193,6 +194,5 @@
     <orderEntry type="library" name="Gradle: com.polyak:icon-switch:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: id.zelory:compressor:2.1.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: ru.tinkoff.scrollingpagerindicator:scrollingpagerindicator:1.0.6@aar" level="project" />
-    <orderEntry type="library" name="Gradle: jp.wasabeef:recyclerview-animators:3.0.0@aar" level="project" />
   </component>
 </module>

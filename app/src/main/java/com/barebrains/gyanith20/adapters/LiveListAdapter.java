@@ -1,22 +1,15 @@
 package com.barebrains.gyanith20.adapters;
 
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
-import android.view.animation.OvershootInterpolator;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -30,9 +23,6 @@ import com.barebrains.gyanith20.interfaces.ArrayResource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import jp.wasabeef.recyclerview.animators.LandingAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
 
 public abstract class LiveListAdapter<T,VH extends LiveViewHolder<T>> extends RecyclerView.Adapter<VH> {

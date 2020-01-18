@@ -1,7 +1,9 @@
 package com.barebrains.gyanith20.others;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +81,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
     }
 
 
-    private PostViewHolder(@NonNull View itemView, FragmentManager fragmentManager) {
+    private PostViewHolder(@NonNull final View itemView, FragmentManager fragmentManager) {
         super(itemView);
 
         this.fragmentManager = fragmentManager;
@@ -109,6 +111,29 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
             }
         });
         clear();
+
+        loader.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                if (longClickListener != null)
+                    longClickListener.onLongClick(v);
+                return true;
+            }
+        });
+
+        imgSlider.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Vibrator vibe = (Vibrator) itemView.getContext().getSystemService(Context.VIBRATOR_SERVICE) ;
+                vibe.vibrate(50); // 50 is time in ms
+
+                if (longClickListener != null)
+                    longClickListener.onLongClick(v);
+
+                return true;
+            }
+        });
     }
 
 
@@ -159,7 +184,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                                     return true;
                                 }
                             };
-                            loader.setOnLongClickListener(longClickListener);
                         }
                         else {
                             try {
@@ -206,8 +230,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                                         return true;
                                     }
                                 };
-
-                                loader.setOnLongClickListener(longClickListener);
                             }catch (IllegalStateException e){
                                 // Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
                             }
@@ -253,10 +275,9 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
             likesObserver = null;
         }
 
-        if (longClickListener != null) {
-            loader.setOnLongClickListener(null);
+        if (longClickListener != null)
             longClickListener = null;
-        }
+
 
         imgSlider.setOnClickListener(null);
 
