@@ -30,6 +30,7 @@
 
     <RatingBar
         android:id="@+id/rating"
+        style="@android:style/Widget.Holo.RatingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -44,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         android:ems="200"
         android:fontFamily="@font/pnreg"
         android:hint="Write your feedback here"
