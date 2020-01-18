@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static com.barebrains.gyanith20.gyanith20.sp;
 import static com.barebrains.gyanith20.others.Response.DATA_EMPTY;
@@ -160,15 +161,17 @@ public class DataRepository {
                             return;
                         }
 
-                        ArrayList<NotificationItem> items = new ArrayList<>();
+                        NotificationItem[] items = new NotificationItem[((Long)dataSnapshot.getChildrenCount()).intValue()];
 
-                        for (DataSnapshot snap : dataSnapshot.getChildren())
-                            items.add(snap.getValue(NotificationItem.class));
-
-                        notiItems.postValue(ArrayResource.withValue(items.toArray(new NotificationItem[0])));
+                        Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                        for (int i = items.length - 1;i >= 0;i--) {
+                            DataSnapshot snapshot = iterator.next();
+                            items[i] = snapshot.getValue(NotificationItem.class);
+                        }
+                        notiItems.postValue(ArrayResource.withValue(items));
 
                         if (MainActivity.botNav != null)
-                            MainActivity.botNav.updateCount(3, items.size());
+                            MainActivity.botNav.updateCount(3, items.length);
                     }
 
                     @Override

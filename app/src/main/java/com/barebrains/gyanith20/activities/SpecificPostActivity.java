@@ -26,7 +26,6 @@ import java.util.HashMap;
 
 import static com.barebrains.gyanith20.others.Response.NO_DATA_AND_NET;
 
-//TODO:IF IMAGE FETCHING TRANSFERED TO POSTS_SOURCE CHANGE HERE ALSO
 public class SpecificPostActivity extends AppCompatActivity {
 
     SwipeRefreshLayout refreshPost;

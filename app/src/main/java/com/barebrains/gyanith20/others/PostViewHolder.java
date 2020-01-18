@@ -235,7 +235,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                             }
                         }
 
-                        //TODO: MOVE IMAGE FETCHING FROM HERE TO POSTS_SOURCE
                         imgSlider.load(Util.getStorageRefs(post.imgIds, FirebaseStorage.getInstance().getReference().child("PostImages")))
                                 .start();
                         if (post.caption != null && !post.caption.isEmpty()) {
@@ -292,7 +291,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
 
 
     private void ConsumeData(Post post){
-        usernameTxt.setText(post.username);
+        usernameTxt.setText("@" + post.username);
         likeCountText.setText((post.likes != 0) ? Long.toString(post.likes).substring(1) : "0");
         captionsText.setText(post.caption);
         bottomCaptionsText.setText(post.caption);

@@ -30,6 +30,7 @@ import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.storage.StorageReference;
 
@@ -66,6 +67,7 @@ public class ImageSlider extends Loader {
     private RecyclerView.Adapter adapter;
 
     private Object[] loadables = new Object[0];
+
     private RequestOptions requestOptions = (new RequestOptions())
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .placeholder(R.drawable.l2)
@@ -178,7 +180,6 @@ public class ImageSlider extends Loader {
                     .load(loadables[position])
                     .apply(requestOptions)
                     .into(imageView);
-
         }
     }
 

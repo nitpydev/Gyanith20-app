@@ -10,7 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.GridLayoutAnimationController;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -139,7 +143,26 @@ public class HomeFragment extends mFragment {
                 startActivity(i);
             }
         });
-/*
+
+        Animation[] fromLeft = new Animation[3];
+        Animation[] fromRight = new Animation[3];
+
+        for (int i = 0;i < 3 ; i++) {
+            fromLeft[i] = AnimationUtils.loadAnimation(getContext(),R.anim.item_intro_left);
+            fromLeft[i].setStartOffset(i*fromLeft[i].getDuration()/6);
+
+            fromRight[i] = AnimationUtils.loadAnimation(getContext(),R.anim.item_intro_right);
+            fromRight[i].setStartOffset(i*fromRight[i].getDuration()/6);
+        }
+
+        w.setAnimation(fromLeft[0]);
+        nte.setAnimation(fromLeft[1]);
+        ps.setAnimation(fromLeft[2]);
+
+        te.setAnimation(fromRight[0]);
+        gl.setAnimation(fromRight[1]);
+        au.setAnimation(fromRight[2]);
+        /*
         ObjectAnimator wa = ObjectAnimator.ofFloat(w, "translationX", -300f, 0f);
         wa.setInterpolator(new DecelerateInterpolator());
         wa.setStartDelay(delay1);

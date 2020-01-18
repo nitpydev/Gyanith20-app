@@ -1,7 +1,5 @@
 package com.barebrains.gyanith20.adapters;
 
-import android.util.Log;
-import android.util.Pair;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
@@ -11,7 +9,6 @@ import androidx.arch.core.util.Function;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
@@ -22,8 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.models.Post;
-import com.barebrains.gyanith20.others.Response;
 import com.barebrains.gyanith20.others.PostViewHolder;
+import com.barebrains.gyanith20.others.Response;
 import com.barebrains.gyanith20.statics.PostsSource;
 import com.firebase.ui.database.paging.LoadingState;
 import com.google.firebase.database.Query;
@@ -37,8 +34,8 @@ public abstract class postsAdapter extends PagedListAdapter<Post, PostViewHolder
 
     private static final PagedList.Config CONFIG = new PagedList.Config.Builder()
             .setEnablePlaceholders(true)
-            .setPrefetchDistance(15)
-            .setPageSize(15)
+            .setPrefetchDistance(3)
+            .setPageSize(2)
             .build();
 
     private LiveData<PostsSource> DataSource;

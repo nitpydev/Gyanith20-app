@@ -21,11 +21,11 @@ import java.util.Calendar;
 
 public class scheduleViewHolder extends LiveViewHolder<ScheduleItem>{
 
-    TextView time;
-    TextView title;
-    TextView venue;
-    View live;
-    View btn;
+    private TextView time;
+    private TextView title;
+    private TextView venue;
+    private View live;
+    private View btn;
 
     public scheduleViewHolder(@NonNull View itemView, Activity activity) {
         super(itemView, activity);
