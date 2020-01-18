@@ -1,12 +1,14 @@
 package com.barebrains.gyanith20.activities;
 
 import android.animation.ObjectAnimator;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -30,6 +32,10 @@ import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.statics.EventsModel;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 
@@ -109,8 +115,8 @@ public class EventDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Glide.with(this)
                 .load(eventItem.img1)
-                .placeholder(R.drawable.l2)
-                .error(R.drawable.gyanith_error)
+                .placeholder(R.drawable.abbg1)
+                .error(R.drawable.abbg1)
                 .centerCrop()
                 .into(eveimage);
         toolbar.setTitle(eventItem.name);
@@ -243,8 +249,8 @@ public class EventDetailsActivity extends AppCompatActivity {
             return pageTitles[position];
         }
     }
-
 }
+
 
 
 

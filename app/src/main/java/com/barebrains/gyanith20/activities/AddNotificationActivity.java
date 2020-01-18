@@ -59,7 +59,7 @@ public class AddNotificationActivity extends AppCompatActivity {
                             FirebaseDatabase.getInstance().getReference().child("Notifications")
                                     .push().setValue(notiItem);
 
-                            Toast.makeText(AddNotificationActivity.this, "Notification Sent", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Notification Sent", Toast.LENGTH_SHORT).show();
 
                             AddNotificationActivity.this.finish();
                         }
@@ -68,11 +68,12 @@ public class AddNotificationActivity extends AppCompatActivity {
                         public void onErrorResponse(VolleyError error) {
                             Log.d("asd","AddNotification Error : " + error.getMessage());
 
-                            Toast.makeText(AddNotificationActivity.this, "Error : Notification not sent", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Error : Notification not sent", Toast.LENGTH_SHORT).show();
                         }
                     });
 
                     VolleyManager.requestQueue.add(notiRequest);
+                    finish();
 
                 }catch (InvalidParameterException e){
                     Toast.makeText(AddNotificationActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();

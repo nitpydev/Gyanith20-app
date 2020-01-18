@@ -6,6 +6,8 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 
@@ -15,6 +17,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
+import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 
@@ -32,7 +35,6 @@ public abstract class LiveListAdapter<T> extends ArrayAdapter {
     private Observer<ArrayResource<T>> observer = new Observer<ArrayResource<T>>() {
         @Override
         public void onChanged(ArrayResource<T> res) {
-            Log.d("asd","res : " + res.response.getCode());
            if (res.handleWithLoader(loader))
                return;
            clear();
@@ -74,6 +76,8 @@ public abstract class LiveListAdapter<T> extends ArrayAdapter {
     }
 
 
+
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -100,11 +104,8 @@ public abstract class LiveListAdapter<T> extends ArrayAdapter {
 
     private void animateItem(View itemView,int position){
         if (pos==position) {
-
             itemView.setAlpha(0);
-
-
-            Long delay = Long.valueOf(position * 150);
+            long delay = (long) (position * 150);
             ObjectAnimator a = ObjectAnimator.ofFloat(itemView, "alpha", 0, 1);
             a.setStartDelay(delay);
             a.start();

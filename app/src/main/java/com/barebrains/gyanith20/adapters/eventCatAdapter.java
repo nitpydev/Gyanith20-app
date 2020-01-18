@@ -1,7 +1,6 @@
 package com.barebrains.gyanith20.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import androidx.lifecycle.LiveData;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
-import com.barebrains.gyanith20.activities.ProfileActivity;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.bumptech.glide.Glide;
@@ -48,8 +46,8 @@ public class eventCatAdapter extends LiveListAdapter<EventItem>{
         final ImageView imageView = view.findViewById(R.id.logo);
         Glide.with(getContext())
                 .load(url)
-                .placeholder(R.drawable.l2)
-                .error(R.drawable.gyanith_error)
+                .placeholder(R.drawable.abbg1)
+                .error(R.drawable.abbg1)
                 .into(imageView);
 
         eve_cat_btn.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +65,7 @@ public class eventCatAdapter extends LiveListAdapter<EventItem>{
                     }
 
 
-                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,eventImg);
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,eventName,eventImg,eventBar);
                     Intent intent = new Intent(getContext(), EventDetailsActivity.class);
                     intent.putExtra("EXTRA_ID",data.id);
                     getContext().startActivity(intent,options.toBundle());
