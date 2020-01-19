@@ -46,12 +46,21 @@ public class AddNotificationActivity extends AppCompatActivity {
                     final NotificationItem notiItem = new NotificationItem(ttl.getText().toString()
                             , System.currentTimeMillis(), bdy.getText().toString());
 
-
+/*
                     String url = Uri.parse("https://us-central1-gyanith19-9fdcb.cloudfunctions.net/notify?ttl=key1&bdy=key2")
                             .buildUpon()
                             .appendQueryParameter("key1", notiItem.title)
                             .appendQueryParameter("key2",notiItem.body)
                             .build().toString();
+
+ */
+                    Uri.Builder builder = new Uri.Builder();
+                    builder.scheme("https")
+                            .authority("us-central1-gyanith19-9fdcb.cloudfunctions.net")
+                            .appendPath("notify")
+                            .appendQueryParameter("ttl", notiItem.title)
+                            .appendQueryParameter("bdy", notiItem.body);
+                    String url = builder.build().toString();
 
                     StringRequest notiRequest = new StringRequest(url, new Response.Listener<String>() {
                         @Override
