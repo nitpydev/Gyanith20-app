@@ -1,29 +1,37 @@
 package com.barebrains.gyanith20.activities;
 
+import android.Manifest;
+import android.content.ClipData;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.FileUtils;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
+import android.transition.Fade;
+import android.util.Log;
+import android.view.Window;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import android.Manifest;
-import android.content.ClipData;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.os.FileUtils;
-import android.os.ParcelFileDescriptor;
-import android.util.Log;
-import android.widget.Toast;
-
 import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.Util;
-import com.google.android.gms.common.util.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class StartPostActivity extends AppCompatActivity {
 
@@ -124,27 +132,55 @@ public class StartPostActivity extends AppCompatActivity {
             imgPaths = new String[imgCount];
 
             for (int i = 0; i < imgCount;i++){
-                ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(clipData.getItemAt(i).getUri(), "r", null);
-                FileInputStream inputStream = new FileInputStream(parcelFileDescriptor.getFileDescriptor());
-                File file = new File(getCacheDir(),Util.generateUniqueId());
 
-                FileOutputStream outputStream = new  FileOutputStream(file);
-                FileUtils.copy(inputStream,outputStream);
-                imgPaths[i] = file.getAbsolutePath();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(clipData.getItemAt(i).getUri(), "r", null);
+                    FileInputStream inputStream = new FileInputStream(parcelFileDescriptor.getFileDescriptor());
+                    File file = new File(getCacheDir(),Util.generateUniqueId());
+                    FileOutputStream outputStream = new  FileOutputStream(file);
+                    FileUtils.copy(inputStream,outputStream);
+                    imgPaths[i] = file.getAbsolutePath();
+                }
+                else
+                {
+                    imgPaths[i] = UriAbsPath(clipData.getItemAt(i).getUri());
+                }
+
             }
         }
         else //USER SELECTS ONLY ONE IMAGES
         {
             imgPaths = new String[1];
-            ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(data.getData(), "r", null);
-            FileInputStream inputStream = new FileInputStream(parcelFileDescriptor.getFileDescriptor());
-            File file = new File(getCacheDir(),Util.generateUniqueId());
-            FileOutputStream outputStream = new  FileOutputStream(file);
-            FileUtils.copy(inputStream,outputStream);
-            imgPaths[0] = file.getAbsolutePath();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+
+                ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(data.getData(), "r", null);
+                FileInputStream inputStream = new FileInputStream(parcelFileDescriptor.getFileDescriptor());
+                File file = new File(getCacheDir(),Util.generateUniqueId());
+                FileOutputStream outputStream = new  FileOutputStream(file);
+                FileUtils.copy(inputStream,outputStream);
+                imgPaths[0] = file.getAbsolutePath();
+            }
+            else
+            {
+                imgPaths[0] = UriAbsPath(data.getData());
+            }
         }
 
         return imgPaths;
+    }
+
+    public String UriAbsPath(Uri imgUri){
+        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+        // Get the cursor
+        Cursor cursor =  getContentResolver().query(imgUri, filePathColumn, null, null, null);
+        // Move to first row
+        cursor.moveToFirst();
+        //Get the column index of MediaStore.Images.Media.DATA
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        //Gets the String value in the column
+        String path = cursor.getString(columnIndex);
+        cursor.close();
+        return path;
     }
 
 }

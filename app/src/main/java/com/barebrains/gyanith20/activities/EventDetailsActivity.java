@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
@@ -190,10 +191,12 @@ public class EventDetailsActivity extends AppCompatActivity {
             Loader loader = new Loader(EventDetailsActivity.this);
             loader.set_empty_error("Will be Updated soon");
             TextView textView = new TextView(new ContextThemeWrapper(EventDetailsActivity.this, R.style.eventDes));
-            loader.addView(textView);
-            container.addView(loader);
+
             switch (position) {
                 case 0:
+                    NestedScrollView scrollView = new NestedScrollView(EventDetailsActivity.this);
+                    scrollView.addView(textView);
+                    loader.addView(scrollView);
                     if (eventItem.des == null || eventItem.des.isEmpty()) {
                         loader.error(0);
                         break;
@@ -204,27 +207,34 @@ public class EventDetailsActivity extends AppCompatActivity {
                         textView.setText(Html.fromHtml(eventItem.des));
                     if (eventItem.cost != null)
                         textView.append("\nRegistration Cost : Rs." + eventItem.cost + " per person");
-                    loader.loaded();
                     break;
                 case 1:
                     if (eventItem.type.equals("w"))
                         pageTitles[1] = "REQUISITES";
+
+                    loader.addView(textView);
 
                     if (eventItem.rules == null || eventItem.rules.isEmpty()) {
                         loader.error();
                         break;
                     }
                     textView.setText(eventItem.rules);
-                    loader.loaded();
+                    loader.addView(textView);
                     break;
                 case 2:
+                    loader.addView(textView);
+
                     if (eventItem.contact == null) {
                         loader.error();
                         break;
                     }
                     textView.setText(eventItem.contact);
+
                     break;
             }
+
+            container.addView(loader);
+            loader.loaded();
             return loader;
         }
 

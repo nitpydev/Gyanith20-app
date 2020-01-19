@@ -101,8 +101,8 @@
         android:id="@+id/post_btn"
         style="@style/fab"
         android:hapticFeedbackEnabled="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_paper_plane" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
