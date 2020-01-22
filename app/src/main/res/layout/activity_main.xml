@@ -44,7 +44,7 @@
                     android:fontFamily="@font/poppinsr"
                     android:gravity="center_vertical"
                     android:text="@string/topbar_home"
-                    android:textSize="22sp" />
+                    android:textSize="20sp" />
 
                 <Space
                     android:layout_width="0dp"

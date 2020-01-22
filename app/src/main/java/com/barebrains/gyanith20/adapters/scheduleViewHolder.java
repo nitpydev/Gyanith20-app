@@ -62,8 +62,10 @@ public class scheduleViewHolder extends LiveViewHolder<ScheduleItem>{
     private String formatTime(Long time){
         Calendar cl = Calendar.getInstance();
         cl.setTimeInMillis(time);
-        return cl.get(Calendar.HOUR) + ":"
-                + cl.get(Calendar.MINUTE) + " "
-                + Util.amPm(cl.get(Calendar.AM_PM));
+        String m=String.format("%02d",cl.get(Calendar.MINUTE));
+        String h=String.format("%02d",cl.get(Calendar.HOUR_OF_DAY));
+
+        return h +":"+m;
+
     }
 }

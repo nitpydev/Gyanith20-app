@@ -81,7 +81,7 @@ public class HomeFragment extends mFragment {
         DatabaseReference imgurl = FirebaseDatabase.getInstance().getReference().child("ImageUrls");
         final StorageReference slidesFolderRef = FirebaseStorage.getInstance().getReference().child("/HomeImageSlides");
 
-        imgurl.addListenerForSingleValueEvent(new ValueEventListener() {
+        imgurl.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<String> imgnames = new ArrayList<>();
