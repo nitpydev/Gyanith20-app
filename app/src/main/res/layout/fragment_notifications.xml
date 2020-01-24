@@ -25,12 +25,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/add_notification"
-                style="@style/fab"
-                android:layout_gravity="bottom|end"
-                app:srcCompat="@drawable/ic_baseline_add_24px" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/notificationListView"
                 android:layout_width="match_parent"
@@ -39,5 +33,14 @@
 
         </FrameLayout>
     </com.barebrains.gyanith20.components.Loader>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_notification"
+        style="@style/fab"
+        android:layout_gravity="bottom|end"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_add_24px" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

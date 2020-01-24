@@ -8,17 +8,18 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".gyanith20"
         android:allowBackup="true"
-        android:icon="@drawable/gyw"
+        android:icon="@drawable/l2"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/l2"
+        android:roundIcon="@drawable/gyw"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".AddScheduleActivity"></activity>
         <activity android:name=".activities.Profile2Activity" />
         <activity android:name=".activities.QrActivity" />
         <activity android:name=".activities.AddNotificationActivity" />

@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     ImageView eveimage;
     AppBarLayout appBarLayout;
     TextView title;
+    TabLayout tabLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +163,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     private void setUpViewPager(EventItem eventItem){
 
         ViewPager viewPager = findViewById(R.id.event_details_viewpager);
-        TabLayout tabLayout =findViewById(R.id.dtab);
+        tabLayout = findViewById(R.id.dtab);
 
         viewPager.setAdapter(new pager(eventItem));
         viewPager.setOffscreenPageLimit(2);
@@ -197,7 +200,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     NestedScrollView scrollView = new NestedScrollView(EventDetailsActivity.this);
                     scrollView.addView(textView);
                     loader.addView(scrollView);
-                    if (eventItem.des == null || eventItem.des.isEmpty()) {
+                    if (eventItem.des == null || eventItem.des.equals("")) {
                         loader.error(0);
                         break;
                     }
@@ -205,36 +208,39 @@ public class EventDetailsActivity extends AppCompatActivity {
                         textView.setText(Html.fromHtml(eventItem.des, Html.FROM_HTML_MODE_LEGACY));
                     else
                         textView.setText(Html.fromHtml(eventItem.des));
-                    if (eventItem.cost != null)
+                    if (eventItem.cost != null && !eventItem.cost.equals(""))
                         textView.append("\nRegistration Cost : Rs." + eventItem.cost + " per person");
+                    loader.loaded();
                     break;
                 case 1:
-                    if (eventItem.type.equals("w"))
+                    if (eventItem.type.equals("w")) {
                         pageTitles[1] = "REQUISITES";
+                        tabLayout.getTabAt(1).setText(pageTitles[1]);
+                    }
 
                     loader.addView(textView);
 
-                    if (eventItem.rules == null || eventItem.rules.isEmpty()) {
+                    if (eventItem.rules == null || eventItem.rules.equals("")) {
                         loader.error();
+                        Log.d("asd","error");
                         break;
                     }
                     textView.setText(eventItem.rules);
-                    loader.addView(textView);
+                    loader.loaded();
                     break;
                 case 2:
                     loader.addView(textView);
 
-                    if (eventItem.contact == null) {
+                    if (eventItem.contact == null || eventItem.contact.equals("")) {
                         loader.error();
                         break;
                     }
                     textView.setText(eventItem.contact);
-
+                    loader.loaded();
                     break;
             }
 
             container.addView(loader);
-            loader.loaded();
             return loader;
         }
 

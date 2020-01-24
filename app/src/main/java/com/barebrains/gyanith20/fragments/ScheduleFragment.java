@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.barebrains.gyanith20.AddScheduleActivity;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.adapters.LiveListAdapter;
@@ -35,8 +36,6 @@ import java.util.Calendar;
 public class ScheduleFragment extends mFragment {
 
     private ScheduleModel viewModel;
-    int res = R.layout.item_schedule;
-
     public ScheduleFragment() {
         // Required empty public constructor
     }
@@ -53,6 +52,15 @@ public class ScheduleFragment extends mFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View root = inflater.inflate(R.layout.fragment_schedule, container, false);
+
+        root.findViewById(R.id.add_schedule).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ScheduleFragment.this.getActivity(), AddScheduleActivity.class);
+                startActivity(intent);
+            }
+        });
+
         TabLayout mtabLayout = root.findViewById(R.id.schtabLayout);
         ViewPager viewPager = root.findViewById(R.id.viewpager);
         viewPager.setAdapter(new pager());
