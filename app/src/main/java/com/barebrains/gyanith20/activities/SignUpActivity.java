@@ -115,7 +115,7 @@ public class SignUpActivity extends AppCompatActivity {
                             //Show Error
                             botSheet.makeBotSheet(getSupportFragmentManager())
                                     .setTitle("Something went wrong")
-                                    .setBody(getString(R.string.msg))
+                                    .setBody(error)
                                     .show();
                         }
                     });

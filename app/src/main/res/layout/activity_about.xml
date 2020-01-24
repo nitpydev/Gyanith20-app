@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:fontFamily="@font/pnreg"
-                    android:text="Gyanith "
+                    android:text="Gyanith"
                     android:textSize="18sp" />
 
                 <TextView
