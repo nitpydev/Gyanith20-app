@@ -45,12 +45,8 @@ import java.util.Random;
 
 public class HomeFragment extends mFragment {
 
-
-    private long delay1 = 0;
-    private long delay2 = 0;
     private ImageSlider imgSlider;
-    private String trendurl = "",devurl ="https://www.gyanith.org/Team%20Gyanith/Team%20Gyanith.html",urlimg;
-
+    private String trendurl = "";
 
     public HomeFragment() {    }
 
