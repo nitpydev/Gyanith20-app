@@ -8,15 +8,19 @@
     android:fillViewport="true">
 
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <FrameLayout
+            android:id="@+id/frameLayout"
             android:layout_width="match_parent"
-            android:layout_height="475dp"
-            android:clickable="false">
+            android:layout_height="0dp"
+            android:clickable="false"
+            app:layout_constraintDimensionRatio="1:1.3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,7 +54,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center_horizontal"
+                        android:layout_gravity="center"
+                        android:gravity="center"
                         android:orientation="horizontal">
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -58,6 +63,7 @@
                             style="@style/fab"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_margin="20sp"
                             android:layout_weight="1"
                             android:clickable="true"
@@ -72,6 +78,7 @@
                             style="@style/fab"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_margin="20sp"
                             android:layout_marginTop="20sp"
                             android:layout_marginRight="20sp"
@@ -88,6 +95,7 @@
                             style="@style/fab"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_margin="20sp"
                             android:layout_marginTop="20sp"
                             android:layout_marginRight="20sp"
@@ -96,9 +104,8 @@
                             app:backgroundTint="@color/colorAccent"
                             app:fabCustomSize="70dp"
                             app:maxImageSize="38dp"
-                            app:srcCompat="@drawable/ic_tick2"
 
-                            />
+                            app:srcCompat="@drawable/ic_tick2" />
                     </LinearLayout>
                 </FrameLayout>
 
@@ -109,8 +116,12 @@
 
         <androidx.gridlayout.widget.GridLayout
             android:layout_width="match_parent"
-            android:layout_height="450dp"
+            android:layout_height="0dp"
             app:columnCount="2"
+            app:layout_constraintDimensionRatio="1:1.1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout"
             app:rowCount="3">
 
             <com.google.android.material.card.MaterialCardView
@@ -125,13 +136,14 @@
                 android:background="@drawable/wgrad"
                 android:minHeight="100dp"
                 android:tag="@string/workshop"
+                app:cardBackgroundColor="@color/colorBackdropAccent"
                 app:cardCornerRadius="5dp"
                 app:layout_columnWeight="1"
                 app:layout_rowWeight="1">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@drawable/wgrad"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
@@ -178,7 +190,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@drawable/tegrad"
                     android:gravity="center"
                     android:orientation="vertical"
@@ -224,7 +236,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@drawable/ntegrad"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
@@ -259,7 +271,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/gl"
+                android:id="@+id/g"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="7.5dp"
@@ -274,7 +286,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@drawable/glgrad"
                     android:gravity="center"
                     android:orientation="vertical"
@@ -304,7 +316,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/ps"
+                android:id="@+id/p"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="7.5dp"
@@ -319,7 +331,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@drawable/psgrad"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
@@ -364,7 +376,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@drawable/abtgrad"
                     android:gravity="center"
                     android:orientation="vertical"
@@ -393,6 +405,6 @@
 
             </com.google.android.material.card.MaterialCardView>
         </androidx.gridlayout.widget.GridLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

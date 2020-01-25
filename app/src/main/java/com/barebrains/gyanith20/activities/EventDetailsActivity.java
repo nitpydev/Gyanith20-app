@@ -195,6 +195,12 @@ public class EventDetailsActivity extends AppCompatActivity {
             loader.set_empty_error("Will be Updated soon");
             TextView textView = new TextView(new ContextThemeWrapper(EventDetailsActivity.this, R.style.eventDes));
 
+            //Adjustment for guestlectures and proshows
+            if(eventItem.type.equals("g") || eventItem.type.equals("p"))
+                if(position == 1)
+                    position++;
+
+
             switch (position) {
                 case 0:
                     NestedScrollView scrollView = new NestedScrollView(EventDetailsActivity.this);
@@ -251,7 +257,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            return (eventItem.type.equals("g") || eventItem.type.equals("p"))?2:3;
         }
 
         @Override

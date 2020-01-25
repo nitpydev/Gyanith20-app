@@ -1,20 +1,13 @@
 package com.barebrains.gyanith20.fragments;
 
-import android.animation.ObjectAnimator;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Vibrator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.GridLayoutAnimationController;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,7 +20,6 @@ import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.activities.EventsCategoryActivity;
 import com.barebrains.gyanith20.activities.Profile2Activity;
 import com.barebrains.gyanith20.components.ImageSlider;
-import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
@@ -121,8 +113,8 @@ public class HomeFragment extends mFragment {
         CardView w = root.findViewById(R.id.w);
         CardView te = root.findViewById(R.id.te);
         CardView nte = root.findViewById(R.id.ne);
-        CardView ps = root.findViewById(R.id.ps);
-        CardView gl = root.findViewById(R.id.gl);
+        CardView ps = root.findViewById(R.id.p);
+        CardView gl = root.findViewById(R.id.g);
         CardView au = root.findViewById(R.id.au);
 
         trend.setOnClickListener(trendclk);
