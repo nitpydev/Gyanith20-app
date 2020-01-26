@@ -54,6 +54,7 @@
             android:name=".activities.MainActivity"
             android:label="@string/app_name" />
         <activity android:name=".activities.EventsCategoryActivity" />
+        <activity android:name=".activities.Accommodation"/>
         <activity android:name=".activities.EventDetailsActivity" />
         <activity
             android:name=".activities.ProfileActivity"

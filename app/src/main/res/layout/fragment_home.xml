@@ -59,7 +59,7 @@
                         android:orientation="horizontal">
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
-                            android:id="@+id/trend"
+                            android:id="@+id/accomdation"
                             style="@style/fab"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.AboutActivity;
+import com.barebrains.gyanith20.activities.Accommodation;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.activities.EventsCategoryActivity;
 import com.barebrains.gyanith20.activities.Profile2Activity;
@@ -46,7 +47,6 @@ import java.util.Random;
 public class HomeFragment extends mFragment {
 
     private ImageSlider imgSlider;
-    private String trendurl = "";
 
     public HomeFragment() {    }
 
@@ -63,7 +63,7 @@ public class HomeFragment extends mFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         imgSlider = root.findViewById(R.id.img_slider);
-        FloatingActionButton trend = root.findViewById(R.id.trend);
+        FloatingActionButton trend = root.findViewById(R.id.accomdation);
         FloatingActionButton random = root.findViewById(R.id.random);
         FloatingActionButton dev = root.findViewById(R.id.fab);
         DatabaseReference imgurl = FirebaseDatabase.getInstance().getReference().child("ImageUrls");
@@ -86,23 +86,6 @@ public class HomeFragment extends mFragment {
 
             }
         });
-        DatabaseReference urlref = FirebaseDatabase.getInstance().getReference().child("homefragment_urlredirect");
-        urlref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                try {
-                    trendurl = dataSnapshot.getValue().toString();
-                } catch (NullPointerException n) {
-                    trendurl = "https://www.youtube.com/channel/UCL8yfte7HZy_KGE-fckMsqQ";
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         imgSlider.getIndicator().setVisibility(View.GONE);
 
@@ -113,7 +96,7 @@ public class HomeFragment extends mFragment {
         CardView gl = root.findViewById(R.id.g);
         CardView au = root.findViewById(R.id.au);
 
-        trend.setOnClickListener(trendclk);
+        trend.setOnClickListener(accclk);
         random.setOnClickListener(rndclk);
         dev.setOnClickListener(devclk);
 
@@ -224,14 +207,12 @@ public class HomeFragment extends mFragment {
     };
 
 
-    private View.OnClickListener trendclk = new View.OnClickListener(){
+    private View.OnClickListener accclk = new View.OnClickListener(){
         @Override
         public void  onClick(View view){
-            try{
-                Intent redirect = new Intent(Intent.ACTION_VIEW,Uri.parse(trendurl));
-                startActivity(redirect);}catch(Exception e){
-                Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
-            }
+           Intent acc = new Intent(getContext(), Accommodation.class);
+           //acc.putExtra("EXTRA_ID","o");
+           startActivity(acc);
         }
     };
     private View.OnClickListener rndclk = new View.OnClickListener(){
