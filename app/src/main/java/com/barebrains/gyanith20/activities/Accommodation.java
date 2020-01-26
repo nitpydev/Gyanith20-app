@@ -126,7 +126,7 @@ if(cost != null){
                         textView.setText(Html.fromHtml(acc.des, Html.FROM_HTML_MODE_LEGACY));
                     else
                         textView.setText(Html.fromHtml(acc.des));
-                    textView.append("Registration cost :\n"+ cost_parse(acc.cost)+"\n \n \n");
+                    textView.append("\nRegistration cost :\n"+ cost_parse(acc.cost)+"\n \n \n");
 
                   loader.loaded();
                     break;
