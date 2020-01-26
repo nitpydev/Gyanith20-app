@@ -71,7 +71,7 @@
                             app:backgroundTint="@color/colorAccent"
                             app:fabCustomSize="70dp"
                             app:maxImageSize="24dp"
-                            app:srcCompat="@drawable/fire" />
+                            app:srcCompat="@drawable/accommodation" />
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/random"

@@ -57,7 +57,7 @@ public class Accommodation extends AppCompatActivity {
         EventsModel model = ViewModelProviders.of(this).get(EventsModel.class);
         loader.loading();
 
-        model.getEventsOfType("w").observe(this, new Observer<ArrayResource<EventItem>>() {
+        model.getEventsOfType("o").observe(this, new Observer<ArrayResource<EventItem>>() {
             @Override
             public void onChanged(ArrayResource<EventItem> res) {
 
@@ -81,6 +81,7 @@ public class Accommodation extends AppCompatActivity {
     // parsing cost param
 private  String cost_parse(String cost)
 {    String parsed = "";
+if(cost != null){
     String[] cost_arr = cost.split(",");
     for(int i = 0; i < cost_arr.length; i++)
     {
@@ -88,7 +89,7 @@ private  String cost_parse(String cost)
         parsed =  " For " + cost_arr[i] + " person" + "\n" + parsed;
         else
             parsed = " Rs." + cost_arr[i] +parsed;
-    }
+    }}
     return parsed;
 
 }
@@ -125,7 +126,8 @@ private  String cost_parse(String cost)
                         textView.setText(Html.fromHtml(acc.des, Html.FROM_HTML_MODE_LEGACY));
                     else
                         textView.setText(Html.fromHtml(acc.des));
-                    textView.append("Registration cost :\n"+ cost_parse(acc.cost));
+                    textView.append("Registration cost :\n"+ cost_parse(acc.cost)+"\n \n \n");
+
                   loader.loaded();
                     break;
                 case 1:

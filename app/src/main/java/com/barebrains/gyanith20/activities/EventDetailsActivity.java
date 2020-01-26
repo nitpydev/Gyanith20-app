@@ -214,8 +214,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                         textView.setText(Html.fromHtml(eventItem.des, Html.FROM_HTML_MODE_LEGACY));
                     else
                         textView.setText(Html.fromHtml(eventItem.des));
+
                     if (eventItem.cost != null && !eventItem.cost.equals(""))
-                        textView.append("\nRegistration Cost : Rs." + eventItem.cost + " per person");
+                        textView.append("Registration Cost : \n" + cost_parse(eventItem.cost)+ "\n \n \n");
                     loader.loaded();
                     break;
                 case 1:
@@ -270,6 +271,21 @@ public class EventDetailsActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return pageTitles[position];
         }
+    }
+
+    private  String cost_parse(String cost)
+    {    String parsed = "";
+        if(cost != null){
+        String[] cost_arr = cost.split(",");
+        for(int i = 0; i < cost_arr.length; i++)
+        {
+            if(i%2 == 0)
+                parsed =  " For " + cost_arr[i] + " person" + "\n" + parsed;
+            else
+                parsed = " Rs." + cost_arr[i] +parsed;
+        }}
+        return parsed;
+
     }
 }
 
