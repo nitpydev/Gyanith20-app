@@ -216,7 +216,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                         textView.setText(Html.fromHtml(eventItem.des));
 
                     if (eventItem.cost != null && !eventItem.cost.equals(""))
-                        textView.append("Registration Cost : \n" + cost_parse(eventItem.cost)+ "\n \n \n");
+                        textView.append("\nRegistration Cost : \n" + cost_parse(eventItem.cost)+ "\n \n \n");
                     loader.loaded();
                     break;
                 case 1:
