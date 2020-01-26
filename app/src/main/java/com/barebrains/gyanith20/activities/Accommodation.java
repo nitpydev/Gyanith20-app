@@ -57,9 +57,10 @@ public class Accommodation extends AppCompatActivity {
         EventsModel model = ViewModelProviders.of(this).get(EventsModel.class);
         loader.loading();
 
-        model.getEventsOfType("o").observe(this, new Observer<ArrayResource<EventItem>>() {
+        model.getEventsOfType("w").observe(this, new Observer<ArrayResource<EventItem>>() {
             @Override
             public void onChanged(ArrayResource<EventItem> res) {
+
                 if(res.handleWithLoader(loader)){
                     return;
                 }
@@ -77,6 +78,20 @@ public class Accommodation extends AppCompatActivity {
 
     }
 
+    // parsing cost param
+private  String cost_parse(String cost)
+{    String parsed = "";
+    String[] cost_arr = cost.split(",");
+    for(int i = 0; i < cost_arr.length; i++)
+    {
+        if(i%2 == 0)
+        parsed =  " For " + cost_arr[i] + " person" + "\n" + parsed;
+        else
+            parsed = " Rs." + cost_arr[i] +parsed;
+    }
+    return parsed;
+
+}
     private class Viewpager extends PagerAdapter
     {
         private EventItem acc;
@@ -97,7 +112,6 @@ public class Accommodation extends AppCompatActivity {
             ScrollView scrollView = new ScrollView(Accommodation.this);
 
 
-
             switch(position)
             {
                 case 0:
@@ -111,6 +125,7 @@ public class Accommodation extends AppCompatActivity {
                         textView.setText(Html.fromHtml(acc.des, Html.FROM_HTML_MODE_LEGACY));
                     else
                         textView.setText(Html.fromHtml(acc.des));
+                    textView.append("Registration cost :\n"+ cost_parse(acc.cost));
                   loader.loaded();
                     break;
                 case 1:
