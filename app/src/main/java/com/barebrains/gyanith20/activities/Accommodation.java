@@ -86,7 +86,7 @@ if(cost != null){
     for(int i = 0; i < cost_arr.length; i++)
     {
         if(i%2 == 0)
-        parsed =  " For " + cost_arr[i] + " person" + "\n" + parsed;
+            parsed =  " For " + cost_arr[i] + " person" + "\n" + parsed;
         else
             parsed = " Rs." + cost_arr[i] +parsed;
     }}

@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AddScheduleActivity"></activity>
+        <activity android:name=".AddScheduleActivity" />
         <activity android:name=".activities.Profile2Activity" />
         <activity android:name=".activities.QrActivity" />
         <activity android:name=".activities.AddNotificationActivity" />
