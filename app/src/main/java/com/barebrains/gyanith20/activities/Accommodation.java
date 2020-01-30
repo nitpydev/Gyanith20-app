@@ -22,6 +22,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
+import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.statics.EventsModel;
 import com.google.android.material.tabs.TabLayout;
@@ -57,9 +58,9 @@ public class Accommodation extends AppCompatActivity {
         EventsModel model = ViewModelProviders.of(this).get(EventsModel.class);
         loader.loading();
 
-        model.getEventsOfType("o").observe(this, new Observer<ArrayResource<EventItem>>() {
+        model.getItem("43").observe(this, new Observer<Resource<EventItem>>() {
             @Override
-            public void onChanged(ArrayResource<EventItem> res) {
+            public void onChanged(Resource<EventItem> res) {
 
                 if(res.handleWithLoader(loader)){
                     return;
@@ -68,7 +69,7 @@ public class Accommodation extends AppCompatActivity {
 
                 tabs = findViewById(R.id.accom_tabs);
 
-                viewPager.setAdapter(new Viewpager(res.value[0]));
+                viewPager.setAdapter(new Viewpager(res.value));
 
                 tabs.setupWithViewPager(viewPager);
             }
@@ -126,6 +127,7 @@ if(cost != null){
                         textView.setText(Html.fromHtml(acc.des, Html.FROM_HTML_MODE_LEGACY));
                     else
                         textView.setText(Html.fromHtml(acc.des));
+                    if (acc.cost != null && !acc.cost.equals(""))
                     textView.append("\nRegistration cost :\n"+ cost_parse(acc.cost)+"\n \n \n");
 
                   loader.loaded();

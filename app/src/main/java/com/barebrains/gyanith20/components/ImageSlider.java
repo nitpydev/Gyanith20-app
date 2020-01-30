@@ -68,7 +68,7 @@ public class ImageSlider extends Loader {
 
     private Object[] loadables = new Object[0];
 
-    private RequestOptions requestOptions = (new RequestOptions())
+    public static RequestOptions requestOptions = (new RequestOptions())
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .placeholder(R.drawable.l2)
             .error(R.drawable.gyanith_error);

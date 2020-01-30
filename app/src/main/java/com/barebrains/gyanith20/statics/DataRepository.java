@@ -1,7 +1,5 @@
 package com.barebrains.gyanith20.statics;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -14,7 +12,7 @@ import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.models.NotificationItem;
 import com.barebrains.gyanith20.models.ScheduleItem;
-import com.barebrains.gyanith20.others.Response;
+import com.barebrains.gyanith20.models.TechExpoData;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -57,6 +55,15 @@ public class DataRepository {
         }
 
         return notiItems;
+    }
+
+    public static MutableLiveData<Resource<TechExpoData>> getTechExpoData(){
+        if (techExpoData == null){
+            techExpoData = new MutableLiveData<>();
+            fetchTechExpoData();
+        }
+
+        return techExpoData;
     }
 
 
@@ -187,4 +194,31 @@ public class DataRepository {
             }
         });
     }
+
+    //NOTIFICATION ITEMS FETCHING
+    private static MutableLiveData<Resource<TechExpoData>> techExpoData;
+
+    public static void fetchTechExpoData() {
+        FirebaseDatabase.getInstance().getReference().child("TechExpoData")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        if (!dataSnapshot.exists()) {
+                            techExpoData.postValue(Resource.<TechExpoData>onlyCode(DATA_EMPTY));
+                            return;
+                        }
+
+                        TechExpoData data = dataSnapshot.getValue(TechExpoData.class);
+
+                        techExpoData.postValue(Resource.withValue(data));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        techExpoData.postValue(Resource.<TechExpoData>autoRespond());
+                    }
+                });
+    }
+
 }

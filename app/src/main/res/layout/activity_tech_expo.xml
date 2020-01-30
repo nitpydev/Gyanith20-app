@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.TechExpoActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="?colorPrimary"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/tech_expo_backbtn"
+            style="@style/backbtn"
+            android:backgroundTint="@android:color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/splight"
+            android:text="@string/tech_expo"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <com.barebrains.gyanith20.components.Loader
+        android:id="@+id/techexpo_loader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tech_expo_imgs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/bot_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom">
+
+            <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                android:id="@+id/te_desc_card"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                app:behavior_hideable="false"
+                app:behavior_peekHeight="70dp"
+                app:cardBackgroundColor="?colorPrimary"
+                app:cardElevation="10dp"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+
+                <TextView
+                    android:id="@+id/te_desc"
+                    style="@style/eventDes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_margin="15dp"
+                    android:text="As component we are using (BottomSheetDialog or BottomSheetDialogFragment)is a dialog itself. So its behavior is same as normal dialog, that you can touch outside to dismiss bottom sheet using this method." />
+            </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </FrameLayout>
+    </com.barebrains.gyanith20.components.Loader>
+</FrameLayout>

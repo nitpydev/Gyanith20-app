@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:clickable="false"
-            app:layout_constraintDimensionRatio="1:1.3"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -49,7 +49,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="0.7">
+                    android:layout_weight="1">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -61,50 +61,43 @@
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/accomdation"
                             style="@style/fab"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
                             android:layout_gravity="center"
-                            android:layout_margin="20sp"
-                            android:layout_weight="1"
+                            android:layout_margin="40sp"
                             android:clickable="true"
                             android:padding="30sp"
+                            android:scaleX="1.5"
+                            android:scaleY="1.5"
                             app:backgroundTint="@color/colorAccent"
-                            app:fabCustomSize="70dp"
-                            app:maxImageSize="24dp"
-                            app:srcCompat="@drawable/accommodation" />
+                            app:srcCompat="@drawable/ic_sleep" />
+
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
-                            android:id="@+id/random"
+                            android:id="@+id/tshirt"
                             style="@style/fab"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
                             android:layout_gravity="center"
-                            android:layout_margin="20sp"
-                            android:layout_marginTop="20sp"
-                            android:layout_marginRight="20sp"
-                            android:layout_marginBottom="20sp"
-                            android:layout_weight="1"
+                            android:layout_margin="40sp"
                             android:clickable="true"
+                            android:scaleX="1.5"
+                            android:scaleY="1.5"
                             app:backgroundTint="@color/colorAccent"
-                            app:fabCustomSize="70dp"
-                            app:maxImageSize="24dp"
-                            app:srcCompat="@drawable/dice" />
+                            app:srcCompat="@drawable/ic_tshirt" />
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/fab"
                             style="@style/fab"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
                             android:layout_gravity="center"
-                            android:layout_margin="20sp"
-                            android:layout_marginTop="20sp"
-                            android:layout_marginRight="20sp"
-                            android:layout_marginBottom="20sp"
+                            android:layout_margin="40sp"
                             android:clickable="true"
-                            app:backgroundTint="@color/colorAccent"
-                            app:fabCustomSize="70dp"
-                            app:maxImageSize="38dp"
 
+                            android:scaleX="1.5"
+                            android:scaleY="1.5"
+                            app:backgroundTint="@color/colorAccent"
                             app:srcCompat="@drawable/ic_tick2" />
                     </LinearLayout>
                 </FrameLayout>
@@ -118,7 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:columnCount="2"
-            app:layout_constraintDimensionRatio="1:1.1"
+            app:layout_constraintDimensionRatio="1:1.65"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frameLayout"
@@ -133,7 +126,6 @@
                 android:layout_marginTop="7.5dp"
                 android:layout_marginEnd="7.5dp"
                 android:layout_marginBottom="7.5dp"
-                android:background="@drawable/wgrad"
                 android:minHeight="100dp"
                 android:tag="@string/workshop"
                 app:cardBackgroundColor="@color/colorBackdropAccent"
@@ -271,14 +263,14 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/g"
+                android:id="@+id/t"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="7.5dp"
                 android:layout_marginTop="7.5dp"
                 android:layout_marginEnd="7.5dp"
                 android:layout_marginBottom="7.5dp"
-                android:tag="@string/guest_lectures"
+                android:tag="@string/tech_expo"
                 app:cardBackgroundColor="@color/colorBackdropAccent"
                 app:cardCornerRadius="5dp"
                 app:layout_columnWeight="1"
@@ -299,7 +291,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="3"
                         android:tint="@android:color/white"
-                        app:srcCompat="@drawable/ic_mic" />
+                        app:srcCompat="@drawable/ic_tech_expo" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -308,7 +300,97 @@
                         android:layout_weight="1.5"
                         android:fontFamily="@font/poppinsr"
                         android:gravity="center"
-                        android:text="@string/guest_lectures"
+                        android:text="@string/tech_expo"
+                        android:textColor="@color/txtColor"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/h"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="7.5dp"
+                android:layout_marginTop="7.5dp"
+                android:layout_marginEnd="7.5dp"
+                android:layout_marginBottom="7.5dp"
+                android:tag="@string/tech_expo"
+                app:cardBackgroundColor="@color/colorBackdropAccent"
+                app:cardCornerRadius="5dp"
+                app:layout_columnWeight="1"
+                app:layout_rowWeight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ppgrad"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="3"
+                        android:tint="@android:color/white"
+                        app:srcCompat="@drawable/ic_hackathon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="1.5"
+                        android:fontFamily="@font/poppinsr"
+                        android:gravity="center"
+                        android:text="@string/hackathon"
+                        android:textColor="@color/txtColor"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/pe"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="7.5dp"
+                android:layout_marginTop="7.5dp"
+                android:layout_marginEnd="7.5dp"
+                android:layout_marginBottom="7.5dp"
+                android:tag="@string/tech_expo"
+                app:cardBackgroundColor="@color/colorBackdropAccent"
+                app:cardCornerRadius="5dp"
+                app:layout_columnWeight="1"
+                app:layout_rowWeight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/hgrad"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="3"
+                        android:tint="@android:color/white"
+                        app:srcCompat="@drawable/ic_project_expo" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="1.5"
+                        android:fontFamily="@font/poppinsr"
+                        android:gravity="center"
+                        android:text="@string/project_expo"
                         android:textColor="@color/txtColor"
                         android:textSize="14sp" />
                 </LinearLayout>

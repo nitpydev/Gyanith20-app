@@ -1,7 +1,6 @@
 package com.barebrains.gyanith20.fragments;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +14,13 @@ import androidx.cardview.widget.CardView;
 import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.activities.TechExpoActivity;
 import com.barebrains.gyanith20.activities.AboutActivity;
 import com.barebrains.gyanith20.activities.Accommodation;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.activities.EventsCategoryActivity;
 import com.barebrains.gyanith20.activities.Profile2Activity;
+import com.barebrains.gyanith20.activities.TShirtActivity;
 import com.barebrains.gyanith20.components.ImageSlider;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.interfaces.Resource;
@@ -64,7 +65,7 @@ public class HomeFragment extends mFragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         imgSlider = root.findViewById(R.id.img_slider);
         FloatingActionButton trend = root.findViewById(R.id.accomdation);
-        FloatingActionButton random = root.findViewById(R.id.random);
+        FloatingActionButton random = root.findViewById(R.id.tshirt);
         FloatingActionButton dev = root.findViewById(R.id.fab);
         DatabaseReference imgurl = FirebaseDatabase.getInstance().getReference().child("ImageUrls");
         final StorageReference slidesFolderRef = FirebaseStorage.getInstance().getReference().child("/HomeImageSlides");
@@ -93,25 +94,59 @@ public class HomeFragment extends mFragment {
         CardView te = root.findViewById(R.id.te);
         CardView nte = root.findViewById(R.id.ne);
         CardView ps = root.findViewById(R.id.p);
-        CardView gl = root.findViewById(R.id.g);
+        CardView t = root.findViewById(R.id.t);
         CardView au = root.findViewById(R.id.au);
+        CardView pe = root.findViewById(R.id.pe);
+        CardView h = root.findViewById(R.id.h);
 
         trend.setOnClickListener(accclk);
-        random.setOnClickListener(rndclk);
         dev.setOnClickListener(devclk);
+        random.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), TShirtActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         w.setOnClickListener(eventCategoryClick);
         te.setOnClickListener(eventCategoryClick);
         nte.setOnClickListener(eventCategoryClick);
         ps.setOnClickListener(eventCategoryClick);
-        gl.setOnClickListener(eventCategoryClick);
+
+
+        t.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), TechExpoActivity.class);
+                startActivity(intent);
+            }
+        });
 
         au.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getContext(), AboutActivity.class);
                 startActivity(i);
+            }
+        });
+
+        pe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), EventDetailsActivity.class);
+                intent.putExtra("EXTRA_ID","29");
+                getContext().startActivity(intent);
+            }
+        });
+
+        h.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), EventDetailsActivity.class);
+                intent.putExtra("EXTRA_ID","26");
+                getContext().startActivity(intent);
             }
         });
 
@@ -131,7 +166,7 @@ public class HomeFragment extends mFragment {
         ps.setAnimation(fromLeft[2]);
 
         te.setAnimation(fromRight[0]);
-        gl.setAnimation(fromRight[1]);
+        t.setAnimation(fromRight[1]);
         au.setAnimation(fromRight[2]);
         /*
         ObjectAnimator wa = ObjectAnimator.ofFloat(w, "translationX", -300f, 0f);

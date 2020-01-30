@@ -5,32 +5,24 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.barebrains.gyanith20.AddScheduleActivity;
+import com.barebrains.gyanith20.activities.AddScheduleActivity;
 import com.barebrains.gyanith20.R;
-import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.adapters.LiveListAdapter;
 import com.barebrains.gyanith20.adapters.scheduleViewHolder;
-import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.ScheduleItem;
 import com.barebrains.gyanith20.others.mFragment;
 import com.barebrains.gyanith20.statics.ScheduleModel;
-import com.barebrains.gyanith20.statics.Util;
 import com.google.android.material.tabs.TabLayout;
-
-import java.util.Calendar;
 
 
 public class ScheduleFragment extends mFragment {

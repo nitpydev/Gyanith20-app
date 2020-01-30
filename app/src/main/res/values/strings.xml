@@ -33,7 +33,9 @@
     <string name="tech_Events">Technical Events</string>
     <string name="non_tech_Events">Non Technical Events</string>
     <string name="pro_shows">Pro Shows</string>
-    <string name="guest_lectures">Tech Expo</string>
+    <string name="hackathon">Hackathon</string>
+    <string name="project_expo">Project Expo</string>
+    <string name="tech_expo">Tech Expo</string>
     <string name="about_us">About us</string>
 
     <string name="msg">Your account was created successfully, please Verify your email and then login into your account</string>
