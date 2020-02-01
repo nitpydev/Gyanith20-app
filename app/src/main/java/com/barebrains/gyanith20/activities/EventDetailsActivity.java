@@ -172,7 +172,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         findViewById(R.id.reg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(EventDetailsActivity.this, "Registration is yet to open", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -232,7 +232,14 @@ public class EventDetailsActivity extends AppCompatActivity {
                         Log.d("asd","error");
                         break;
                     }
-                    textView.setText(eventItem.rules);
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                    {
+                        textView.setText(Html.fromHtml(eventItem.rules,Html.FROM_HTML_MODE_LEGACY));
+                    }
+                    else
+                    {
+                        textView.setText(Html.fromHtml(eventItem.rules));
+                    }
                     loader.loaded();
                     break;
                 case 2:
@@ -242,7 +249,14 @@ public class EventDetailsActivity extends AppCompatActivity {
                         loader.error();
                         break;
                     }
-                    textView.setText(eventItem.contact);
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                    {
+                        textView.setText(Html.fromHtml(eventItem.contact,Html.FROM_HTML_MODE_LEGACY));
+                    }
+                    else
+                    {
+                        textView.setText(Html.fromHtml(eventItem.contact));
+                    }
                     loader.loaded();
                     break;
             }
