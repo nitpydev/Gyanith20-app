@@ -174,6 +174,10 @@ public class EventDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //intent to instruction with ptps key = EXTRAS_PTPS
+
+                Intent i = new Intent(EventDetailsActivity.this, Instruction.class);
+                i.putExtra("EXTRAS_PTPS", "135");
+                startActivity(i);
             }
         });
 

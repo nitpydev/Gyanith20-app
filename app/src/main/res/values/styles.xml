@@ -19,6 +19,13 @@
         <item name="android:textColorSecondary">@color/colorSecondary</item>
     </style>
 
+    <style name="Dialogue" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="actionMenuTextColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/blackbg</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="colorBackgroundFloating">@color/colorPrimary</item>
+    </style>
+
     <style name="fab" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="android:layout_margin">16dp</item>
         <item name="android:layout_width">wrap_content</item>
