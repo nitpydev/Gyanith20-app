@@ -3,6 +3,9 @@ package com.barebrains.gyanith20.activities;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -33,7 +36,10 @@ import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
+import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.statics.EventsModel;
+import com.barebrains.gyanith20.statics.GyanithUserManager;
+import com.barebrains.gyanith20.statics.NetworkManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -53,6 +59,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     AppBarLayout appBarLayout;
     TextView title;
     TabLayout tabLayout;
+    String ptps, id;
 
 
     @Override
@@ -90,7 +97,8 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                 if (res.handleWithLoader(loader))
                     return;
-
+                id = res.value.id;
+                ptps = res.value.getMax_ptps();
                 fillTopUI(res.value);
                 setUpViewPager(res.value);
             }
@@ -161,7 +169,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void setUpViewPager(EventItem eventItem){
+    private void setUpViewPager(final EventItem eventItem){
 
         ViewPager viewPager = findViewById(R.id.event_details_viewpager);
         tabLayout = findViewById(R.id.dtab);
@@ -173,11 +181,26 @@ public class EventDetailsActivity extends AppCompatActivity {
         findViewById(R.id.reg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //intent to instruction with ptps key = EXTRAS_PTPS
+                if(NetworkManager.internet_value) {
 
-                Intent i = new Intent(EventDetailsActivity.this, Instruction.class);
-                i.putExtra("EXTRAS_PTPS", "135");
-                startActivity(i);
+                    GyanithUserManager.getCurrentUser().observe(EventDetailsActivity.this, new Observer<Resource<GyanithUser>>() {
+                        @Override
+                        public void onChanged(Resource<GyanithUser> user) {
+                            if (user.value != null) {
+                                Intent i = new Intent(EventDetailsActivity.this, Instruction.class);
+                                i.putExtra("EXTRAS_PTPS",ptps);
+                                i.putExtra("EXTRAS_ID", id);
+                                startActivity(i);
+                            } else {
+                                Toast.makeText(EventDetailsActivity.this, "Sign in to Register", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                }else
+                {
+                    Toast.makeText(EventDetailsActivity.this, "check your internet",Toast.LENGTH_LONG).show();
+                }
             }
         });
 

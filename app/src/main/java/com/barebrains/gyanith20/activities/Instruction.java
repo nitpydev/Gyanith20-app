@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +27,8 @@ public class Instruction extends AppCompatActivity {
         AlertDialog al;
         AlertDialog.Builder bu ;
         Intent in;
+        char choosen;
+        int i;
         DatabaseReference ins;
         String url , mem, eve_id;
     @Override
@@ -42,10 +45,15 @@ public class Instruction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Dialogue_layout(context);
-                Web.WebFactory.with(Instruction.this).load(url);
+
             }
         });
 
+    }
+    private  void Register(String id,char ptps)
+    {
+        url = "http://gyanith.org/register.php?id="+id+"&ptps="+ptps;
+        Web.WebFactory.with(Instruction.this).title("Register").load(url).start();
     }
     private void Dialogue_layout(final Context cnt)
     {
@@ -55,14 +63,15 @@ public class Instruction extends AppCompatActivity {
         lin.setOrientation(LinearLayout.VERTICAL);
         Button[] btn = new Button[5];
         if(mem != null)
-        for(int i = 0; i < mem.length(); i++ )
+        for( i = 0; i < mem.length(); i++ )
         {
+            choosen = mem.charAt(i);
             btn[i] = new Button(cnt);
             btn[i].setText("Register For "+ mem.charAt(i));
             btn[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    register(mem,eve_id);
+                    Register(eve_id,choosen);
 
                 }
             });
@@ -73,10 +82,7 @@ public class Instruction extends AppCompatActivity {
         al = bu.create();
         al.show();
     }
-    private  void register(String id, String ptps)
-    {
-        url = "http://gyanith.org/register.php?id="+id+"&ptps="+ptps;
-    }
+
     private void load_instruct()
     {
         final TextView instruct = findViewById(R.id.instruct);
