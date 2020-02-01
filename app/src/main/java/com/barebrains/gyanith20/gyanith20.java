@@ -38,6 +38,7 @@ public class gyanith20 extends MultiDexApplication {
         CreateProgressNotificationChannel();
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
+
         //NETWORKING INITIATIONS
         VolleyManager.setRequestQueue(this);
         NetworkManager.init(getApplicationContext());

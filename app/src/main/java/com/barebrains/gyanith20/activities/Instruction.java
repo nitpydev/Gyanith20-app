@@ -3,6 +3,7 @@ package com.barebrains.gyanith20.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -13,8 +14,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.fragments.CommunityFragment;
+import com.barebrains.gyanith20.fragments.botSheet;
+import com.barebrains.gyanith20.interfaces.Resource;
+import com.barebrains.gyanith20.interfaces.ResultListener;
+import com.barebrains.gyanith20.models.GyanithUser;
+import com.barebrains.gyanith20.statics.GyanithUserManager;
+import com.barebrains.gyanith20.statics.NetworkManager;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,65 +32,111 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class Instruction extends AppCompatActivity {
-        Button btn, clg_fev;
-        Context context;
-        AlertDialog al;
+
+    public final static String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
+    public final static String EXTRA_MAX_PTPS = "EXTRA_MAX_PTPS";
+
+        Button web_reg_btn, clg_fev;
+
         AlertDialog.Builder bu ;
         Intent in;
         char choosen;
         int i;
         DatabaseReference ins;
         String url , mem, eve_id;
+
+        private Integer max_ptps;
+        private String eventId;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instruction);
         load_instruct();
-        btn = findViewById(R.id.ins_btn);
+        web_reg_btn = findViewById(R.id.web_reg_btn);
         clg_fev = findViewById(R.id.clf_fever);
-        context = this;
-        bu = new AlertDialog.Builder(context, R.style.Dialogue);
-        in =  getIntent();
-        btn.setOnClickListener(new View.OnClickListener() {
+
+        extractData();
+
+        web_reg_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialogue_layout(context);
+                GyanithUserManager.getCurrentUser().observe(Instruction.this, new Observer<Resource<GyanithUser>>() {
+                    @Override
+                    public void onChanged(Resource<GyanithUser> res) {
+                        if (res.value != null){//USER SIGNED IN
+                            if (!NetworkManager.internet_value) {
+                                Toast.makeText(Instruction.this, "No Internet", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                           showDialog();
+                        }
+                        else {//NOT SIGNED USER
+                            Toast.makeText(Instruction.this, "Sign in to Register", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Instruction.this,LoginActivity.class);
+                            startActivity(intent);
+                        }
+                        //Removing observer as it is just a click
+                        GyanithUserManager.getCurrentUser().removeObserver(this);
+                    }
+
+
+                });
 
             }
         });
 
     }
-    private  void Register(String id,char ptps)
-    {
-        url = "http://gyanith.org/register.php?id="+id+"&ptps="+ptps;
-        Web.WebFactory.with(Instruction.this).title("Register").load(url).start();
-    }
-    private void Dialogue_layout(final Context cnt)
-    {
-         mem = in.getStringExtra("EXTRAS_PTPS");
-         eve_id = in.getStringExtra("EXTRAS_ID");
-        LinearLayout lin = new LinearLayout(cnt);
-        lin.setOrientation(LinearLayout.VERTICAL);
-        Button[] btn = new Button[5];
-        if(mem != null)
-        for( i = 0; i < mem.length(); i++ )
-        {
-            choosen = mem.charAt(i);
-            btn[i] = new Button(cnt);
-            btn[i].setText("Register For "+ mem.charAt(i));
-            btn[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Register(eve_id,choosen);
 
-                }
-            });
-            lin.addView(btn[i]);
-        }
-        bu.setTitle("REGISTER");
-        bu.setView(lin);
-        al = bu.create();
-        al.show();
+    private void showDialog(){
+        final botSheet bs = botSheet.makeBotSheet(getSupportFragmentManager())
+                .setTitle("Register For : ")
+                .setContentRes(R.layout.bot_content_ptps_count);
+
+        bs.setContentListener(new ResultListener<View>(){
+                    @Override
+                    public void OnResult(View content) {
+                        BottomNavigationView navView = (BottomNavigationView)content;
+
+                        for (int i = getIndex(max_ptps) + 1;i < 3;i++)
+                            navView.getMenu().getItem(i).setVisible(false);
+
+                        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                            @Override
+                            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                                showWeb(item.getOrder());
+
+                                bs.dismiss();
+                                return true;
+                            }
+                        });
+                    }
+                }).show();
+    }
+
+    private void showWeb(Integer index){
+        url = "http://gyanith.org/register.php?id="+eventId+"&ptps="+ getPtps(index);
+
+        Web.WebFactory.with(this)
+                .title("Register")
+                .load(url)
+                .start();
+    }
+
+    private void extractData(){
+        Intent intent = getIntent();
+        String mp = intent.getStringExtra(EXTRA_MAX_PTPS);
+        max_ptps = (mp != null)?Integer.parseInt(mp):5;
+        eventId = intent.getStringExtra(EXTRA_EVENT_ID);
+    }
+
+    private String getPtps(Integer i){
+       return ((Integer)(2*i + 1)).toString();
+    }
+
+    private int getIndex(int i){
+       return (i-1)/2;
     }
 
     private void load_instruct()

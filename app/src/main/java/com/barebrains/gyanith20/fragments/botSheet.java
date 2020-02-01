@@ -1,20 +1,18 @@
 package com.barebrains.gyanith20.fragments;
 
 import android.app.Dialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
+import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class botSheet extends BottomSheetDialogFragment {
@@ -26,8 +24,10 @@ public class botSheet extends BottomSheetDialogFragment {
 
     private String title,body;
     private String action;
+    private Integer contentResID;
     
-    private CompletionListener listener;
+    private CompletionListener actionListener;
+    private ResultListener<View> contentListener;
 
     private botSheet() {
     }
@@ -52,9 +52,19 @@ public class botSheet extends BottomSheetDialogFragment {
         this.action = action;
         return this;
     }
+
+    public botSheet setContentRes(Integer resId){
+        this.contentResID = resId;
+        return this;
+    }
+
+    public botSheet setContentListener(ResultListener<View> contentListener){
+        this.contentListener = contentListener;
+        return this;
+    }
     
     public botSheet setActionListener(CompletionListener listener){
-        this.listener = listener;
+        this.actionListener = listener;
         return this;
     }
 
@@ -67,25 +77,56 @@ public class botSheet extends BottomSheetDialogFragment {
     public void setupDialog(Dialog dialog, int style) {
         super.setupDialog(dialog, style);
 
-        //Set the custom view
+        //Creating base botSheet
         View botRoot = LayoutInflater.from(getContext()).inflate(R.layout.botsheet, null);
-        ((TextView)botRoot.findViewById(R.id.bot_title)).setText(title);
-        ((TextView)botRoot.findViewById(R.id.bot_body)).setText(body);
-        TextView btn = botRoot.findViewById(R.id.bot_btn);
+
+        TextView bot_Title = botRoot.findViewById(R.id.bot_title);
+        TextView bot_body = botRoot.findViewById(R.id.bot_body);
+        TextView actionBtn = botRoot.findViewById(R.id.bot_btn);
+        FrameLayout contentHolder = botRoot.findViewById(R.id.bot_content_holder);
+
+        //Set title if exists
+        if (title != null) {
+            bot_Title.setVisibility(View.VISIBLE);
+            bot_Title.setText(title);
+        } else
+            bot_Title.setVisibility(View.GONE);
+
+        //Set body if exists
+        if (body != null) {
+            bot_body.setVisibility(View.VISIBLE);
+            bot_body.setText(body);
+        } else
+            bot_body.setVisibility(View.GONE);
+
+        //set Content if it exists and call its listener
+        if (contentResID != null) {
+            contentHolder.setVisibility(View.VISIBLE);
+            View content = LayoutInflater.from(getContext()).inflate(contentResID,contentHolder,false);
+            contentHolder.addView(content);
+            if (contentListener != null)
+                contentListener.OnResult(content);
+        }
+        else {
+            contentHolder.setVisibility(View.GONE);
+        }
+
+
+        //Set Action btn if exists
         if (action != null) {
-            btn.setText(action);
-            btn.setVisibility(View.VISIBLE);
-            btn.setOnClickListener(new View.OnClickListener() {
+            actionBtn.setText(action);
+            actionBtn.setVisibility(View.VISIBLE);
+            actionBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                  if (listener != null)
-                      listener.OnComplete();
+                  if (actionListener != null)
+                      actionListener.OnComplete();
                 }
             });
         }
         else{
-            btn.setVisibility(View.GONE);
-            btn.setOnClickListener(null);
+            actionBtn.setVisibility(View.GONE);
+            actionBtn.setOnClickListener(null);
         }
 
         dialog.setContentView(botRoot);
@@ -93,15 +134,15 @@ public class botSheet extends BottomSheetDialogFragment {
 
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
-        if (listener != null)
-            listener.OnError(null);
+        if (actionListener != null)
+            actionListener.OnError(null);
         super.onCancel(dialog);
     }
 
     @Override
     public void onDestroyView() {
-        if (listener != null)
-            listener.OnError(null);
+        if (actionListener != null)
+            actionListener.OnError(null);
         super.onDestroyView();
     }
 }

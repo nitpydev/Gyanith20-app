@@ -24,6 +24,13 @@
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
+    <FrameLayout
+        android:id="@+id/bot_content_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </FrameLayout>
+
     <TextView
         android:id="@+id/bot_btn"
         android:layout_width="wrap_content"

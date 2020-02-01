@@ -1,8 +1,7 @@
 package com.barebrains.gyanith20.statics;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.util.LruCache;
+import android.webkit.CookieManager;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -10,41 +9,25 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
+
+import java.net.CookieHandler;
+import java.net.CookiePolicy;
 
 public class VolleyManager {
     public static RequestQueue requestQueue;
-    public static ImageLoader imageLoader;
 
     public static void setRequestQueue(Context context){
         if (requestQueue != null)
             return;
+
+
+         //new CookieManager( cookies.getInstance(), CookiePolicy.ACCEPT_ALL );
+        CookieHandler.setDefault( new WebkitCookieManagerProxy(cookies.getInstance(),CookiePolicy.ACCEPT_ALL));
+
         Cache cache = new DiskBasedCache(context.getCacheDir(), 10 * 1024 * 1024);
         Network network = new BasicNetwork(new HurlStack());
         requestQueue = new RequestQueue(cache, network);
         requestQueue.start();
-
-        imageLoader = new ImageLoader(requestQueue,
-                new ImageLoader.ImageCache() {
-
-                    final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-
-                    final int cacheSize = maxMemory / 8;
-
-                    private final LruCache<String, Bitmap>
-                            cache = new LruCache<String, Bitmap>(cacheSize);
-
-                    @Override
-                    public Bitmap getBitmap(String url) {
-                        return cache.get(url);
-                    }
-
-                    @Override
-                    public void putBitmap(String url, Bitmap bitmap) {
-                        cache.put(url, bitmap);
-                    }
-                });
     }
 }
+

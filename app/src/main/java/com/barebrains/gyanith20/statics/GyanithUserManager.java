@@ -1,6 +1,7 @@
 package com.barebrains.gyanith20.statics;
 
 import android.util.Log;
+import android.webkit.CookieManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -10,8 +11,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -21,7 +22,6 @@ import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.models.SignUpDetails;
-import com.barebrains.gyanith20.others.Response;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -38,6 +38,11 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.CookieHandler;
+import java.net.CookiePolicy;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -162,9 +167,12 @@ public class GyanithUserManager {
                     GyanithUser user = Util.jsonToGyanithUser(response.toString(),token);
                     SaveGyanithUser(user);
 
-                    loggedUser.postValue(Resource.withValue(user));
 
                     StartNewUserSession(user.gyanithId);
+                    webLogin(user.gyanithId,user.token);
+
+                    loggedUser.postValue(Resource.withValue(user));
+
                     Log.d("asd","User Signed In");
                 } else if (response.has("reg"))//TODO:CHECK HERE
                 {//TOKEN EXPIRED
@@ -194,7 +202,7 @@ public class GyanithUserManager {
         StringRequest signUpRequest = new StringRequest(Request.Method.POST,url,new com.android.volley.Response.Listener<String>(){
             @Override
             public void onResponse(String response) {
-                JSONObject obj = null;
+                JSONObject obj;
                 try {
                     obj = new JSONObject(response);
                     String result = obj.getString("result");
@@ -317,6 +325,24 @@ public class GyanithUserManager {
 
     }
 
+    private static void webLogin(@NonNull String gyid,@NonNull String token){
+        String url = "http://gyanith.org/verify.php?code=" + token + "&gyid=" + gyid;
+
+        StringRequest request = new StringRequest(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //SUCCESS
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("asd","webLogin Error : " + error.getMessage());
+            }
+        });
+
+        VolleyManager.requestQueue.add(request);
+    }
+
     //save user of the current session even in offline mode
     private static void SaveGyanithUser(GyanithUser user) {
         Gson gson = new Gson();
@@ -339,6 +365,7 @@ public class GyanithUserManager {
             return;
         sp.edit().remove(GYANITH_USER_SP_KEY).apply();
         FirebaseAuth.getInstance().signOut();
+        CookieManager.getInstance().removeAllCookie();
         loggedUser.postValue(Resource.<GyanithUser>withValue(null));
         if (toast != null)
             Toast.makeText(gyanith20.appContext, toast, Toast.LENGTH_SHORT).show();

@@ -27,7 +27,7 @@
     android:layout_marginTop="10dp">
     <Button
         style="@style/txtBtn"
-        android:id="@+id/ins_btn"
+        android:id="@+id/web_reg_btn"
         android:text="REGISTER"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

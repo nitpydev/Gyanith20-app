@@ -51,6 +51,8 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.barebrains.gyanith20.activities.Instruction.EXTRA_EVENT_ID;
+import static com.barebrains.gyanith20.activities.Instruction.EXTRA_MAX_PTPS;
 import static com.barebrains.gyanith20.gyanith20.sp;
 
 public class EventDetailsActivity extends AppCompatActivity {
@@ -188,8 +190,8 @@ public class EventDetailsActivity extends AppCompatActivity {
                         public void onChanged(Resource<GyanithUser> user) {
                             if (user.value != null) {
                                 Intent i = new Intent(EventDetailsActivity.this, Instruction.class);
-                                i.putExtra("EXTRAS_PTPS",ptps);
-                                i.putExtra("EXTRAS_ID", id);
+                                i.putExtra(EXTRA_MAX_PTPS,ptps);
+                                i.putExtra(EXTRA_EVENT_ID, id);
                                 startActivity(i);
                             } else {
                                 Toast.makeText(EventDetailsActivity.this, "Sign in to Register", Toast.LENGTH_SHORT).show();
@@ -199,7 +201,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                 }else
                 {
-                    Toast.makeText(EventDetailsActivity.this, "check your internet",Toast.LENGTH_LONG).show();
+                    Toast.makeText(EventDetailsActivity.this, "No Internet",Toast.LENGTH_LONG).show();
                 }
             }
         });

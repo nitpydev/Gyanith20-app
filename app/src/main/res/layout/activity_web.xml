@@ -20,7 +20,9 @@
         <ImageView
             android:id="@+id/web_close_btn"
             style="@style/backbtn"
-            android:backgroundTint="@android:color/white" />
+            android:backgroundTint="@android:color/white"
+            android:clickable="true"
+            android:focusable="true"/>
 
         <TextView
             android:id="@+id/web_title"
