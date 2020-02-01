@@ -1,6 +1,7 @@
 package com.barebrains.gyanith20.activities;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -172,7 +173,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         findViewById(R.id.reg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //intent to instruction with ptps key = EXTRAS_PTPS
             }
         });
 
