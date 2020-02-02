@@ -39,8 +39,8 @@
 
                     <com.barebrains.gyanith20.components.ImageSlider
                         android:id="@+id/img_slider"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="444dp"
+                        android:layout_height="278dp"
                         android:clickable="true"
                         android:focusable="true" />
 
@@ -61,14 +61,15 @@
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/accomdation"
                             style="@style/fab"
-                            android:layout_width="56dp"
+                            android:layout_width="0dp"
                             android:layout_height="56dp"
                             android:layout_gravity="center"
-                            android:layout_margin="40sp"
+                            android:layout_margin="30dp"
+                            android:layout_weight="1"
                             android:clickable="true"
                             android:padding="30sp"
-                            android:scaleX="1.5"
-                            android:scaleY="1.5"
+                            android:scaleX="@dimen/fab_scale"
+                            android:scaleY="@dimen/fab_scale"
                             app:backgroundTint="@color/colorAccent"
                             app:srcCompat="@drawable/ic_sleep" />
 
@@ -76,27 +77,29 @@
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/tshirt"
                             style="@style/fab"
-                            android:layout_width="56dp"
+                            android:layout_width="0dp"
                             android:layout_height="56dp"
                             android:layout_gravity="center"
-                            android:layout_margin="40sp"
+                            android:layout_margin="30dp"
+                            android:layout_weight="1"
                             android:clickable="true"
-                            android:scaleX="1.5"
-                            android:scaleY="1.5"
+                            android:scaleX="@dimen/fab_scale"
+                            android:scaleY="@dimen/fab_scale"
                             app:backgroundTint="@color/colorAccent"
                             app:srcCompat="@drawable/ic_tshirt" />
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/fab"
                             style="@style/fab"
-                            android:layout_width="56dp"
+                            android:layout_width="0dp"
                             android:layout_height="56dp"
                             android:layout_gravity="center"
-                            android:layout_margin="40sp"
-                            android:clickable="true"
 
-                            android:scaleX="1.5"
-                            android:scaleY="1.5"
+                            android:layout_margin="30dp"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:scaleX="@dimen/fab_scale"
+                            android:scaleY="@dimen/fab_scale"
                             app:backgroundTint="@color/colorAccent"
                             app:srcCompat="@drawable/ic_tick2" />
                     </LinearLayout>

@@ -3,7 +3,6 @@ package com.barebrains.gyanith20.components;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.ScaleAnimation;
@@ -14,7 +13,7 @@ import androidx.annotation.Nullable;
 
 public class AnimatedToggle extends ToggleButton {
 
-    private OnCheckedChangeListener listener;
+    public OnCheckedChangeListener listener;
 
     public AnimatedToggle(Context context) {
         super(context);
@@ -36,36 +35,20 @@ public class AnimatedToggle extends ToggleButton {
         scaleAnimation.setDuration(500);
         BounceInterpolator bounceInterpolator = new BounceInterpolator();
         scaleAnimation.setInterpolator(bounceInterpolator);
-        listener = new OnCheckedChangeListener(){
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                //animation
-                compoundButton.startAnimation(scaleAnimation);
-            }};
 
-        setOnCheckedChangeListener(null);
-    }
-
-
-    @Override
-    public void setOnCheckedChangeListener(@Nullable final OnCheckedChangeListener listener) {
-
-        super.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+        setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                AnimatedToggle.this.listener.onCheckedChanged(compoundButton,b);
+                compoundButton.startAnimation(scaleAnimation);
 
                 if (listener != null)
-                listener.onCheckedChanged(compoundButton,b);
+                    listener.onCheckedChanged(compoundButton, b);
             }
         });
     }
 
-    public void setSafeChecked(boolean state){
-        if (state != isChecked()) {
-            performClick();
-        }
+    public void setCheckListener(OnCheckedChangeListener listener){
+        this.listener = listener;
     }
-
 
 }

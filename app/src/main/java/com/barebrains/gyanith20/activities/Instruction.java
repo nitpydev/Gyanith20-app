@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.R;
+import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.fragments.CommunityFragment;
 import com.barebrains.gyanith20.fragments.botSheet;
 import com.barebrains.gyanith20.interfaces.Resource;
@@ -24,6 +25,7 @@ import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.NetworkManager;
+import com.barebrains.gyanith20.statics.Util;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,22 +38,24 @@ public class Instruction extends AppCompatActivity {
     public final static String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
     public final static String EXTRA_MAX_PTPS = "EXTRA_MAX_PTPS";
 
-        Button web_reg_btn, clg_fev;
+    Button web_reg_btn, clg_fev;
+    String url;
 
-        AlertDialog.Builder bu ;
-        Intent in;
-        char choosen;
-        int i;
-        DatabaseReference ins;
-        String url , mem, eve_id;
-
-        private Integer max_ptps;
-        private String eventId;
+    private Integer max_ptps;
+    private String eventId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instruction);
+
+        findViewById(R.id.instr_backbtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Instruction.super.onBackPressed();
+            }
+        });
+
         load_instruct();
         web_reg_btn = findViewById(R.id.web_reg_btn);
         clg_fev = findViewById(R.id.clf_fever);
@@ -141,24 +145,25 @@ public class Instruction extends AppCompatActivity {
 
     private void load_instruct()
     {
+        final Loader loader = findViewById(R.id.instr_loader);
         final TextView instruct = findViewById(R.id.instruct);
-        ins = FirebaseDatabase.getInstance().getReference().child("instructions");
-        ins.addValueEventListener(new ValueEventListener() {
+        DatabaseReference instrRef = FirebaseDatabase.getInstance().getReference().child("instructions");
+        instrRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                String count ;
-                for(DataSnapshot ds : dataSnapshot.getChildren())
-                {
-                    int i = 1;
-                    count = Integer.toString(i);
-                    instruct.append("\n"+count + ". " +ds.getValue().toString());
+                if (!dataSnapshot.exists()){
+                    loader.error();
+                    return;
                 }
+
+                loader.loaded();
+                String raw = dataSnapshot.getValue(String.class);
+                instruct.setText(Util.fromHTML(raw));
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                loader.error();
             }
         });
     }

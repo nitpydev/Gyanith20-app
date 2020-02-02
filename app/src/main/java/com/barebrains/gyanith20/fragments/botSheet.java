@@ -99,7 +99,7 @@ public class botSheet extends BottomSheetDialogFragment {
         } else
             bot_body.setVisibility(View.GONE);
 
-        //set Content if it exists and call its listener
+        //set Content if it exists and call its btnListener
         if (contentResID != null) {
             contentHolder.setVisibility(View.VISIBLE);
             View content = LayoutInflater.from(getContext()).inflate(contentResID,contentHolder,false);

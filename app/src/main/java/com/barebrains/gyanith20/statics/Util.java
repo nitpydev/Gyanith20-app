@@ -5,7 +5,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.method.DateTimeKeyListener;
 import android.util.Log;
 import android.util.Pair;
@@ -38,6 +41,19 @@ import java.util.Date;
 import java.util.List;
 
 public class Util {
+
+    public static Spanned fromHTML(String raw){
+        if (raw == null)
+            return null;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        {
+            return Html.fromHtml(raw,Html.FROM_HTML_MODE_LEGACY);
+        }
+        else
+        {
+            return Html.fromHtml(raw);
+        }
+    }
 
     public static StorageReference[] getStorageRefs(List<String> ids,StorageReference parent){
         StorageReference[] storageReferences = new StorageReference[ids.size()];

@@ -50,7 +50,7 @@ public class PostsFeed extends SwipeRefreshLayout {
 
         loader.addView(recyclerView,layoutParams);
         layoutParams.setMargins(15,15,15,15);
-        loader.set_empty_error("Tap post button and add a post that end up here");
+        loader.set_empty_error("Tap ➕ button to add a post that end up here");
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
     }

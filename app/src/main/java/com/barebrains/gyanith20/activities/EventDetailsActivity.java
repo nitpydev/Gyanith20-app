@@ -230,12 +230,10 @@ public class EventDetailsActivity extends AppCompatActivity {
                 if(position == 1)
                     position++;
 
-
+            NestedScrollView scrollView = new NestedScrollView(EventDetailsActivity.this);
+            scrollView.addView(textView);
             switch (position) {
                 case 0:
-                    NestedScrollView scrollView = new NestedScrollView(EventDetailsActivity.this);
-                    scrollView.addView(textView);
-                    loader.addView(scrollView);
                     if (eventItem.des == null || eventItem.des.equals("")) {
                         loader.error(0);
                         break;
@@ -255,8 +253,6 @@ public class EventDetailsActivity extends AppCompatActivity {
                         tabLayout.getTabAt(1).setText(pageTitles[1]);
                     }
 
-                    loader.addView(textView);
-
                     if (eventItem.rules == null || eventItem.rules.equals("")) {
                         loader.error();
                         Log.d("asd","error");
@@ -273,8 +269,6 @@ public class EventDetailsActivity extends AppCompatActivity {
                     loader.loaded();
                     break;
                 case 2:
-                    loader.addView(textView);
-
                     if (eventItem.contact == null || eventItem.contact.equals("")) {
                         loader.error();
                         break;
@@ -290,7 +284,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     loader.loaded();
                     break;
             }
-
+            loader.addView(scrollView);
             container.addView(loader);
             return loader;
         }

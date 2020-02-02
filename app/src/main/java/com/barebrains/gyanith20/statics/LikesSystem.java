@@ -1,5 +1,7 @@
 package com.barebrains.gyanith20.statics;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
@@ -27,7 +29,7 @@ public class LikesSystem {
 
     public static void ToggleLikeState(final String postId, final boolean state) throws IllegalStateException {
         Resource<GyanithUser> res = GyanithUserManager.loggedUser_value;
-        if (likedPosts_value == null || res == null || res.value == null)
+        if (likedPosts_value == null || res.value == null)
             return;
 
         //DatabaseRefs

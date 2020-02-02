@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import com.barebrains.gyanith20.statics.LikesSystem;
 import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.PostManager;
 import com.barebrains.gyanith20.statics.Util;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.List;
@@ -160,21 +162,22 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                     @Override
                     public void onChanged(final Resource<GyanithUser> res) {
 
-                        if (likesObserver != null) {
-                            LikesSystem.likedPosts.removeObserver(likesObserver);
-                            likesObserver = null;
-                        }
-
                         if (res.value == null){//NO USER STATE
                             likedVal = null;
                             unlikedVal = null;
-                            likeBtn.setSafeChecked(false);
-                            likeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                            if (likesObserver != null) {
+                                LikesSystem.likedPosts.removeObserver(likesObserver);
+                                likesObserver = null;
+                            }
+
+                            setSafeLikeChecked(false);
+                            likeBtn.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
                                 @Override
                                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                     Toast.makeText(buttonView.getContext(),"Sign in to Like Posts", Toast.LENGTH_SHORT).show();
                                     if (likeBtn.isChecked())
-                                    likeBtn.setSafeChecked(false);
+                                        setSafeLikeChecked(false);
                                 }
                             });
                             longClickListener = new View.OnLongClickListener() {
@@ -210,7 +213,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
 
                                LikesSystem.likedPosts.observeForever(likesObserver);
 
-                                likeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                likeBtn.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
                                     @Override
                                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                                         if (NetworkManager.internet_value != null && NetworkManager.internet_value)
@@ -236,6 +239,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                         }
 
                         imgSlider.load(Util.getStorageRefs(post.imgIds, FirebaseStorage.getInstance().getReference().child("PostImages")))
+                                .apply((new RequestOptions()).fitCenter())
                                 .start();
                         if (post.caption != null && !post.caption.isEmpty()) {
                             imgSlider.setOnClickListener(new View.OnClickListener() {
@@ -283,10 +287,12 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
         if (tapPanel.getVisibility() == VISIBLE)
             captionStateToggle();
 
-        likeBtn.setOnCheckedChangeListener(null);
+        likeBtn.setCheckListener(null);
         likeBtn.setChecked(false);
 
         post = null;
+        likedVal = null;
+        unlikedVal = null;
     }
 
 
@@ -324,7 +330,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
         else
             likes = post.likes;
         likeCountText.setText((likes != 0) ? Long.toString(likes).substring(1) : "0");
-        likeBtn.setSafeChecked(isliked);
+        setSafeLikeChecked(isliked);
     }
 
     private void deletePost(){
@@ -367,5 +373,13 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                         });
                     }
                 }).show();
+    }
+
+
+    private void setSafeLikeChecked(boolean state){
+        CompoundButton.OnCheckedChangeListener listener = likeBtn.listener;
+        likeBtn.setCheckListener(null);
+        likeBtn.setChecked(state);
+        likeBtn.setCheckListener(listener);
     }
 }

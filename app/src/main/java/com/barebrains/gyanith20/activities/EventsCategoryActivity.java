@@ -27,8 +27,6 @@ import com.barebrains.gyanith20.statics.EventsModel;
 
 public class EventsCategoryActivity extends AppCompatActivity {
 
-    private int res = R.layout.item_schedule;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -33,7 +33,6 @@ public class postFeedAdapter extends postsAdapter {
                 loader.loading();
                 break;
             case LOADED:
-                Log.d("asd","putting Loaded");
                 loader.loaded();
                 pullRefresh.setRefreshing(false);
                 break;
