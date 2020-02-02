@@ -114,7 +114,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:columnCount="2"
-            app:layout_constraintDimensionRatio="1:1.65"
+            app:layout_constraintDimensionRatio="1:1.7"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frameLayout"

@@ -232,6 +232,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
             NestedScrollView scrollView = new NestedScrollView(EventDetailsActivity.this);
             scrollView.addView(textView);
+            loader.addView(scrollView);
             switch (position) {
                 case 0:
                     if (eventItem.des == null || eventItem.des.equals("")) {
@@ -284,7 +285,6 @@ public class EventDetailsActivity extends AppCompatActivity {
                     loader.loaded();
                     break;
             }
-            loader.addView(scrollView);
             container.addView(loader);
             return loader;
         }

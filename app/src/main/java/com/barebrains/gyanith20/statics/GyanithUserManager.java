@@ -126,6 +126,13 @@ public class GyanithUserManager {
         GyanithSignInWithToken(user.token);
     }
 
+    public static void SignInFromVerification(String token){
+        if (loggedUser_value != null)
+            SignOutUser(null);
+
+        GyanithSignInWithToken(token);
+    }
+
     private static void GetGyanithUserToken(final String username, final String password, final ResultListener<String> result){
 
         JsonObjectRequest userTokenRequest = new JsonObjectRequest

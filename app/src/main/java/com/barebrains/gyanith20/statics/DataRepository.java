@@ -67,7 +67,6 @@ public class DataRepository {
     }
 
 
-
     //EVENT ITEMS FETCHING
     private static MutableLiveData<ArrayResource<EventItem>> eventItems;
 
@@ -219,6 +218,24 @@ public class DataRepository {
                         techExpoData.postValue(Resource.<TechExpoData>autoRespond());
                     }
                 });
+    }
+
+    //LOAD URL FOR REGISTRATION
+    public static String clg_fever_url;
+
+    public static void fetchClgFeverUrl(){
+        FirebaseDatabase.getInstance().getReference().child("clg_fever_url").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists())
+                    clg_fever_url = dataSnapshot.getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

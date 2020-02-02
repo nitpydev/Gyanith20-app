@@ -63,6 +63,7 @@ public class gyanith20 extends MultiDexApplication {
                 DataRepository.getAllNotiItems().removeObserver(this);
             }
         });
+        DataRepository.fetchClgFeverUrl();
         super.onCreate();
     }
     private void setScreenOrientation(){

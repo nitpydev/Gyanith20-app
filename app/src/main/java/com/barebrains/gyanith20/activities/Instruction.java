@@ -23,6 +23,7 @@ import com.barebrains.gyanith20.fragments.botSheet;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.GyanithUser;
+import com.barebrains.gyanith20.statics.DataRepository;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.NetworkManager;
 import com.barebrains.gyanith20.statics.Util;
@@ -91,6 +92,21 @@ public class Instruction extends AppCompatActivity {
             }
         });
 
+        clg_fev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (DataRepository.clg_fever_url == null){
+                    Toast.makeText(Instruction.this, "Will be updated soon", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Web.WebFactory.with(Instruction.this)
+                        .title("Register")
+                        .load("https://www.thecollegefever.com/college-technical-fests/burnout-IgVj9eUqG6")
+                        .finishOnAuthLoss()
+                        .start();
+            }
+        });
     }
 
     private void showDialog(){
@@ -125,6 +141,7 @@ public class Instruction extends AppCompatActivity {
         Web.WebFactory.with(this)
                 .title("Register")
                 .load(url)
+                .finishOnAuthLoss()
                 .start();
     }
 
