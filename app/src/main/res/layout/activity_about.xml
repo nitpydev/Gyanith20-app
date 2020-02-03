@@ -64,7 +64,8 @@
                     android:gravity="center"
                     android:text="Feb 26 - 29"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/descr"

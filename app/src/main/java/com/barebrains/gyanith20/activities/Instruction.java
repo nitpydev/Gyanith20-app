@@ -102,7 +102,7 @@ public class Instruction extends AppCompatActivity {
 
                 Web.WebFactory.with(Instruction.this)
                         .title("Register")
-                        .load("https://www.thecollegefever.com/college-technical-fests/burnout-IgVj9eUqG6")
+                        .load(DataRepository.clg_fever_url)
                         .finishOnAuthLoss()
                         .start();
             }

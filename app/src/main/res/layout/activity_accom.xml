@@ -8,10 +8,13 @@
 
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?colorPrimary"
         android:orientation="horizontal">
+
         <ImageButton
             android:id="@+id/backbu"
             style="@style/backbtn" />
@@ -19,11 +22,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
             android:text="Accommodation"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="10dp"/>
+            android:textStyle="bold" />
     </LinearLayout>
 <com.barebrains.gyanith20.components.Loader
     android:layout_width="match_parent"

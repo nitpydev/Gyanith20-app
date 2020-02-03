@@ -188,7 +188,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     GyanithUserManager.getCurrentUser().observe(EventDetailsActivity.this, new Observer<Resource<GyanithUser>>() {
                         @Override
                         public void onChanged(Resource<GyanithUser> user) {
-                            if (user.value != null) {
+                            /*if (user.value != null) {
                                 Intent i = new Intent(EventDetailsActivity.this, Instruction.class);
                                 i.putExtra(EXTRA_MAX_PTPS,ptps);
                                 i.putExtra(EXTRA_EVENT_ID, id);
@@ -196,6 +196,10 @@ public class EventDetailsActivity extends AppCompatActivity {
                             } else {
                                 Toast.makeText(EventDetailsActivity.this, "Sign in to Register", Toast.LENGTH_SHORT).show();
                             }
+
+                             */
+
+                            Toast.makeText(EventDetailsActivity.this, "Registration yet to Open", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -226,7 +230,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             TextView textView = new TextView(new ContextThemeWrapper(EventDetailsActivity.this, R.style.eventDes));
 
             //Adjustment for guestlectures and proshows
-            if(eventItem.type.equals("g") || eventItem.type.equals("p"))
+            if(eventItem.type.equals("p"))
                 if(position == 1)
                     position++;
 
@@ -307,6 +311,10 @@ public class EventDetailsActivity extends AppCompatActivity {
         @Nullable
         @Override
         public CharSequence getPageTitle(int position) {
+            if(eventItem.type.equals("p"))
+                if(position == 1)
+                    position++;
+
             return pageTitles[position];
         }
     }

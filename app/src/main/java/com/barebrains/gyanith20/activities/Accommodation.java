@@ -98,7 +98,7 @@ if(cost != null){
     {
         private EventItem acc;
 
-        private String[] titles = new String[]{"DETAILS", "RULES", "CONTACT"};
+        private String[] titles = new String[]{"DETAILS","CONTACT"};
 
         private Viewpager(EventItem item)
         {
@@ -133,17 +133,6 @@ if(cost != null){
                   loader.loaded();
                     break;
                 case 1:
-                    scrollView.addView(textView);
-                    loader.addView(scrollView);
-                    if(acc.rules == null || acc.rules.equals(""))
-                    {
-                        loader.error(0);
-                        break;
-                    }
-                    textView.setText(acc.rules);
-                    loader.loaded();
-                     break;
-                case 2:
                     loader.addView(textView);
                     if(acc.contact == null || acc.contact.equals(""))
                     {
@@ -181,7 +170,7 @@ if(cost != null){
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
     }
 }

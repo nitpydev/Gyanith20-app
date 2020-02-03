@@ -393,7 +393,7 @@
                         android:layout_weight="1.5"
                         android:fontFamily="@font/poppinsr"
                         android:gravity="center"
-                        android:text="@string/project_expo"
+                        android:text="@string/paper_presentation"
                         android:textColor="@color/txtColor"
                         android:textSize="14sp" />
                 </LinearLayout>
