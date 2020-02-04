@@ -110,4 +110,10 @@
         <item name="android:textColor">#00000000</item>
     </style>
 
+    <style name="switchStyle" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/colorSecondary</item>
+        <item name="trackTint">@color/colorPrimaryLight</item>
+    </style>
+
 </resources>

@@ -17,6 +17,7 @@ import androidx.multidex.MultiDexApplication;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.models.NotificationItem;
+import com.barebrains.gyanith20.statics.Configs;
 import com.barebrains.gyanith20.statics.DataRepository;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.LikesSystem;
@@ -26,6 +27,9 @@ import com.barebrains.gyanith20.statics.VolleyManager;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class gyanith20 extends MultiDexApplication {
+
+    public static final String ADMIN_TOKEN = "Gyanith2020";
+
     public static final String PROGRESS_CHANNEL = "progress";
     public static SharedPreferences sp;
     public static Context appContext;
@@ -37,7 +41,7 @@ public class gyanith20 extends MultiDexApplication {
         setScreenOrientation();
         CreateProgressNotificationChannel();
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
+        Configs.init();
 
         //NETWORKING INITIATIONS
         VolleyManager.setRequestQueue(this);

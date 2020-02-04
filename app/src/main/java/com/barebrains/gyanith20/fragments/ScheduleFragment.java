@@ -21,6 +21,7 @@ import com.barebrains.gyanith20.adapters.scheduleViewHolder;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.ScheduleItem;
 import com.barebrains.gyanith20.others.mFragment;
+import com.barebrains.gyanith20.statics.Configs;
 import com.barebrains.gyanith20.statics.ScheduleModel;
 import com.google.android.material.tabs.TabLayout;
 
@@ -45,13 +46,19 @@ public class ScheduleFragment extends mFragment {
         // Inflate the layout for this fragment
         final View root = inflater.inflate(R.layout.fragment_schedule, container, false);
 
-        root.findViewById(R.id.add_schedule).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ScheduleFragment.this.getActivity(), AddScheduleActivity.class);
-                startActivity(intent);
-            }
-        });
+        View addSchedule = root.findViewById(R.id.add_schedule);
+        if (Configs.isValidAdmin()) {
+            addSchedule.setVisibility(View.VISIBLE);
+            addSchedule.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ScheduleFragment.this.getActivity(), AddScheduleActivity.class);
+                    startActivity(intent);
+                }
+            });
+        } else
+            addSchedule.setVisibility(View.GONE);
+
 
         TabLayout mtabLayout = root.findViewById(R.id.schtabLayout);
         ViewPager viewPager = root.findViewById(R.id.viewpager);

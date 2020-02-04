@@ -7,6 +7,9 @@ public class ScheduleItem {
     public String venue,title,id = null;
     public Long start_time,end_time;
 
+    @Exclude
+    public String key;
+
     public ScheduleItem() {
     }
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.models.NotificationItem;
 import com.barebrains.gyanith20.others.mFragment;
+import com.barebrains.gyanith20.statics.Configs;
 import com.barebrains.gyanith20.statics.DataRepository;
 
 public class NotificationFragment extends mFragment {
@@ -54,13 +56,19 @@ public class NotificationFragment extends mFragment {
         notiRecyclerView.setAdapter(adapter);
         View addBtn = root.findViewById(R.id.add_notification);
 
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), AddNotificationActivity.class);
-                startActivity(intent);
-            }
-        });
+        if (Configs.isValidAdmin()) {
+            addBtn.setVisibility(View.VISIBLE);
+            addBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getContext(), AddNotificationActivity.class);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            addBtn.setVisibility(View.GONE);
+        }
+
 
         super.onCreateView(inflater, container, savedInstanceState);
         return root;

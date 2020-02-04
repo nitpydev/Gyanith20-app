@@ -43,7 +43,7 @@ import static com.barebrains.gyanith20.others.Response.DATA_EMPTY;
 
 public class PostViewHolder extends RecyclerView.ViewHolder{
 
-    private static final long DELETE_RESPONSE_DELAY = 1500;
+    public static final long DELETE_RESPONSE_DELAY = 1500;
 
     //Data UI
     private TextView usernameTxt;

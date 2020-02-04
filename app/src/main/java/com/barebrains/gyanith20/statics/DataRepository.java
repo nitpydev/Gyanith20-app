@@ -135,8 +135,11 @@ public class DataRepository {
 
                         try {
                             ArrayList<ScheduleItem> items = new ArrayList<>();
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren())
-                                items.add(snapshot.getValue(ScheduleItem.class));
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                ScheduleItem item = snapshot.getValue(ScheduleItem.class);
+                                item.key = snapshot.getKey();
+                                items.add(item);
+                            }
 
                             scheduleItems.postValue(ArrayResource.withValue(items.toArray(new ScheduleItem[0])));
                         }catch (DatabaseException e){
@@ -172,7 +175,10 @@ public class DataRepository {
                         Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
                         for (int i = items.length - 1;i >= 0;i--) {
                             DataSnapshot snapshot = iterator.next();
-                            items[i] = snapshot.getValue(NotificationItem.class);
+                            try {
+                                items[i] = snapshot.getValue(NotificationItem.class);
+                                items[i].key = snapshot.getKey();
+                            }catch (DatabaseException ignored){}
                         }
                         notiItems.postValue(ArrayResource.withValue(items));
 

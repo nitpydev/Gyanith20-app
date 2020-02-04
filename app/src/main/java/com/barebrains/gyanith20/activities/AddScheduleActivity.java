@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.ScheduleItem;
+import com.barebrains.gyanith20.statics.Configs;
 import com.barebrains.gyanith20.statics.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,6 +39,12 @@ public class AddScheduleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!Configs.isValidAdmin()){
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_add_schedule);
 
         ttl = findViewById(R.id.sch_ttl);

@@ -2,22 +2,34 @@ package com.barebrains.gyanith20.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.EventDetailsActivity;
 import com.barebrains.gyanith20.fragments.ScheduleFragment;
+import com.barebrains.gyanith20.fragments.botSheet;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
+import com.barebrains.gyanith20.interfaces.CompletionListener;
 import com.barebrains.gyanith20.models.ScheduleItem;
+import com.barebrains.gyanith20.statics.Configs;
 import com.barebrains.gyanith20.statics.Util;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
+
+import static com.barebrains.gyanith20.gyanith20.appContext;
+import static com.barebrains.gyanith20.others.PostViewHolder.DELETE_RESPONSE_DELAY;
 
 public class scheduleViewHolder extends LiveViewHolder<ScheduleItem>{
 
@@ -55,6 +67,52 @@ public class scheduleViewHolder extends LiveViewHolder<ScheduleItem>{
                     intent.putExtra("EXTRA_ID",data.id);
                     itemView.getContext().startActivity(intent);
                 }
+            }
+        });
+
+        btn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (Configs.isValidAdmin()) {
+                    String content = data.title;
+                    final botSheet prompt = botSheet.makeBotSheet(activity.getSupportFragmentManager());
+                    prompt.setTitle("Delete Schedule")
+                            .setBody("Are u sure ? [" + content.substring(0, (content.length() < 40) ? content.length() : 40) + "...]")
+                            .setAction("DELETE")
+                            .setActionListener(new CompletionListener() {
+                                @Override
+                                public void OnComplete() {
+                                    FirebaseDatabase.getInstance().getReference().child("Schedule")
+                                            .child(data.key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull final Task<Void> task) {
+                                            prompt.dismiss();
+
+                                            final botSheet deletingPrompt = botSheet.makeBotSheet(activity.getSupportFragmentManager())
+                                                    .setTitle("Delete Schedule")
+                                                    .setBody("Deleting Schedule ...")
+                                                    .show();
+
+                                            final Handler handler = new Handler();
+                                            handler.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    deletingPrompt.dismiss();
+                                                    if (task.isSuccessful())
+                                                        Toast.makeText(appContext, "Schedule Deleted !", Toast.LENGTH_SHORT).show();
+                                                    else
+                                                        Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }, DELETE_RESPONSE_DELAY);
+                                        }
+                                    });
+
+
+                                }
+                            }).show();
+                    return true;
+                }
+                return false;
             }
         });
     }

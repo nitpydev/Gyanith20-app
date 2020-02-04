@@ -38,7 +38,7 @@
         android:id="@+id/add_notification"
         style="@style/fab"
         android:layout_gravity="bottom|end"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_baseline_add_24px" />

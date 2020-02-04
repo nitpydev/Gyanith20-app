@@ -176,10 +176,13 @@ public class ImageSlider extends Loader {
         }
 
         private void loadImage(int position){
-            Glide.with(getContext())
-                    .load(loadables[position])
-                    .apply(requestOptions)
-                    .into(imageView);
+            try {
+                Glide.with(getContext())
+                        .load(loadables[position])
+                        .apply(requestOptions)
+                        .into(imageView);
+            }catch (IllegalStateException ignore){}
+
         }
     }
 

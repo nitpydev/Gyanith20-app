@@ -1,10 +1,15 @@
 package com.barebrains.gyanith20.models;
 
+import com.google.firebase.database.Exclude;
+
 import java.security.InvalidParameterException;
 
 public class NotificationItem {
     public String title, body;
     public long time;
+
+    @Exclude
+    public String key;
 
     public NotificationItem(String title, long time, String body) throws InvalidParameterException {
 

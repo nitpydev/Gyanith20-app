@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -126,11 +127,11 @@ public abstract class LiveListAdapter<T,VH extends LiveViewHolder<T>> extends Re
 
 abstract class LiveViewHolder<T> extends RecyclerView.ViewHolder{
 
-    Activity activity;
+    AppCompatActivity activity;
 
     public LiveViewHolder(@NonNull View itemView, Activity activity) {
         super(itemView);
-        this.activity = activity;
+        this.activity = (AppCompatActivity) activity;
     }
 
     public abstract void bindView(T data);

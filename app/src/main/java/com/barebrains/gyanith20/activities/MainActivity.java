@@ -1,6 +1,7 @@
 package com.barebrains.gyanith20.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +26,8 @@ import com.barebrains.gyanith20.fragments.FavouritesFragment;
 import com.barebrains.gyanith20.fragments.HomeFragment;
 import com.barebrains.gyanith20.fragments.NotificationFragment;
 import com.barebrains.gyanith20.fragments.ScheduleFragment;
+import com.barebrains.gyanith20.fragments.botSheet;
+import com.barebrains.gyanith20.statics.Configs;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -48,8 +51,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             getWindow().setEnterTransition(new Fade());
         }
         setContentView(R.layout.activity_main);
-
         fragmentManager = getSupportFragmentManager();
+        Configs.checkUpdate(this,fragmentManager);
+
 
         title = findViewById(R.id.title);
         botNav = findViewById(R.id.navigation);
@@ -153,5 +157,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 throw new Exception("No fragment defined for id");
         }
     }
+
 }
 

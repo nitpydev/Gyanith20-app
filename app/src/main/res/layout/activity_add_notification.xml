@@ -20,8 +20,10 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <TextView
             android:id="@+id/title2"
@@ -35,37 +37,14 @@
             android:textSize="20sp" />
 
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/textfieldstyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="40dp"
             android:textColorHint="#64ffffff"
-            app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout"
-            style="@style/textfieldstyle">
-
-            <EditText
-                android:id="@+id/noti_ttl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Title"
-                android:inputType="textPersonName"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@color/whitealpha" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="40dp"
-            android:textColorHint="#64ffffff"
-            app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout"
-            style="@style/textfieldstyle">
+            app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
             <EditText
                 android:id="@+id/noti_bdy"
@@ -80,6 +59,40 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/textfieldstyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="40dp"
+            android:textColorHint="#64ffffff"
+            app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
+
+            <EditText
+                android:id="@+id/noti_ttl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Title"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/whitealpha" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/add_not_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:text="Show Notification Only"
+            android:textColor="?colorSecondary"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"
+            android:theme="@style/switchStyle" />
+
         <Button
             android:id="@+id/sendNotiBtn"
             style="@style/txtBtn"
@@ -89,4 +102,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -37,6 +37,7 @@ import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.models.GyanithUser;
+import com.barebrains.gyanith20.statics.Configs;
 import com.barebrains.gyanith20.statics.EventsModel;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.NetworkManager;
@@ -188,7 +189,12 @@ public class EventDetailsActivity extends AppCompatActivity {
                     GyanithUserManager.getCurrentUser().observe(EventDetailsActivity.this, new Observer<Resource<GyanithUser>>() {
                         @Override
                         public void onChanged(Resource<GyanithUser> user) {
-                            /*if (user.value != null) {
+
+                            if (user.value != null) {
+                                if (Configs.isRegLocked()){
+                                    Toast.makeText(EventDetailsActivity.this, Configs.getRegLockNote(), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                                 Intent i = new Intent(EventDetailsActivity.this, Instruction.class);
                                 i.putExtra(EXTRA_MAX_PTPS,ptps);
                                 i.putExtra(EXTRA_EVENT_ID, id);
@@ -196,10 +202,6 @@ public class EventDetailsActivity extends AppCompatActivity {
                             } else {
                                 Toast.makeText(EventDetailsActivity.this, "Sign in to Register", Toast.LENGTH_SHORT).show();
                             }
-
-                             */
-
-                            Toast.makeText(EventDetailsActivity.this, "Registration yet to Open", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -229,7 +231,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             loader.set_empty_error("Will be Updated soon");
             TextView textView = new TextView(new ContextThemeWrapper(EventDetailsActivity.this, R.style.eventDes));
 
-            //Adjustment for guestlectures and proshows
+            //Adjustment for proshows
             if(eventItem.type.equals("p"))
                 if(position == 1)
                     position++;
@@ -300,7 +302,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return (eventItem.type.equals("g") || eventItem.type.equals("p"))?2:3;
+            return (eventItem.type.equals("p"))?2:3;
         }
 
         @Override

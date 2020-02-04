@@ -131,18 +131,10 @@ public class botSheet extends BottomSheetDialogFragment {
 
         dialog.setContentView(botRoot);
     }
-
-    @Override
-    public void onCancel(@NonNull DialogInterface dialog) {
-        if (actionListener != null)
-            actionListener.OnError(null);
-        super.onCancel(dialog);
-    }
-
     @Override
     public void onDestroyView() {
+        super.onDestroyView();
         if (actionListener != null)
             actionListener.OnError(null);
-        super.onDestroyView();
     }
 }

@@ -53,7 +53,7 @@ public class Web extends AppCompatActivity {
         private String title = null;
         private boolean authLoss = false;
         private Activity withActivity;
-        private int loadListenerIndex;
+        private int loadListenerIndex = -1;
 
         private WebFactory(Activity activity){
             this.withActivity = activity;

@@ -172,7 +172,12 @@ public class SignUpActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == EMAIL_REQUEST_ID)
         {
-            GyanithUserManager.SignInUser(usrname.getText().toString(),pwd.getText().toString());
+            try {
+                GyanithUserManager.SignInUser(usrname.getText().toString(),pwd.getText().toString());
+            }catch (IllegalStateException e){
+                GyanithUserManager.SignOutUser(null);
+                GyanithUserManager.SignInUser(usrname.getText().toString(),pwd.getText().toString());
+            }
             Intent login = new Intent(SignUpActivity.this, LoginActivity.class);
             login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(login);

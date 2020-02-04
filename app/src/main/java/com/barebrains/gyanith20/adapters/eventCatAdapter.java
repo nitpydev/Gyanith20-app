@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 import androidx.lifecycle.LifecycleOwner;
@@ -54,7 +55,7 @@ class eventCatViewHolder extends LiveViewHolder<EventItem>{
     private ImageView eventItemImg;
 
     public eventCatViewHolder(@NonNull View itemView,Activity activity) {
-        super(itemView,activity);
+        super(itemView, activity);
         eventItemName = itemView.findViewById(R.id.eveitname);
         eventItemTime = itemView.findViewById(R.id.eveittime);
         eventItemBtn = itemView.findViewById(R.id.eve_cat_btn);
@@ -78,7 +79,7 @@ class eventCatViewHolder extends LiveViewHolder<EventItem>{
             public void onClick(View view) {
                 if (data.id != null){
                     Pair<View, String> eventName = Pair.<View, String>create(eventItemName,"eventName");
-                    Pair<View, String> eventBar = Pair.<View, String>create(eventItemBtn,"eventBar");
+                    Pair<View, String> eventBar = Pair.create(eventItemBtn,"eventBar");
                     Pair<View, String> eventImg = Pair.<View, String>create(eventItemImg,"eventImg");
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

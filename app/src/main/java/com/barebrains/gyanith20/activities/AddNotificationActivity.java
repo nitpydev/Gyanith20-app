@@ -8,12 +8,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.models.NotificationItem;
+import com.barebrains.gyanith20.statics.Configs;
 import com.barebrains.gyanith20.statics.VolleyManager;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -24,6 +26,12 @@ public class AddNotificationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!Configs.isValidAdmin()){
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_add_notification);
 
         View btn = findViewById(R.id.sendNotiBtn);
@@ -42,18 +50,14 @@ public class AddNotificationActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!Configs.isValidAdmin()){
+                    Toast.makeText(AddNotificationActivity.this, "Needs Admin Privileges", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 try {
                     final NotificationItem notiItem = new NotificationItem(ttl.getText().toString()
                             , System.currentTimeMillis(), bdy.getText().toString());
 
-/*
-                    String url = Uri.parse("https://us-central1-gyanith19-9fdcb.cloudfunctions.net/notify?ttl=key1&bdy=key2")
-                            .buildUpon()
-                            .appendQueryParameter("key1", notiItem.title)
-                            .appendQueryParameter("key2",notiItem.body)
-                            .build().toString();
-
- */
                     Uri.Builder builder = new Uri.Builder();
                     builder.scheme("https")
                             .authority("us-central1-gyanith19-9fdcb.cloudfunctions.net")
@@ -65,8 +69,10 @@ public class AddNotificationActivity extends AppCompatActivity {
                     StringRequest notiRequest = new StringRequest(url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            FirebaseDatabase.getInstance().getReference().child("Notifications")
-                                    .push().setValue(notiItem);
+                            if (!((SwitchCompat)findViewById(R.id.add_not_switch)).isChecked()){
+                                FirebaseDatabase.getInstance().getReference().child("Notifications")
+                                        .push().setValue(notiItem);
+                            }
 
                             Toast.makeText(getApplicationContext(), "Notification Sent", Toast.LENGTH_SHORT).show();
 
