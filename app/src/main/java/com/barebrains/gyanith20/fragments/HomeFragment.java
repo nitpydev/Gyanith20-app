@@ -139,7 +139,7 @@ public class HomeFragment extends mFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), EventDetailsActivity.class);
-                intent.putExtra("EXTRA_ID","29");
+                intent.putExtra("EXTRA_ID","30");
                 getContext().startActivity(intent);
             }
         });

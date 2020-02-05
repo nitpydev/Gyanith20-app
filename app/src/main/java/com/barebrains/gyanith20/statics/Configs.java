@@ -33,11 +33,13 @@ public class Configs {
 
         remoteConfig.setDefaultsAsync(R.xml.defaults_remote_config);
 
-        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+      /*  FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
                 .setMinimumFetchIntervalInSeconds(3600)
                 .build();
 
         remoteConfig.setConfigSettingsAsync(configSettings);
+
+       */
 
         //Activate already fetched config
         remoteConfig.activate();
