@@ -1,5 +1,6 @@
 package com.barebrains.gyanith20.activities;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -24,13 +25,21 @@ import com.barebrains.gyanith20.components.Loader;
 import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
+import com.barebrains.gyanith20.models.GyanithUser;
+import com.barebrains.gyanith20.statics.Configs;
 import com.barebrains.gyanith20.statics.EventsModel;
+import com.barebrains.gyanith20.statics.GyanithUserManager;
+import com.barebrains.gyanith20.statics.NetworkManager;
 import com.google.android.material.tabs.TabLayout;
+
+import static com.barebrains.gyanith20.activities.Instruction.EXTRA_EVENT_ID;
+import static com.barebrains.gyanith20.activities.Instruction.EXTRA_MAX_PTPS;
 
 public class Accommodation extends AppCompatActivity {
 
     TabLayout tabs;
     Button btn;
+    String ptps, id;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,13 +47,8 @@ public class Accommodation extends AppCompatActivity {
         final  Loader loader = findViewById(R.id.accom_loader);
         btn = findViewById(R.id.reg_acc);
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(Accommodation.this, "Registration is yet to open", Toast.LENGTH_SHORT).show();
 
-            }
-        });
+
 
 
         findViewById(R.id.backbu).setOnClickListener(new View.OnClickListener() {
@@ -65,6 +69,8 @@ public class Accommodation extends AppCompatActivity {
                 if(res.handleWithLoader(loader)){
                     return;
                 }
+                id = res.value.id;
+                ptps = res.value.getMax_ptps();
                 ViewPager viewPager = findViewById(R.id.accom_viewpager);
 
                 tabs = findViewById(R.id.accom_tabs);
@@ -72,6 +78,37 @@ public class Accommodation extends AppCompatActivity {
                 viewPager.setAdapter(new Viewpager(res.value));
 
                 tabs.setupWithViewPager(viewPager);
+            }
+        });
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(NetworkManager.internet_value) {
+
+                    GyanithUserManager.getCurrentUser().observe(Accommodation.this, new Observer<Resource<GyanithUser>>() {
+                        @Override
+                        public void onChanged(Resource<GyanithUser> user) {
+
+                            if (user.value != null) {
+                                if (Configs.isRegLocked()){
+                                    Toast.makeText(Accommodation.this, Configs.getRegLockNote(), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                Intent i = new Intent(Accommodation.this, Instruction.class);
+                                i.putExtra(EXTRA_MAX_PTPS,ptps);
+                                i.putExtra(EXTRA_EVENT_ID, id);
+                                startActivity(i);
+                            } else {
+                                Toast.makeText(Accommodation.this, "Sign in to Register", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                }else
+                {
+                    Toast.makeText(Accommodation.this, "No Internet",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
