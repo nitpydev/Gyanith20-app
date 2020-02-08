@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.barebrains.gyanith20.R;
@@ -131,6 +133,8 @@ public class Web extends AppCompatActivity {
 
     private void applyData(){
         webView = findViewById(R.id.web);
+        final ProgressBar progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().setAcceptThirdPartyCookies(webView,true);
         }
@@ -141,11 +145,22 @@ public class Web extends AppCompatActivity {
         webView.loadUrl(url);
         webView.setWebViewClient(new WebViewClient(){
             @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (loadListener != null)
+                progressBar.setVisibility(View.VISIBLE);
+                if (loadListener != null) {
                     loadListener.onLoad(Web.this,view,url);
+                    return true;
+                }
                 return false;
             }
+
+
         });
     }
 }

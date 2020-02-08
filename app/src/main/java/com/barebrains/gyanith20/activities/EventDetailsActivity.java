@@ -191,7 +191,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                         public void onChanged(Resource<GyanithUser> user) {
 
                             if (user.value != null) {
-                                if (Configs.isRegLocked()){
+                                if (Configs.isRegLocked() && !Configs.isRegLockExcluded(id)){
                                     Toast.makeText(EventDetailsActivity.this, Configs.getRegLockNote(), Toast.LENGTH_SHORT).show();
                                     return;
                                 }

@@ -25,6 +25,7 @@ public class Configs {
 
     private static final String REG_LOCK = "reg_lock";
     private static final String REG_LOCK_NOTE = "reg_lock_note";
+    private static final String REG_LOCK_EXCLUDES = "reg_lock_excludes";
 
     private static final String ADMIN_TOKEN = "admin_token";
 
@@ -88,7 +89,13 @@ public class Configs {
 
         String rv = FirebaseRemoteConfig.getInstance().getString(VERSION_NAME);
 
-        return !rv.equals(v);
+        boolean update;
+        try {
+            update = Float.parseFloat(rv) > Float.parseFloat(v);
+        }catch (NumberFormatException e){
+            update = !rv.equals(v);
+        }
+        return update;
     }
 
     private static String getAppVersionName(){
@@ -118,6 +125,17 @@ public class Configs {
 
     public static String getRegLockNote(){
         return FirebaseRemoteConfig.getInstance().getString(REG_LOCK_NOTE);
+    }
+
+    public static boolean isRegLockExcluded(String id){
+        String[] ar = FirebaseRemoteConfig.getInstance().getString(REG_LOCK_EXCLUDES).split("/");
+
+        for (int i = 0;i < ar.length;i++){
+            if (ar[i].equals(id))
+                return true;
+        }
+
+        return false;
     }
 
     public static boolean isValidAdmin(){

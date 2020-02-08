@@ -22,7 +22,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.Loader;
-import com.barebrains.gyanith20.interfaces.ArrayResource;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.models.EventItem;
 import com.barebrains.gyanith20.models.GyanithUser;
@@ -91,7 +90,7 @@ public class Accommodation extends AppCompatActivity {
                         public void onChanged(Resource<GyanithUser> user) {
 
                             if (user.value != null) {
-                                if (Configs.isRegLocked()){
+                                if (Configs.isRegLocked() && !Configs.isRegLockExcluded(id)){
                                     Toast.makeText(Accommodation.this, Configs.getRegLockNote(), Toast.LENGTH_SHORT).show();
                                     return;
                                 }

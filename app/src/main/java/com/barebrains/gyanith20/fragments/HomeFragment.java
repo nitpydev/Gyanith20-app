@@ -253,36 +253,12 @@ public class HomeFragment extends mFragment {
            startActivity(acc);
         }
     };
-    private View.OnClickListener rndclk = new View.OnClickListener(){
-        @Override
-        public void  onClick(View view) {
-            final Random r = new Random();
-            DataRepository.getAllEventItems().removeObservers(getViewLifecycleOwner());
-            DataRepository.getAllEventItems().observe(getViewLifecycleOwner(), new Observer<ArrayResource<EventItem>>() {
-                @Override
-                public void onChanged(ArrayResource<EventItem> res) {
-                   if (res.response.handle())
-                       return;
-
-                    int rnd = r.nextInt(res.value.length);
-                    Intent evt = new Intent(getContext(), EventDetailsActivity.class);
-                    evt.putExtra("EXTRA_ID", res.value[rnd].id);
-                    startActivity(evt);
-
-
-                    DataRepository.getAllEventItems().removeObserver(this);
-                }
-            });
-
-        }
-    };
 
     @Override
     public void onHide() {
         super.onHide();
         if (getView() == null)
             return;
-        DataRepository.getAllEventItems().removeObservers(getViewLifecycleOwner());
         GyanithUserManager.getCurrentUser().removeObservers(getViewLifecycleOwner());
     }
 

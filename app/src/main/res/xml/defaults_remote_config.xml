@@ -10,7 +10,7 @@
     </entry>
     <entry>
         <key>version_code</key>
-        <value>3.2</value>
+        <value>3.3</value>
     </entry>
     <entry>
         <key>reg_lock</key>
@@ -23,5 +23,9 @@
     <entry>
         <key>admin_token</key>
         <value>thisistheadmin</value>
+    </entry>
+    <entry>
+        <key>reg_lock_excludes</key>
+        <value>43</value>
     </entry>
 </defaultsMap>
