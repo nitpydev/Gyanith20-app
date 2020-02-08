@@ -1,13 +1,11 @@
 package com.barebrains.gyanith20.activities;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +27,7 @@ public class SplashActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_splash);
 
-        ImageView l=(ImageView)findViewById(R.id.imageView4);
+        ImageView l= findViewById(R.id.imageView4);
 /*
         ObjectAnimator a=ObjectAnimator.ofFloat(l,"alpha",0,1);
         a.setDuration(500);

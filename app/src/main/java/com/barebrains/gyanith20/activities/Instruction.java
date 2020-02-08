@@ -1,24 +1,20 @@
 package com.barebrains.gyanith20.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.components.Loader;
-import com.barebrains.gyanith20.fragments.CommunityFragment;
 import com.barebrains.gyanith20.fragments.botSheet;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.interfaces.ResultListener;

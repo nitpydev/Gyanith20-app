@@ -77,10 +77,7 @@ public class Response {
     public boolean handle(){
         if (getToast() != null)
             Toast.makeText(appContext, getToast(), Toast.LENGTH_SHORT).show();
-        if (getCode() != null)
-            return true;
-
-        return false;
+        return getCode() != null;
     }
 
     public static Response autoRespond(){

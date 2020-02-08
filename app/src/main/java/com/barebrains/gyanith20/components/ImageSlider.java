@@ -195,7 +195,7 @@ public class ImageSlider extends Loader {
 
 
     public ImageSlider apply(@NonNull RequestOptions requestOptions){
-        this.requestOptions = this.requestOptions.apply(requestOptions);
+        ImageSlider.requestOptions = ImageSlider.requestOptions.apply(requestOptions);
         return this;
     }
 
