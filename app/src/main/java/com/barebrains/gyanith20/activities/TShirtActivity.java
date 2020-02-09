@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.barebrains.gyanith20.statics.EventsModel;
 public class TShirtActivity extends AppCompatActivity {
 
     EventItem item;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,13 @@ public class TShirtActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.tshirt_backbtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
     private void setUpImgSlider(){
@@ -81,4 +90,6 @@ public class TShirtActivity extends AppCompatActivity {
         return parsed;
 
     }
+
+
 }

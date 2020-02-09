@@ -21,6 +21,7 @@ import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.interfaces.Resource;
 import com.barebrains.gyanith20.interfaces.UrlLoadListener;
 import com.barebrains.gyanith20.models.GyanithUser;
+import com.barebrains.gyanith20.statics.DataRepository;
 import com.barebrains.gyanith20.statics.GyanithUserManager;
 import com.barebrains.gyanith20.statics.cookies;
 
@@ -142,7 +143,8 @@ public class Web extends AppCompatActivity {
             CookieManager.getInstance().setAcceptCookie(true);
 
         ((TextView)findViewById(R.id.web_title)).setText(title);
-        webView.loadUrl(url);
+        webView.loadUrl(DataRepository.clg_fever_url);
+        webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageFinished(WebView view, String url) {
