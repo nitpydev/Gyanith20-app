@@ -1,18 +1,9 @@
 package com.barebrains.gyanith20.statics;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
-import android.util.Pair;
-
 import androidx.annotation.NonNull;
 
-import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.activities.MainActivity;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
-import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.barebrains.gyanith20.models.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,12 +12,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.io.File;
-import java.util.ArrayList;
 
 import static com.barebrains.gyanith20.statics.Util.decrementer;
 

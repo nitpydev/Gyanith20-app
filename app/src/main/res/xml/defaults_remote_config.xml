@@ -10,7 +10,7 @@
     </entry>
     <entry>
         <key>version_code</key>
-        <value>3.3</value>
+        <value>3.4</value>
     </entry>
     <entry>
         <key>reg_lock</key>
@@ -26,6 +26,6 @@
     </entry>
     <entry>
         <key>reg_lock_excludes</key>
-        <value>43</value>
+        <value></value>
     </entry>
 </defaultsMap>

@@ -1,7 +1,5 @@
 package com.barebrains.gyanith20.statics;
 
-import android.os.Handler;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -23,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.barebrains.gyanith20.others.Response.DATA_EMPTY;
-import static com.barebrains.gyanith20.others.Response.NO_DATA_AND_NET;
 
 public class PostsSource extends ItemKeyedDataSource<Post, Post> {
 
@@ -65,7 +62,7 @@ public class PostsSource extends ItemKeyedDataSource<Post, Post> {
         }
     }
 
-    public PostsSource(Query query, boolean timeOrdered){
+    private PostsSource(Query query, boolean timeOrdered){
         this.query = query;
         this.timeOrdered = timeOrdered;
     }

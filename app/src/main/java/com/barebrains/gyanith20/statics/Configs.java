@@ -5,19 +5,28 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Handler;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
 import com.barebrains.gyanith20.R;
 import com.barebrains.gyanith20.fragments.botSheet;
 import com.barebrains.gyanith20.gyanith20;
 import com.barebrains.gyanith20.interfaces.CompletionListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+
+import static com.barebrains.gyanith20.gyanith20.sp;
 
 public class Configs {
+
+    private static final String RC_STALE = "stale_config";
+
 
     private static final String VERSION_NAME = "version_code";
     private static final String UPDATE_NOTE = "update_note";
@@ -34,24 +43,32 @@ public class Configs {
 
         remoteConfig.setDefaultsAsync(R.xml.defaults_remote_config);
 
-      /*  FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                .setMinimumFetchIntervalInSeconds(3600)
-                .build();
-
-        remoteConfig.setConfigSettingsAsync(configSettings);
-
-       */
-
-        //Activate already fetched config
-        remoteConfig.activate();
-
-        //Try to fetch new config
-        new Handler().postDelayed(new Runnable() {
+        FirebaseDatabase.getInstance().getReference().child("config_token").addValueEventListener(new ValueEventListener() {
             @Override
-            public void run() {
-                remoteConfig.fetch();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists())
+                    return;
+
+                String token = dataSnapshot.getValue(String.class);
+
+                if (!sp.getString(RC_STALE,"").equals(token))
+                    refresh(remoteConfig,token);
             }
-        }, 0);
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private static void refresh(FirebaseRemoteConfig remoteConfig, final String token){
+        remoteConfig.fetchAndActivate().addOnSuccessListener(new OnSuccessListener<Boolean>() {
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+                sp.edit().putString(RC_STALE,token).apply();
+            }
+        });
     }
 
 

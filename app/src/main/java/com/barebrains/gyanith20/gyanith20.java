@@ -28,7 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class gyanith20 extends MultiDexApplication {
 
-    public static final String ADMIN_TOKEN = "Gyanith2020";
+    public static final String ADMIN_TOKEN = "Gyanith20";
 
     public static final String PROGRESS_CHANNEL = "progress";
     public static SharedPreferences sp;
