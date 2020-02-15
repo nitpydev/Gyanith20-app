@@ -36,7 +36,8 @@ public class ScheduleModel extends ViewModel {
         });
     }
 
-    public LiveData<ArrayResource<ScheduleItem>> getSchedulesOfDay(final Long dayStart, final Long dayEnd){
+    public LiveData<ArrayResource<ScheduleItem>> getSchedulesOfDay(final Long dayStart){
+        final Long dayEnd = dayStart + 86400000;
         return Transformations.map(getAllScheduleItems(), new Function<ArrayResource<ScheduleItem>, ArrayResource<ScheduleItem>>() {
             @Override
             public ArrayResource<ScheduleItem> apply(ArrayResource<ScheduleItem> input) {

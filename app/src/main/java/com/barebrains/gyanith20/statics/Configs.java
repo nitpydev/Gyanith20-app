@@ -159,4 +159,7 @@ public class Configs {
         return gyanith20.ADMIN_TOKEN.equals(FirebaseRemoteConfig.getInstance().getString(ADMIN_TOKEN));
     }
 
+    public static Long getDayMillis(int day){
+        return FirebaseRemoteConfig.getInstance().getLong("Day" + day);
+    }
 }

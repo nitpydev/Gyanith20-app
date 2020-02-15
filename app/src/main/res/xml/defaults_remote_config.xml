@@ -28,4 +28,24 @@
         <key>reg_lock_excludes</key>
         <value></value>
     </entry>
+    <entry>
+        <key>Day1</key>
+        <value>1583260200000</value>
+    </entry>
+    <entry>
+        <key>Day2</key>
+        <value>1583346600000</value>
+    </entry>
+    <entry>
+        <key>Day3</key>
+        <value>1583433000000</value>
+    </entry>
+    <entry>
+        <key>Day4</key>
+        <value>1583519400000</value>
+    </entry>
+    <entry>
+        <key>Day5</key>
+        <value>1583605800000</value>
+    </entry>
 </defaultsMap>

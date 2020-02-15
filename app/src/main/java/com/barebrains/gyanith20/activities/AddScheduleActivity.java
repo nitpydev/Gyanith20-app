@@ -75,9 +75,9 @@ public class AddScheduleActivity extends AppCompatActivity {
                     @Override
                     public void OnResult(Long aLong) {
                         endTime = aLong;
+                        et.setText(Util.BuildScheduleDateString(endTime));
                     }
                 });
-                et.setText(Util.BuildScheduleDateString(endTime));
             }
         });
 

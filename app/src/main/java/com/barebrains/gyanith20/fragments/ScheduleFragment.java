@@ -113,47 +113,16 @@ public class ScheduleFragment extends mFragment {
         }
     }
 
-    private scheduleAdapter getSchduleAdapter(int pos){
-        switch (pos){
-            case 0:
-                return new scheduleAdapter() {
-                    @Override
-                    public LiveData<ArrayResource<ScheduleItem>> getLiveData() {
+    private scheduleAdapter getSchduleAdapter(final int pos){
+            return new scheduleAdapter() {
+                @Override
+                public LiveData<ArrayResource<ScheduleItem>> getLiveData() {
+                    if (pos == 0)
                         return viewModel.getLiveSchedules(System.currentTimeMillis());
-                    }
-                };
-            case 1://26 th February
-                return new scheduleAdapter() {
-                    @Override
-                    public LiveData<ArrayResource<ScheduleItem>> getLiveData() {
-                        return viewModel.getSchedulesOfDay(1582655400000L,1582741800000L);
-                    }
-                };
-            case 2://27 th February
-                return new scheduleAdapter() {
-                    @Override
-                    public LiveData<ArrayResource<ScheduleItem>> getLiveData() {
-                        return viewModel.getSchedulesOfDay(1582741800000L,1582828200000L);
-                    }
-                };
-            case 3://28 th February
-                return new scheduleAdapter() {
-                    @Override
-                    public LiveData<ArrayResource<ScheduleItem>> getLiveData() {
-                        return viewModel.getSchedulesOfDay(1582828200000L,1582914600000L);
-                    }
-                };
-            case 4://29 th February
-                return new scheduleAdapter() {
-                    @Override
-                    public LiveData<ArrayResource<ScheduleItem>> getLiveData() {
-                        return viewModel.getSchedulesOfDay(1582914600000L,1583001000000L);
-                    }
-                };
-            default:
-                return null;
-
-        }
+                    else
+                        return viewModel.getSchedulesOfDay(Configs.getDayMillis(pos));
+                }
+            };
     }
 
     public abstract class scheduleAdapter extends LiveListAdapter<ScheduleItem, scheduleViewHolder> {
