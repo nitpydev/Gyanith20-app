@@ -61,6 +61,7 @@ public class ScheduleFragment extends mFragment {
 
 
         TabLayout mtabLayout = root.findViewById(R.id.schtabLayout);
+        mtabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         ViewPager viewPager = root.findViewById(R.id.viewpager);
         viewPager.setAdapter(new pager());
         viewPager.setCurrentItem(0);
@@ -72,7 +73,7 @@ public class ScheduleFragment extends mFragment {
 
     private class pager extends PagerAdapter{
 
-        private String[] titles = new String[]{"LIVE","DAY 1","DAY 2","DAY 3","DAY 4"};
+        private String[] titles = new String[]{"LIVE","DAY 1","DAY 2","DAY 3","DAY 4","DAY 5"};
 
         @NonNull
         @Override
@@ -104,7 +105,7 @@ public class ScheduleFragment extends mFragment {
 
         @Override
         public int getCount() {
-            return 5;
+            return 6;
         }
 
         @Override

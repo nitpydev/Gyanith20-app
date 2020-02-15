@@ -22,7 +22,7 @@
                     android:layout_height="match_parent"
                     android:fontFamily="@font/spsbold"
                     android:gravity="center_vertical|center_horizontal"
-                    android:padding="10sp"
+                    android:padding="8sp"
                     android:text="9:00"
                     android:textColor="@android:color/white"
                     android:textSize="22sp" />
