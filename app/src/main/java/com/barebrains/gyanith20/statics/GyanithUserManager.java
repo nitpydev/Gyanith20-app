@@ -211,10 +211,10 @@ public class GyanithUserManager {
                     if (result.equals("success"))
                         listener.OnComplete();
                     else
-                        listener.OnError(obj.getString("body"));
+                        listener.OnError(obj.getString("text"));
 
                 } catch (JSONException e) {
-                    listener.OnError("Internal Error");
+                    listener.OnError("internal error");
                     e.printStackTrace();
                 }
 
