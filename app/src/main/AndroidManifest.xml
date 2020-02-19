@@ -44,16 +44,16 @@
         <activity
             android:name=".activities.SpecificPostActivity"
             android:label="@string/app_name">
-            <intent-filter android:label="@string/app_name">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="gyanith.com"
-                    android:pathPrefix="/post"
-                    android:scheme="app" />
+                    android:scheme="https"
+                    android:host="app.gyanith.org"
+                    android:pathPrefix="/post" />
             </intent-filter>
         </activity>
 

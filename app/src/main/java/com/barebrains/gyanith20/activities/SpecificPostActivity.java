@@ -37,6 +37,7 @@ public class SpecificPostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_specific_post);
         loader = findViewById(R.id.postLoader);
         postViewHolder = PostViewHolder.getHolder(loader,getSupportFragmentManager());
+        loader.addView(postViewHolder.itemView);
         refreshPost = findViewById(R.id.refresh_post);
         findViewById(R.id.specific_post_back_btn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +101,6 @@ public class SpecificPostActivity extends AppCompatActivity {
             refreshPost.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    postRef.removeEventListener(listener);
                     handleIntent(intent);
                 }
             });

@@ -305,7 +305,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
     }
 
     private String buildDeepLink(String postId){
-        return "http://gyanith.com/post/" + postId;
+        return "https://app.gyanith.org/post/" + postId;
     }
 
     private void captionStateToggle(){
