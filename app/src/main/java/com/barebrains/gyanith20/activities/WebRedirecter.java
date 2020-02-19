@@ -23,19 +23,19 @@ public class WebRedirecter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Uri uri = getIntent().getData();
         final String token = uri.getQueryParameter("code");
-        String url = "https://gyanith.org/verify.php?code=" + token + "&gyid=" + uri.getQueryParameter("gyid");
+        final String verifyUrl = "https://gyanith.org/verify.php?code=" + token + "&gyid=" + uri.getQueryParameter("gyid");
 
         Web.WebFactory.with(this)
                 .title("Verfication")
-                .load(url)
+                .load(verifyUrl)
                 .interceptUrlLoading(new UrlLoadListener() {
                     @Override
                     public void onLoad(Web web,WebView view, String url) {
-                        if (url.equals("https://gyanith.org/profile.php")) {
+                        if (!url.equals(verifyUrl)) {
                             GyanithUserManager.SignOutUser(null);
                             Intent intent = new Intent(WebRedirecter.this,LoginActivity.class);
-                            GyanithUserManager.SignInFromVerification(token);
                             startActivity(intent);
+                            GyanithUserManager.SignInFromVerification(token);
                             web.finish();
                             finish();
                         }

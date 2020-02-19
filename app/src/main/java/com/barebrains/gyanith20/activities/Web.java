@@ -153,15 +153,13 @@ public class Web extends AppCompatActivity {
             }
 
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                progressBar.setVisibility(View.VISIBLE);
-                if (loadListener != null) {
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                if (loadListener != null)
                     loadListener.onLoad(Web.this,view,url);
-                    return true;
-                }
-                return false;
-            }
 
+
+            }
 
         });
     }

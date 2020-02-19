@@ -124,6 +124,9 @@ public class GyanithUserManager {
     public static void SignInFromVerification(String token){
         if (loggedUser_value != null)
             SignOutUser(null);
+        loggedUser = new MutableLiveData<>();
+        loggedUser_value = null;
+        Log.d("asd","reset");
 
         GyanithSignInWithToken(token);
     }
@@ -175,15 +178,12 @@ public class GyanithUserManager {
 
                     loggedUser.postValue(Resource.withValue(user));
 
-                    Log.d("asd","User Signed In");
                 } else if (response.has("reg"))//TODO:CHECK HERE
                 {//TOKEN EXPIRED
                     SignOutUser("User Session Expired");
-                    Log.d("asd","User Session Expired");
+                    Log.d("asd","set");
                 } else {
                     loggedUser.postValue(Resource.<GyanithUser>onlyToasts("Internal Error"));
-                    Log.d("asd","Server Error");
-
                 }
             }
         },new com.android.volley.Response.ErrorListener(){
@@ -369,6 +369,7 @@ public class GyanithUserManager {
         FirebaseAuth.getInstance().signOut();
         CookieManager.getInstance().removeAllCookie();
         loggedUser.postValue(Resource.<GyanithUser>withValue(null));
+        loggedUser_value = null;
         if (toast != null)
             Toast.makeText(gyanith20.appContext, toast, Toast.LENGTH_SHORT).show();
     }

@@ -1,19 +1,15 @@
 package com.barebrains.gyanith20.components;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -26,17 +22,9 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.barebrains.gyanith20.R;
-import com.barebrains.gyanith20.interfaces.CompletionListener;
-import com.barebrains.gyanith20.interfaces.ResultListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.firebase.storage.StorageReference;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator;
 
@@ -181,7 +169,7 @@ public class ImageSlider extends Loader {
                         .load(loadables[position])
                         .apply(requestOptions)
                         .into(imageView);
-            }catch (IllegalStateException ignore){}
+            }catch (IllegalStateException | IllegalArgumentException ignore){}
 
         }
     }
