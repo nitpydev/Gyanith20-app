@@ -143,7 +143,7 @@ public class Web extends AppCompatActivity {
             CookieManager.getInstance().setAcceptCookie(true);
 
         ((TextView)findViewById(R.id.web_title)).setText(title);
-        webView.loadUrl(DataRepository.clg_fever_url);
+        webView.loadUrl(url);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient(){
             @Override
