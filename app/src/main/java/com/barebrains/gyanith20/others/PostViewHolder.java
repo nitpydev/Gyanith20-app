@@ -293,12 +293,13 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
         post = null;
         likedVal = null;
         unlikedVal = null;
+
     }
 
 
     private void ConsumeData(Post post){
         usernameTxt.setText("@" + post.username);
-        likeCountText.setText((post.likes != 0) ? Long.toString(post.likes).substring(1) : "0");
+        likeCountText.setText((post.likes < 0) ? Long.toString(post.likes).substring(1) : "0");
         captionsText.setText(post.caption);
         bottomCaptionsText.setText(post.caption);
         timestampText.setText(Util.BuildTimeAgoString(post.time));

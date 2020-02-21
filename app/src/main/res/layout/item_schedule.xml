@@ -21,11 +21,14 @@
                     android:layout_width="80dp"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/spsbold"
-                    android:gravity="center_vertical|center_horizontal"
+                    android:gravity="center"
                     android:padding="8sp"
-                    android:text="9:00"
+                    android:text="10:00"
                     android:textColor="@android:color/white"
-                    android:textSize="22sp" />
+                    app:autoSizeMaxTextSize="100sp"
+                    app:autoSizeMinTextSize="12sp"
+                    app:autoSizeStepGranularity="2sp"
+                    app:autoSizeTextType="uniform" />
 
                 <View
                     android:id="@+id/divider"

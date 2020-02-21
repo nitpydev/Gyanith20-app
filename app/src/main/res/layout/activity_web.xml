@@ -22,7 +22,9 @@
             style="@style/backbtn"
             android:backgroundTint="@android:color/white"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:tint="#FFFFFF"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
         <TextView
             android:id="@+id/web_title"

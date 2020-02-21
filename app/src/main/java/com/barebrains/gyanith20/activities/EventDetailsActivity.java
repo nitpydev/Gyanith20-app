@@ -83,7 +83,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         findViewById(R.id.backbut2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
 

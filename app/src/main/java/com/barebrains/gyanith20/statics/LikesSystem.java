@@ -1,7 +1,5 @@
 package com.barebrains.gyanith20.statics;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;

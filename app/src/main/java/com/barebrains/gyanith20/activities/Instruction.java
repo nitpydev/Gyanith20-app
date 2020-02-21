@@ -35,9 +35,8 @@ public class Instruction extends AppCompatActivity {
     public final static String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
     public final static String EXTRA_MAX_PTPS = "EXTRA_MAX_PTPS";
 
-    Button web_reg_btn, clg_fev;
+    Button web_reg_btn;
     String url;
-
     private Integer max_ptps;
     private String eventId;
 
@@ -55,7 +54,6 @@ public class Instruction extends AppCompatActivity {
 
         load_instruct();
         web_reg_btn = findViewById(R.id.web_reg_btn);
-        clg_fev = findViewById(R.id.clf_fever);
 
         extractData();
 
@@ -88,21 +86,7 @@ public class Instruction extends AppCompatActivity {
             }
         });
 
-        clg_fev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (DataRepository.clg_fever_url == null){
-                    Toast.makeText(Instruction.this, "Will be updated soon", Toast.LENGTH_SHORT).show();
-                    return;
-                }
 
-                Web.WebFactory.with(Instruction.this)
-                        .title("Register")
-                        .load(DataRepository.clg_fever_url)
-                        .finishOnAuthLoss()
-                        .start();
-            }
-        });
     }
 
     private void showDialog(){

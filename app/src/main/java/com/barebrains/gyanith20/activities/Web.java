@@ -101,11 +101,12 @@ public class Web extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
+        webView = findViewById(R.id.web);
 
         findViewById(R.id.web_close_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Web.super.onBackPressed();
+                finish();
             }
         });
 
@@ -133,7 +134,6 @@ public class Web extends AppCompatActivity {
     }
 
     private void applyData(){
-        webView = findViewById(R.id.web);
         final ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -143,7 +143,7 @@ public class Web extends AppCompatActivity {
             CookieManager.getInstance().setAcceptCookie(true);
 
         ((TextView)findViewById(R.id.web_title)).setText(title);
-        webView.loadUrl(DataRepository.clg_fever_url);
+        webView.loadUrl(url);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient(){
             @Override
@@ -162,5 +162,13 @@ public class Web extends AppCompatActivity {
             }
 
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (webView.canGoBack())
+            webView.goBack();
+        else
+            finish();
     }
 }

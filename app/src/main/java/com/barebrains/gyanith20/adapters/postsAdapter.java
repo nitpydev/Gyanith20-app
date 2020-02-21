@@ -1,5 +1,6 @@
 package com.barebrains.gyanith20.adapters;
 
+import android.util.Log;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
@@ -116,10 +117,12 @@ public abstract class postsAdapter extends PagedListAdapter<Post, PostViewHolder
         if (!posts.containsKey(post.postId)) {
             livePost = new MutableLiveData<>();
             posts.put(post.postId,livePost);
-            livePost.postValue(post);
         }
         else
             livePost = posts.get(post.postId);
+
+        livePost.setValue(post);
+
         viewHolder.bindto(livePost);
     }
 
